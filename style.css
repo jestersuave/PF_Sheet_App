@@ -198,3 +198,89 @@ span { /* General spans, often used for "Modifier:" or "Total:" text */
 #hpTotal, #acTotal {
     min-width: 30px; /* Slightly wider for potentially larger numbers */
 }
+
+/* Custom Dice Rolls Section */
+#customRollsSection {
+  border: 1px solid #aaa;
+  padding: 10px;
+  border-radius: 3px; /* Subtle rounding */
+  margin-top: 15px; /* Space from the skills section */
+}
+
+#addCustomRollBtn {
+  font-size: 1.2em; /* Make '+' clearly visible */
+  padding: 5px 10px;
+  margin-bottom: 10px; /* Space before the form container */
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+#addCustomRollBtn:hover {
+  background-color: #e0e0e0;
+}
+
+#customRollFormContainer .custom-roll-form { /* Class for individual forms */
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  border-radius: 3px;
+}
+
+.custom-roll-form div { /* For layout of label/input pairs */
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.custom-roll-form label {
+  min-width: 100px; /* Adjust as needed */
+  margin-right: 5px;
+}
+
+.custom-roll-form input[type="number"] {
+  width: 50px; /* Compact size for dice counts */
+  margin-right: 10px; /* Space between dice inputs */
+}
+
+.custom-roll-form input[type="text"] { /* For description */
+  flex-grow: 1; /* Allow description to take available space */
+  padding: 5px;
+}
+
+.custom-roll-form button { /* Save button for the form */
+  padding: 6px 12px;
+  background-color: #4CAF50; /* Green for save */
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.custom-roll-form button:hover {
+  background-color: #45a049;
+}
+
+#customRollsDisplayContainer .displayed-roll { /* Class for individual displayed rolls */
+  border: 1px solid #ddd;
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: #fff;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between; /* For description and dice string */
+  align-items: center;
+}
+
+.displayed-roll .roll-description {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.displayed-roll .roll-dice-summary {
+  font-family: monospace; /* Good for dice strings like 2d6+1d4 */
+  font-size: 0.95em;
+}
