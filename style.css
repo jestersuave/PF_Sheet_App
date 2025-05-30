@@ -1,0 +1,138 @@
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+h2 {
+  color: #555;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"] {
+  padding: 8px;
+  margin: 4px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  width: 100px; /* Default width, can be overridden */
+}
+
+label {
+  margin-right: 10px;
+  font-weight: bold;
+  min-width: 150px; /* Align labels */
+  display: inline-block;
+}
+
+span {
+  margin-left: 5px;
+}
+
+/* Main container for layout */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between columns/rows */
+}
+
+/* Sections styling */
+#charInfo,
+#abilityScores,
+#skills,
+#combatStats,
+#savingThrows {
+  background-color: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Layout for main sections */
+#charInfo {
+  width: 100%; /* Full width for character info */
+}
+
+.column-container {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+
+.left-column {
+    flex: 1; /* Takes up half the space */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.right-column {
+    flex: 2; /* Takes up the other half */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+#abilityScores > div,
+#skills > div,
+#combatStats > div,
+#savingThrows > div,
+#charInfo > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+}
+
+#abilityScores > div:last-child,
+#skills > div:last-child,
+#combatStats > div:last-child,
+#savingThrows > div:last-child,
+#charInfo > div:last-child {
+  border-bottom: none;
+}
+
+
+/* Specific input field sizing */
+#charName, #charClass, #charRace {
+  width: 200px;
+}
+
+#charLevel {
+    width: 60px;
+}
+
+#abilityScores input[type="number"] {
+  width: 60px;
+}
+
+#skills input[type="number"] {
+  width: 60px;
+}
+
+#combatStats input[type="number"],
+#savingThrows input[type="number"] {
+  width: 70px;
+}
+
+/* Make spans for modifiers and totals stand out a bit */
+#strMod, #dexMod, #conMod, #intMod, #wisMod, #chaMod,
+#acrobaticsTotal, #appraiseTotal, #bluffTotal, #climbTotal, #craftTotal, #diplomacyTotal,
+#disableDeviceTotal, #disguiseTotal, #escapeArtistTotal, #flyTotal, #handleAnimalTotal,
+#healTotal, #intimidateTotal, #knowledgeArcanaTotal, #knowledgeDungeoneeringTotal,
+#knowledgeEngineeringTotal, #knowledgeGeographyTotal, #knowledgeHistoryTotal,
+#knowledgeLocalTotal, #knowledgeNatureTotal, #knowledgeNobilityTotal, #knowledgePlanesTotal,
+#knowledgeReligionTotal, #linguisticsTotal, #perceptionTotal, #performTotal, #professionTotal,
+#rideTotal, #senseMotiveTotal, #sleightOfHandTotal, #spellcraftTotal, #stealthTotal,
+#survivalTotal, #swimTotal, #useMagicDeviceTotal,
+#hpTotal, #acTotal, #meleeAttack, #rangedAttack, #cmbTotal, #cmdTotal, #initiativeTotal,
+#fortTotal, #refTotal, #willTotal {
+  font-weight: bold;
+  color: #337ab7; /* A slightly different color to highlight */
+}

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pathfinder Character Sheet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="charInfo">
+      <h2>Character Information</h2>
+    <div>
+      <label for="charName">Name:</label>
+      <input type="text" id="charName">
+    </div>
+    <div>
+      <label for="charClass">Class:</label>
+      <input type="text" id="charClass">
+    </div>
+    <div>
+      <label for="charRace">Race:</label>
+      <input type="text" id="charRace">
+    </div>
+    <div>
+      <label for="charLevel">Level:</label>
+      <input type="number" id="charLevel" value="1">
+    </div>
+
+    <div class="column-container">
+      <div class="left-column">
+        <div id="abilityScores">
+          <h2>Ability Scores</h2>
+          <div>
+            <label for="strScore">Strength:</label>
+      <input type="number" id="strScore" value="10">
+      <span>Modifier: <span id="strMod">0</span></span>
+    </div>
+    <div>
+      <label for="dexScore">Dexterity:</label>
+      <input type="number" id="dexScore" value="10">
+      <span>Modifier: <span id="dexMod">0</span></span>
+    </div>
+    <div>
+      <label for="conScore">Constitution:</label>
+      <input type="number" id="conScore" value="10">
+      <span>Modifier: <span id="conMod">0</span></span>
+    </div>
+    <div>
+      <label for="intScore">Intelligence:</label>
+      <input type="number" id="intScore" value="10">
+      <span>Modifier: <span id="intMod">0</span></span>
+    </div>
+    <div>
+      <label for="wisScore">Wisdom:</label>
+      <input type="number" id="wisScore" value="10">
+      <span>Modifier: <span id="wisMod">0</span></span>
+    </div>
+    <div>
+      <label for="chaScore">Charisma:</label>
+      <input type="number" id="chaScore" value="10">
+      <span>Modifier: <span id="chaMod">0</span></span>
+        </div>
+        <div id="savingThrows">
+          <h2>Saving Throws</h2>
+          <div>
+            <label for="fortBase">Fortitude Base:</label>
+            <input type="number" id="fortBase" value="0">
+            <span>Total: <span id="fortTotal">0</span></span>
+          </div>
+          <div>
+            <label for="fortMagicMod">Fortitude Magic Mod:</label>
+            <input type="number" id="fortMagicMod" value="0">
+          </div>
+          <div>
+            <label for="fortMiscMod">Fortitude Misc Mod:</label>
+            <input type="number" id="fortMiscMod" value="0">
+          </div>
+          <div>
+            <label for="refBase">Reflex Base:</label>
+            <input type="number" id="refBase" value="0">
+            <span>Total: <span id="refTotal">0</span></span>
+          </div>
+          <div>
+            <label for="refMagicMod">Reflex Magic Mod:</label>
+            <input type="number" id="refMagicMod" value="0">
+          </div>
+          <div>
+            <label for="refMiscMod">Reflex Misc Mod:</label>
+            <input type="number" id="refMiscMod" value="0">
+          </div>
+          <div>
+            <label for="willBase">Will Base:</label>
+            <input type="number" id="willBase" value="0">
+            <span>Total: <span id="willTotal">0</span></span>
+          </div>
+          <div>
+            <label for="willMagicMod">Will Magic Mod:</label>
+            <input type="number" id="willMagicMod" value="0">
+          </div>
+          <div>
+            <label for="willMiscMod">Will Misc Mod:</label>
+            <input type="number" id="willMiscMod" value="0">
+          </div>
+        </div>
+        <div id="combatStats">
+          <h2>Combat Stats</h2>
+          <div>
+            <label for="hpBase">Base HP:</label>
+            <input type="number" id="hpBase" value="10">
+            <span>Total HP: <span id="hpTotal">10</span></span>
+          </div>
+          <div>
+            <label for="armorBonus">Armor Bonus:</label>
+            <input type="number" id="armorBonus" value="0">
+          </div>
+          <div>
+            <label for="shieldBonus">Shield Bonus:</label>
+            <input type="number" id="shieldBonus" value="0">
+          </div>
+          <div>
+            <label for="sizeModAc">Size Modifier (AC):</label>
+            <input type="number" id="sizeModAc" value="0">
+          </div>
+          <div>
+            <label for="naturalArmor">Natural Armor:</label>
+            <input type="number" id="naturalArmor" value="0">
+          </div>
+          <div>
+            <label for="deflectionMod">Deflection Modifier:</label>
+            <input type="number" id="deflectionMod" value="0">
+          </div>
+          <div>
+            <label for="miscAcBonus">Misc AC Bonus:</label>
+            <input type="number" id="miscAcBonus" value="0">
+          </div>
+          <div>
+            <span>Total AC: <span id="acTotal">10</span></span>
+          </div>
+          <div>
+            <label for="bab">Base Attack Bonus (BAB):</label>
+            <input type="number" id="bab" value="0">
+          </div>
+          <div>
+            <label for="sizeModAttack">Size Modifier (Attack):</label>
+            <input type="number" id="sizeModAttack" value="0">
+          </div>
+          <div>
+            <span>Melee Attack: <span id="meleeAttack">0</span></span>
+          </div>
+          <div>
+            <span>Ranged Attack: <span id="rangedAttack">0</span></span>
+          </div>
+          <div>
+            <span>CMB Total: <span id="cmbTotal">0</span></span>
+          </div>
+          <div>
+            <span>CMD Total: <span id="cmdTotal">10</span></span>
+          </div>
+          <div>
+            <label for="initiativeMiscMod">Initiative Misc Mod:</label>
+            <input type="number" id="initiativeMiscMod" value="0">
+            <span>Total Initiative: <span id="initiativeTotal">0</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="right-column">
+        <div id="skills">
+          <h2>Skills</h2>
+          <div>
+            <label for="acrobaticsRanks">Acrobatics (Dex):</label>
+      <input type="number" id="acrobaticsRanks" value="0">
+      <span>Total: <span id="acrobaticsTotal">0</span></span>
+    </div>
+    <div>
+      <label for="appraiseRanks">Appraise (Int):</label>
+      <input type="number" id="appraiseRanks" value="0">
+      <span>Total: <span id="appraiseTotal">0</span></span>
+    </div>
+    <div>
+      <label for="bluffRanks">Bluff (Cha):</label>
+      <input type="number" id="bluffRanks" value="0">
+      <span>Total: <span id="bluffTotal">0</span></span>
+    </div>
+    <div>
+      <label for="climbRanks">Climb (Str):</label>
+      <input type="number" id="climbRanks" value="0">
+      <span>Total: <span id="climbTotal">0</span></span>
+    </div>
+    <div>
+      <label for="craftRanks">Craft (Int):</label>
+      <input type="number" id="craftRanks" value="0">
+      <span>Total: <span id="craftTotal">0</span></span>
+    </div>
+    <div>
+      <label for="diplomacyRanks">Diplomacy (Cha):</label>
+      <input type="number" id="diplomacyRanks" value="0">
+      <span>Total: <span id="diplomacyTotal">0</span></span>
+    </div>
+    <div>
+      <label for="disableDeviceRanks">Disable Device (Dex):</label>
+      <input type="number" id="disableDeviceRanks" value="0">
+      <span>Total: <span id="disableDeviceTotal">0</span></span>
+    </div>
+    <div>
+      <label for="disguiseRanks">Disguise (Cha):</label>
+      <input type="number" id="disguiseRanks" value="0">
+      <span>Total: <span id="disguiseTotal">0</span></span>
+    </div>
+    <div>
+      <label for="escapeArtistRanks">Escape Artist (Dex):</label>
+      <input type="number" id="escapeArtistRanks" value="0">
+      <span>Total: <span id="escapeArtistTotal">0</span></span>
+    </div>
+    <div>
+      <label for="flyRanks">Fly (Dex):</label>
+      <input type="number" id="flyRanks" value="0">
+      <span>Total: <span id="flyTotal">0</span></span>
+    </div>
+    <div>
+      <label for="handleAnimalRanks">Handle Animal (Cha):</label>
+      <input type="number" id="handleAnimalRanks" value="0">
+      <span>Total: <span id="handleAnimalTotal">0</span></span>
+    </div>
+    <div>
+      <label for="healRanks">Heal (Wis):</label>
+      <input type="number" id="healRanks" value="0">
+      <span>Total: <span id="healTotal">0</span></span>
+    </div>
+    <div>
+      <label for="intimidateRanks">Intimidate (Cha):</label>
+      <input type="number" id="intimidateRanks" value="0">
+      <span>Total: <span id="intimidateTotal">0</span></span>
+    </div>
+    <div>
+      <label for="knowledgeArcanaRanks">Knowledge (Arcana) (Int):</label>
+      <input type="number" id="knowledgeArcanaRanks" value="0">
+      <span>Total: <span id="knowledgeArcanaTotal">0</span></span>
+    </div>
+    <div>
+      <label for="knowledgeDungeoneeringRanks">Knowledge (Dungeoneering) (Int):</label>
+      <input type="number" id="knowledgeDungeoneeringRanks" value="0">
+      <span>Total: <span id="knowledgeDungeoneeringTotal">0</span></span>
+    </div>
+    <div>
+      <label for="knowledgeEngineeringRanks">Knowledge (Engineering) (Int):</label>
+      <input type="number" id="knowledgeEngineeringRanks" value="0">
+      <span>Total: <span id="knowledgeEngineeringTotal">0</span></span>
+    </div>
+    <div>
+      <label for="knowledgeGeographyRanks">Knowledge (Geography) (Int):</label>
+      <input type="number" id="knowledgeGeographyRanks" value="0">
+      <span>Total: <span id="knowledgeGeographyTotal">0</span></span>
+    </div>
+    <div>
+      <label for="knowledgeHistoryRanks">Knowledge (History) (Int):</label>
+      <input type="number" id="knowledgeHistoryRanks" value="0">
+      <span>Total: <span id="knowledgeHistoryTotal">0</span></span>
+    </div>
+    <div>
+      <label for="knowledgeLocalRanks">Knowledge (Local) (Int):</label>
+      <input type="number" id="knowledgeLocalRanks" value="0">
+      <span>Total: <span id="knowledgeLocalTotal">0</span></span>
+    </div>
+    <div>
+      <label for="knowledgeNatureRanks">Knowledge (Nature) (Int):</label>
+      <input type="number" id="knowledgeNatureRanks" value="0">
+      <span>Total: <span id="knowledgeNatureTotal">0</span></span>
+    </div>
+    <div>
+      <label for="knowledgeNobilityRanks">Knowledge (Nobility) (Int):</label>
+      <input type="number" id="knowledgeNobilityRanks" value="0">
+      <span>Total: <span id="knowledgeNobilityTotal">0</span></span>
+    </div>
+    <div>
+      <label for="knowledgePlanesRanks">Knowledge (Planes) (Int):</label>
+      <input type="number" id="knowledgePlanesRanks" value="0">
+      <span>Total: <span id="knowledgePlanesTotal">0</span></span>
+    </div>
+    <div>
+      <label for="knowledgeReligionRanks">Knowledge (Religion) (Int):</label>
+      <input type="number" id="knowledgeReligionRanks" value="0">
+      <span>Total: <span id="knowledgeReligionTotal">0</span></span>
+    </div>
+    <div>
+      <label for="linguisticsRanks">Linguistics (Int):</label>
+      <input type="number" id="linguisticsRanks" value="0">
+      <span>Total: <span id="linguisticsTotal">0</span></span>
+    </div>
+    <div>
+      <label for="perceptionRanks">Perception (Wis):</label>
+      <input type="number" id="perceptionRanks" value="0">
+      <span>Total: <span id="perceptionTotal">0</span></span>
+    </div>
+    <div>
+      <label for="performRanks">Perform (Cha):</label>
+      <input type="number" id="performRanks" value="0">
+      <span>Total: <span id="performTotal">0</span></span>
+    </div>
+    <div>
+      <label for="professionRanks">Profession (Wis):</label>
+      <input type="number" id="professionRanks" value="0">
+      <span>Total: <span id="professionTotal">0</span></span>
+    </div>
+    <div>
+      <label for="rideRanks">Ride (Dex):</label>
+      <input type="number" id="rideRanks" value="0">
+      <span>Total: <span id="rideTotal">0</span></span>
+    </div>
+    <div>
+      <label for="senseMotiveRanks">Sense Motive (Wis):</label>
+      <input type="number" id="senseMotiveRanks" value="0">
+      <span>Total: <span id="senseMotiveTotal">0</span></span>
+    </div>
+    <div>
+      <label for="sleightOfHandRanks">Sleight of Hand (Dex):</label>
+      <input type="number" id="sleightOfHandRanks" value="0">
+      <span>Total: <span id="sleightOfHandTotal">0</span></span>
+    </div>
+    <div>
+      <label for="spellcraftRanks">Spellcraft (Int):</label>
+      <input type="number" id="spellcraftRanks" value="0">
+      <span>Total: <span id="spellcraftTotal">0</span></span>
+    </div>
+    <div>
+      <label for="stealthRanks">Stealth (Dex):</label>
+      <input type="number" id="stealthRanks" value="0">
+      <span>Total: <span id="stealthTotal">0</span></span>
+    </div>
+    <div>
+      <label for="survivalRanks">Survival (Wis):</label>
+      <input type="number" id="survivalRanks" value="0">
+      <span>Total: <span id="survivalTotal">0</span></span>
+    </div>
+    <div>
+      <label for="swimRanks">Swim (Str):</label>
+      <input type="number" id="swimRanks" value="0">
+      <span>Total: <span id="swimTotal">0</span></span>
+    </div>
+    <div>
+      <label for="useMagicDeviceRanks">Use Magic Device (Cha):</label>
+      <input type="number" id="useMagicDeviceRanks" value="0">
+      <span>Total: <span id="useMagicDeviceTotal">0</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
