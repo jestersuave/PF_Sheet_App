@@ -231,4 +231,144 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log("AC Total (acTotal): " + getIntValue('acTotal'));
   console.log("Fortitude Total (fortTotal): " + getIntValue('fortTotal'));
   console.log("---------------------------------");
+
+  // --- Custom Dice Rolls --- //
+  const addCustomRollBtn = document.getElementById('addCustomRollBtn');
+  const customRollFormContainer = document.getElementById('customRollFormContainer');
+  const customRollsDisplayContainer = document.getElementById('customRollsDisplayContainer');
+  let customRolls = []; // To store custom roll objects
+
+  function createNewRollForm() {
+    if (!customRollFormContainer) {
+        console.error('customRollFormContainer not found');
+        return;
+    }
+
+    const formDiv = document.createElement('div');
+    formDiv.classList.add('custom-roll-form');
+
+    let formHTML = `
+        <div>
+            <label for="rollDescription_temp">Description:</label>
+            <input type="text" class="roll-description-input" name="rollDescription_temp" placeholder="e.g., Longsword Damage">
+        </div>
+        <div><label>Dice (enter quantity):</label></div>
+        <div style="display: flex; flex-wrap: wrap;">`; // Wrapper for dice inputs
+
+    const diceTypes = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'];
+    diceTypes.forEach(die => {
+        formHTML += `
+            <div style="margin-right: 10px; margin-bottom: 5px; display: flex; align-items: center;">
+                <label class="dice-label" for="${die}_count_temp" style="min-width: auto; margin-right: 3px;">${die}:</label>
+                <input type="number" class="dice-input" data-die="${die}" name="${die}_count_temp" value="0" min="0" style="width: 45px;">
+            </div>`;
+    });
+    formHTML += `</div>`; // End dice wrapper
+    formHTML += `<div style="margin-top: 10px;">`;
+    formHTML += `<button class="save-roll-btn">Save Roll</button>`;
+    formHTML += `<button class="cancel-roll-btn" type="button" style="margin-left: 10px; background-color: #f44336; color:white; border:none; padding: 6px 12px; border-radius:3px; cursor:pointer;">Cancel</button>`;
+    formHTML += `</div>`;
+
+    formDiv.innerHTML = formHTML;
+    customRollFormContainer.appendChild(formDiv);
+
+    const saveBtn = formDiv.querySelector('.save-roll-btn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            const descriptionInput = formDiv.querySelector('.roll-description-input');
+            const description = descriptionInput ? descriptionInput.value.trim() : '';
+            
+            const diceCounts = [];
+            formDiv.querySelectorAll('.dice-input').forEach(input => {
+                const count = parseInt(input.value, 10);
+                if (count > 0) {
+                    diceCounts.push({ die: input.dataset.die, count: count });
+                }
+            });
+
+            if (description === '' && diceCounts.length === 0) {
+                alert("Please enter a description or at least one die for the roll.");
+                return;
+            }
+            if (diceCounts.length === 0) {
+                 alert("Please specify at least one die to roll.");
+                 return;
+             }
+
+            const newRoll = {
+                id: Date.now().toString(), // Simple unique ID
+                description: description || "Custom Roll", // Default description if empty
+                dice: diceCounts
+            };
+
+            customRolls.push(newRoll);
+            renderCustomRolls(); // New function to re-render all displayed rolls
+            formDiv.remove(); 
+        });
+    } else {
+        console.error('Save button not found in new roll form.');
+    }
+
+    const cancelBtn = formDiv.querySelector('.cancel-roll-btn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+            formDiv.remove(); 
+        });
+    } else {
+        console.error('Cancel button not found in new roll form.');
+    }
+  }
+
+  function renderCustomRolls() {
+      if (!customRollsDisplayContainer) {
+          console.error('customRollsDisplayContainer not found');
+          return;
+      }
+      customRollsDisplayContainer.innerHTML = ''; // Clear existing displayed rolls
+
+      customRolls.forEach(roll => {
+          const rollDiv = document.createElement('div');
+          rollDiv.classList.add('displayed-roll');
+          rollDiv.dataset.rollId = roll.id;
+
+          const descriptionSpan = document.createElement('span');
+          descriptionSpan.classList.add('roll-description');
+          descriptionSpan.textContent = roll.description;
+
+          const diceSummarySpan = document.createElement('span');
+          diceSummarySpan.classList.add('roll-dice-summary');
+          diceSummarySpan.textContent = roll.dice.map(d => `${d.count}${d.die}`).join(' + ');
+
+          // Future: Add edit/delete buttons here if needed
+          // For now, just display. A delete button is a good next step.
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = 'Delete';
+          deleteBtn.style.marginLeft = '10px';
+          deleteBtn.style.padding = '3px 8px';
+          deleteBtn.style.backgroundColor = '#dc3545'; // Red color for delete
+          deleteBtn.style.color = 'white';
+          deleteBtn.style.border = 'none';
+          deleteBtn.style.borderRadius = '3px';
+          deleteBtn.style.cursor = 'pointer';
+          deleteBtn.addEventListener('click', function() {
+              customRolls = customRolls.filter(r => r.id !== roll.id);
+              renderCustomRolls(); // Re-render after deletion
+          });
+
+
+          rollDiv.appendChild(descriptionSpan);
+          rollDiv.appendChild(diceSummarySpan);
+          rollDiv.appendChild(deleteBtn); // Add delete button
+          customRollsDisplayContainer.appendChild(rollDiv);
+      });
+  }
+
+  if (addCustomRollBtn) {
+    addCustomRollBtn.addEventListener('click', createNewRollForm);
+  } else {
+    console.error('Main "Add Custom Roll" button (addCustomRollBtn) not found.');
+  }
+  renderCustomRolls(); // Initial render (will be empty at first)
+  // --- End Custom Dice Rolls --- //
 });
