@@ -1,0 +1,226 @@
+// Function to calculate ability modifier
+function calculateAbilityModifier(score) {
+  return Math.floor((score - 10) / 2);
+}
+
+// Helper to get integer value from an element, defaulting to 0
+function getIntValue(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    const value = element.value !== undefined ? element.value : element.textContent;
+    const parsed = parseInt(value, 10);
+    return isNaN(parsed) ? 0 : parsed;
+  }
+  console.warn(`Element ${elementId} not found, defaulting to 0.`);
+  return 0;
+}
+
+
+// --- Ability Scores ---
+const abilityScoreConfigs = [
+  { scoreId: 'strScore', modId: 'strMod' },
+  { scoreId: 'dexScore', modId: 'dexMod' },
+  { scoreId: 'conScore', modId: 'conMod' },
+  { scoreId: 'intScore', modId: 'intMod' },
+  { scoreId: 'wisScore', modId: 'wisMod' },
+  { scoreId: 'chaScore', modId: 'chaMod' }
+];
+
+function updateAbilityModifierDisplay(scoreId, modId) {
+  const scoreInput = document.getElementById(scoreId);
+  const modSpan = document.getElementById(modId);
+
+  if (scoreInput && modSpan) {
+    const score = parseInt(scoreInput.value, 10);
+    let modifier = 0;
+    if (!isNaN(score)) {
+      modifier = calculateAbilityModifier(score);
+    }
+    modSpan.textContent = modifier;
+  } else {
+    console.error(`Elements not found for ability score: ${scoreId} or ${modId}`);
+  }
+}
+
+// --- Skills ---
+const skillConfigs = [
+  { ranksId: 'acrobaticsRanks', abilityModId: 'dexMod', totalId: 'acrobaticsTotal' },
+  { ranksId: 'appraiseRanks', abilityModId: 'intMod', totalId: 'appraiseTotal' },
+  { ranksId: 'bluffRanks', abilityModId: 'chaMod', totalId: 'bluffTotal' },
+  { ranksId: 'climbRanks', abilityModId: 'strMod', totalId: 'climbTotal' },
+  { ranksId: 'craftRanks', abilityModId: 'intMod', totalId: 'craftTotal' },
+  { ranksId: 'diplomacyRanks', abilityModId: 'chaMod', totalId: 'diplomacyTotal' },
+  { ranksId: 'disableDeviceRanks', abilityModId: 'dexMod', totalId: 'disableDeviceTotal' },
+  { ranksId: 'disguiseRanks', abilityModId: 'chaMod', totalId: 'disguiseTotal' },
+  { ranksId: 'escapeArtistRanks', abilityModId: 'dexMod', totalId: 'escapeArtistTotal' },
+  { ranksId: 'flyRanks', abilityModId: 'dexMod', totalId: 'flyTotal' },
+  { ranksId: 'handleAnimalRanks', abilityModId: 'chaMod', totalId: 'handleAnimalTotal' },
+  { ranksId: 'healRanks', abilityModId: 'wisMod', totalId: 'healTotal' },
+  { ranksId: 'intimidateRanks', abilityModId: 'chaMod', totalId: 'intimidateTotal' },
+  { ranksId: 'knowledgeArcanaRanks', abilityModId: 'intMod', totalId: 'knowledgeArcanaTotal' },
+  { ranksId: 'knowledgeDungeoneeringRanks', abilityModId: 'intMod', totalId: 'knowledgeDungeoneeringTotal' },
+  { ranksId: 'knowledgeEngineeringRanks', abilityModId: 'intMod', totalId: 'knowledgeEngineeringTotal' },
+  { ranksId: 'knowledgeGeographyRanks', abilityModId: 'intMod', totalId: 'knowledgeGeographyTotal' },
+  { ranksId: 'knowledgeHistoryRanks', abilityModId: 'intMod', totalId: 'knowledgeHistoryTotal' },
+  { ranksId: 'knowledgeLocalRanks', abilityModId: 'intMod', totalId: 'knowledgeLocalTotal' },
+  { ranksId: 'knowledgeNatureRanks', abilityModId: 'intMod', totalId: 'knowledgeNatureTotal' },
+  { ranksId: 'knowledgeNobilityRanks', abilityModId: 'intMod', totalId: 'knowledgeNobilityTotal' },
+  { ranksId: 'knowledgePlanesRanks', abilityModId: 'intMod', totalId: 'knowledgePlanesTotal' },
+  { ranksId: 'knowledgeReligionRanks', abilityModId: 'intMod', totalId: 'knowledgeReligionTotal' },
+  { ranksId: 'linguisticsRanks', abilityModId: 'intMod', totalId: 'linguisticsTotal' },
+  { ranksId: 'perceptionRanks', abilityModId: 'wisMod', totalId: 'perceptionTotal' },
+  { ranksId: 'performRanks', abilityModId: 'chaMod', totalId: 'performTotal' },
+  { ranksId: 'professionRanks', abilityModId: 'wisMod', totalId: 'professionTotal' },
+  { ranksId: 'rideRanks', abilityModId: 'dexMod', totalId: 'rideTotal' },
+  { ranksId: 'senseMotiveRanks', abilityModId: 'wisMod', totalId: 'senseMotiveTotal' },
+  { ranksId: 'sleightOfHandRanks', abilityModId: 'dexMod', totalId: 'sleightOfHandTotal' },
+  { ranksId: 'spellcraftRanks', abilityModId: 'intMod', totalId: 'spellcraftTotal' },
+  { ranksId: 'stealthRanks', abilityModId: 'dexMod', totalId: 'stealthTotal' },
+  { ranksId: 'survivalRanks', abilityModId: 'wisMod', totalId: 'survivalTotal' },
+  { ranksId: 'swimRanks', abilityModId: 'strMod', totalId: 'swimTotal' },
+  { ranksId: 'useMagicDeviceRanks', abilityModId: 'chaMod', totalId: 'useMagicDeviceTotal' }
+];
+
+function updateSkillTotal(skillRanksId, abilityModifierId, skillTotalId) {
+  const ranks = getIntValue(skillRanksId);
+  const abilityModifier = getIntValue(abilityModifierId);
+  const totalSpan = document.getElementById(skillTotalId);
+
+  if (totalSpan) {
+    totalSpan.textContent = ranks + abilityModifier;
+  } else {
+    console.error(`Skill total span not found: ${skillTotalId}`);
+  }
+}
+
+function updateDependentSkills(abilityModId) {
+  skillConfigs.forEach(skill => {
+    if (skill.abilityModId === abilityModId) {
+      updateSkillTotal(skill.ranksId, skill.abilityModId, skill.totalId);
+    }
+  });
+}
+
+// --- Combat Stats ---
+function updateCombatStats() {
+  const strMod = getIntValue('strMod');
+  const dexMod = getIntValue('dexMod');
+  const conMod = getIntValue('conMod');
+
+  const hpBase = getIntValue('hpBase');
+  const armorBonus = getIntValue('armorBonus');
+  const shieldBonus = getIntValue('shieldBonus');
+  const sizeModAc = getIntValue('sizeModAc');
+  const naturalArmor = getIntValue('naturalArmor');
+  const deflectionMod = getIntValue('deflectionMod');
+  const miscAcBonus = getIntValue('miscAcBonus');
+  const bab = getIntValue('bab');
+  const sizeModAttack = getIntValue('sizeModAttack');
+  const initiativeMiscMod = getIntValue('initiativeMiscMod');
+
+  document.getElementById('hpTotal').textContent = hpBase + conMod;
+  document.getElementById('acTotal').textContent = 10 + dexMod + armorBonus + shieldBonus + sizeModAc + naturalArmor + deflectionMod + miscAcBonus;
+  document.getElementById('meleeAttack').textContent = bab + strMod + sizeModAttack;
+  document.getElementById('rangedAttack').textContent = bab + dexMod + sizeModAttack;
+  document.getElementById('cmbTotal').textContent = bab + strMod + sizeModAttack;
+  document.getElementById('cmdTotal').textContent = 10 + bab + strMod + dexMod + sizeModAttack;
+  document.getElementById('initiativeTotal').textContent = dexMod + initiativeMiscMod;
+}
+
+// --- Saving Throws ---
+function updateSavingThrows() {
+  const conMod = getIntValue('conMod');
+  const dexMod = getIntValue('dexMod');
+  const wisMod = getIntValue('wisMod');
+
+  const fortBase = getIntValue('fortBase');
+  const fortMagicMod = getIntValue('fortMagicMod');
+  const fortMiscMod = getIntValue('fortMiscMod');
+  document.getElementById('fortTotal').textContent = fortBase + conMod + fortMagicMod + fortMiscMod;
+
+  const refBase = getIntValue('refBase');
+  const refMagicMod = getIntValue('refMagicMod');
+  const refMiscMod = getIntValue('refMiscMod');
+  document.getElementById('refTotal').textContent = refBase + dexMod + refMagicMod + refMiscMod;
+
+  const willBase = getIntValue('willBase');
+  const willMagicMod = getIntValue('willMagicMod');
+  const willMiscMod = getIntValue('willMiscMod');
+  document.getElementById('willTotal').textContent = willBase + wisMod + willMagicMod + willMiscMod;
+}
+
+
+// --- Event Listeners & Initial Calculation ---
+document.addEventListener('DOMContentLoaded', () => {
+  // Initial calculation for ability scores
+  abilityScoreConfigs.forEach(ability => {
+    updateAbilityModifierDisplay(ability.scoreId, ability.modId);
+    updateDependentSkills(ability.modId);
+  });
+
+  // Add event listeners to ability score inputs
+  abilityScoreConfigs.forEach(ability => {
+    const scoreInput = document.getElementById(ability.scoreId);
+    if (scoreInput) {
+      scoreInput.addEventListener('input', () => {
+        updateAbilityModifierDisplay(ability.scoreId, ability.modId);
+        updateDependentSkills(ability.modId);
+        updateCombatStats(); 
+        updateSavingThrows();
+      });
+    }
+  });
+
+  // Initial calculation for all skills and add event listeners
+  skillConfigs.forEach((skill, index) => {
+    updateSkillTotal(skill.ranksId, skill.abilityModId, skill.totalId);
+    const ranksInput = document.getElementById(skill.ranksId);
+    if (ranksInput) {
+      ranksInput.addEventListener('input', () => {
+        updateSkillTotal(skill.ranksId, skill.abilityModId, skill.totalId);
+      });
+    }
+    // Log first skill calculation for basic feedback
+    if (index === 0) {
+        console.log("Initial skill test (Acrobatics): Ranks=" + getIntValue('acrobaticsRanks') + ", Mod=" + getIntValue('dexMod') + ", Total=" + getIntValue('acrobaticsTotal'));
+    }
+  });
+  
+  // Combat stats input fields
+  const combatInputIds = [
+    'hpBase', 'armorBonus', 'shieldBonus', 'sizeModAc', 'naturalArmor', 
+    'deflectionMod', 'miscAcBonus', 'bab', 'sizeModAttack', 'initiativeMiscMod'
+  ];
+  combatInputIds.forEach(inputId => {
+    const inputElement = document.getElementById(inputId);
+    if (inputElement) {
+      inputElement.addEventListener('input', updateCombatStats);
+    }
+  });
+
+  // Saving throw input fields
+  const savingThrowInputIds = [
+    'fortBase', 'fortMagicMod', 'fortMiscMod',
+    'refBase', 'refMagicMod', 'refMiscMod',
+    'willBase', 'willMagicMod', 'willMiscMod'
+  ];
+  savingThrowInputIds.forEach(inputId => {
+    const inputElement = document.getElementById(inputId);
+    if (inputElement) {
+      inputElement.addEventListener('input', updateSavingThrows);
+    }
+  });
+
+  // Initial calculations
+  updateCombatStats();
+  updateSavingThrows(); 
+  
+  // --- Basic Assertions for calculateAbilityModifier ---
+  console.assert(calculateAbilityModifier(10) === 0, "Test Failed: Modifier for 10 should be 0");
+  console.assert(calculateAbilityModifier(12) === 1, "Test Failed: Modifier for 12 should be 1");
+  console.assert(calculateAbilityModifier(7) === -2, "Test Failed: Modifier for 7 should be -2");
+  console.assert(calculateAbilityModifier(20) === 5, "Test Failed: Modifier for 20 should be 5");
+  console.assert(calculateAbilityModifier(1) === -5, "Test Failed: Modifier for 1 should be -5");
+  console.log("calculateAbilityModifier tests completed.");
+
+});
