@@ -223,4 +223,12 @@ document.addEventListener('DOMContentLoaded', () => {
   console.assert(calculateAbilityModifier(1) === -5, "Test Failed: Modifier for 1 should be -5");
   console.log("calculateAbilityModifier tests completed.");
 
+  // Log initial calculated values for key fields
+  console.log("--- Initial Calculated Values ---");
+  console.log("Strength Modifier (strMod): " + getIntValue('strMod'));
+  console.log("Acrobatics Total (acrobaticsTotal): " + getIntValue('acrobaticsTotal'));
+  console.log("HP Total (hpTotal): " + getIntValue('hpTotal'));
+  console.log("AC Total (acTotal): " + getIntValue('acTotal'));
+  console.log("Fortitude Total (fortTotal): " + getIntValue('fortTotal'));
+  console.log("---------------------------------");
 });
