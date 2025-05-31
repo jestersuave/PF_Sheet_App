@@ -284,3 +284,189 @@ span { /* General spans, often used for "Modifier:" or "Total:" text */
   font-family: monospace; /* Good for dice strings like 2d6+1d4 */
   font-size: 0.95em;
 }
+
+/* Bonuses Section */
+#bonusesSection {
+  border: 1px solid #aaa;
+  padding: 10px;
+  border-radius: 3px; /* Subtle rounding */
+  margin-top: 15px; /* Space from the previous section */
+}
+
+#addBonusBtn {
+  font-size: 1.2em; /* Make '+' clearly visible */
+  padding: 5px 10px;
+  margin-bottom: 10px; /* Space before the form container */
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+#addBonusBtn:hover {
+  background-color: #e0e0e0;
+}
+
+#bonusFormContainer .bonus-form { /* Class for individual bonus forms */
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  border-radius: 3px;
+}
+
+.bonus-form div { /* For layout of label/input pairs within the bonus form */
+  margin-bottom: 8px;
+  /* display: flex; Consider flex for more complex alignment if needed */
+  /* align-items: center; */
+}
+
+.bonus-form label {
+  min-width: 120px; /* Adjust as needed */
+  margin-right: 5px;
+  display: block; /* Make labels take their own line for now */
+  margin-bottom: 3px; /* Space between label and its control */
+}
+
+.bonus-form select,
+.bonus-form textarea,
+.bonus-form input[type="text"] { /* Assuming a text input might be used, though not in current plan */
+  width: 100%; /* Make them take full width of their container */
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.bonus-form input#bonusValue_temp {
+  width: 70px;
+  padding: 5px; /* Match other inputs */
+  /* margin-left: 5px; /* Only if label is inline and needs space */
+}
+
+.bonus-form .checkbox-group label {
+    min-width: unset; /* Override default for checkbox labels */
+    display: inline-block; /* Keep checkbox and label on same line */
+    margin-right: 10px;
+    font-weight: normal;
+}
+.bonus-form .checkbox-group input[type="checkbox"] {
+    width: auto; /* Checkboxes should not be full width */
+    margin-right: 5px;
+}
+
+
+.bonus-form textarea {
+  min-height: 60px; /* Decent starting height for description */
+  resize: vertical; /* Allow vertical resizing */
+}
+
+.bonus-form button { /* Save/Cancel buttons for the bonus form */
+  padding: 6px 12px;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 5px;
+  margin-right: 5px; /* Space between buttons */
+}
+
+.bonus-form button.save-bonus-btn {
+  background-color: #4CAF50; /* Green for save */
+}
+.bonus-form button.save-bonus-btn:hover {
+  background-color: #45a049;
+}
+
+.bonus-form button.cancel-bonus-btn {
+  background-color: #f44336; /* Red for cancel */
+}
+.bonus-form button.cancel-bonus-btn:hover {
+  background-color: #da190b;
+}
+
+#bonusesDisplayContainer .displayed-bonus { /* Class for individual displayed bonuses */
+  border: 1px solid #ddd;
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: #fff;
+  border-radius: 3px;
+}
+
+.displayed-bonus .bonus-summary {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.displayed-bonus .bonus-applies-to {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.displayed-bonus .bonus-description {
+  font-size: 0.9em;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.displayed-bonus button.delete-bonus-btn {
+  padding: 3px 8px;
+  background-color: #dc3545; /* Red color for delete */
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.85em;
+  float: right; /* Position delete button to the right */
+}
+.displayed-bonus button.delete-bonus-btn:hover {
+  background-color: #c82333;
+}
+
+/* Clearfix for displayed-bonus if using float */
+#bonusesDisplayContainer .displayed-bonus::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Skill Section Enhancements for Class Skills */
+
+.class-skill-text-display {
+  font-size: 0.8em; /* Smaller font */
+  color: #006400; /* Dark green color */
+  margin-left: 8px; /* Space after the total */
+  font-style: italic;
+  vertical-align: middle; /* Align with other text on the line */
+}
+
+.class-skill-checkbox-label {
+  font-size: 0.9em;
+  margin-left: 8px; /* Space before "CS" label (after main skill name label) */
+  margin-right: 0; /* No space needed if checkbox is immediately after */
+  cursor: pointer;
+  vertical-align: middle;
+  min-width: auto; /* Override general label min-width */
+  /* display: inline-flex; align-items: center; /* Optional for precise vertical centering with text */
+}
+
+.class-skill-checkbox {
+  margin-left: 3px; /* Space after "CS" label and before checkbox */
+  margin-right: 5px; /* Space after checkbox before rank input or "Total:" span */
+  vertical-align: middle; /* Align checkbox with text */
+  cursor: pointer;
+  flex-shrink: 0; /* Prevent checkbox from shrinking if skill name is long */
+}
+
+input.skill-rank-input {
+  width: 40px; /* Make skill rank inputs a bit smaller */
+  /* padding, border, margin-right are inherited from input[type="number"] */
+  flex-shrink: 0; /* Prevent rank input from shrinking */
+}
+
+/* #skills > div is already display: flex; align-items: center; */
+/* The main skill label (#skills label) already has flex-shrink: 0; */
+/* The total span (e.g. <span>Total: <span id="acrobaticsTotal">0</span></span>) might need flex-shrink: 0 if things get too crowded */
+#skills > div > span { /* Targeting the "Total: ..." span container */
+    flex-shrink: 0; /* Prevent "Total: X" from shrinking */
+}
