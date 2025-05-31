@@ -105,41 +105,41 @@ function updateAbilityModifierDisplay(scoreId, modId) {
 
 // --- Skills ---
 const skillConfigs = [
-  { ranksId: 'acrobaticsRanks', abilityModId: 'dexMod', totalId: 'acrobaticsTotal' },
-  { ranksId: 'appraiseRanks', abilityModId: 'intMod', totalId: 'appraiseTotal' },
-  { ranksId: 'bluffRanks', abilityModId: 'chaMod', totalId: 'bluffTotal' },
-  { ranksId: 'climbRanks', abilityModId: 'strMod', totalId: 'climbTotal' },
-  { ranksId: 'craftRanks', abilityModId: 'intMod', totalId: 'craftTotal' },
-  { ranksId: 'diplomacyRanks', abilityModId: 'chaMod', totalId: 'diplomacyTotal' },
-  { ranksId: 'disableDeviceRanks', abilityModId: 'dexMod', totalId: 'disableDeviceTotal' },
-  { ranksId: 'disguiseRanks', abilityModId: 'chaMod', totalId: 'disguiseTotal' },
-  { ranksId: 'escapeArtistRanks', abilityModId: 'dexMod', totalId: 'escapeArtistTotal' },
-  { ranksId: 'flyRanks', abilityModId: 'dexMod', totalId: 'flyTotal' },
-  { ranksId: 'handleAnimalRanks', abilityModId: 'chaMod', totalId: 'handleAnimalTotal' },
-  { ranksId: 'healRanks', abilityModId: 'wisMod', totalId: 'healTotal' },
-  { ranksId: 'intimidateRanks', abilityModId: 'chaMod', totalId: 'intimidateTotal' },
-  { ranksId: 'knowledgeArcanaRanks', abilityModId: 'intMod', totalId: 'knowledgeArcanaTotal' },
-  { ranksId: 'knowledgeDungeoneeringRanks', abilityModId: 'intMod', totalId: 'knowledgeDungeoneeringTotal' },
-  { ranksId: 'knowledgeEngineeringRanks', abilityModId: 'intMod', totalId: 'knowledgeEngineeringTotal' },
-  { ranksId: 'knowledgeGeographyRanks', abilityModId: 'intMod', totalId: 'knowledgeGeographyTotal' },
-  { ranksId: 'knowledgeHistoryRanks', abilityModId: 'intMod', totalId: 'knowledgeHistoryTotal' },
-  { ranksId: 'knowledgeLocalRanks', abilityModId: 'intMod', totalId: 'knowledgeLocalTotal' },
-  { ranksId: 'knowledgeNatureRanks', abilityModId: 'intMod', totalId: 'knowledgeNatureTotal' },
-  { ranksId: 'knowledgeNobilityRanks', abilityModId: 'intMod', totalId: 'knowledgeNobilityTotal' },
-  { ranksId: 'knowledgePlanesRanks', abilityModId: 'intMod', totalId: 'knowledgePlanesTotal' },
-  { ranksId: 'knowledgeReligionRanks', abilityModId: 'intMod', totalId: 'knowledgeReligionTotal' },
-  { ranksId: 'linguisticsRanks', abilityModId: 'intMod', totalId: 'linguisticsTotal' },
-  { ranksId: 'perceptionRanks', abilityModId: 'wisMod', totalId: 'perceptionTotal' },
-  { ranksId: 'performRanks', abilityModId: 'chaMod', totalId: 'performTotal' },
-  { ranksId: 'professionRanks', abilityModId: 'wisMod', totalId: 'professionTotal' },
-  { ranksId: 'rideRanks', abilityModId: 'dexMod', totalId: 'rideTotal' },
-  { ranksId: 'senseMotiveRanks', abilityModId: 'wisMod', totalId: 'senseMotiveTotal' },
-  { ranksId: 'sleightOfHandRanks', abilityModId: 'dexMod', totalId: 'sleightOfHandTotal' },
-  { ranksId: 'spellcraftRanks', abilityModId: 'intMod', totalId: 'spellcraftTotal' },
-  { ranksId: 'stealthRanks', abilityModId: 'dexMod', totalId: 'stealthTotal' },
-  { ranksId: 'survivalRanks', abilityModId: 'wisMod', totalId: 'survivalTotal' },
-  { ranksId: 'swimRanks', abilityModId: 'strMod', totalId: 'swimTotal' },
-  { ranksId: 'useMagicDeviceRanks', abilityModId: 'chaMod', totalId: 'useMagicDeviceTotal' }
+  { ranksId: 'acrobaticsRanks', abilityModId: 'dexMod', totalId: 'acrobaticsTotal', classSkillCheckboxId: 'acrobaticsClassSkillChk', classSkillTextId: 'acrobaticsClassSkillText' },
+  { ranksId: 'appraiseRanks', abilityModId: 'intMod', totalId: 'appraiseTotal', classSkillCheckboxId: 'appraiseClassSkillChk', classSkillTextId: 'appraiseClassSkillText' },
+  { ranksId: 'bluffRanks', abilityModId: 'chaMod', totalId: 'bluffTotal', classSkillCheckboxId: 'bluffClassSkillChk', classSkillTextId: 'bluffClassSkillText' },
+  { ranksId: 'climbRanks', abilityModId: 'strMod', totalId: 'climbTotal', classSkillCheckboxId: 'climbClassSkillChk', classSkillTextId: 'climbClassSkillText' },
+  { ranksId: 'craftRanks', abilityModId: 'intMod', totalId: 'craftTotal', classSkillCheckboxId: 'craftClassSkillChk', classSkillTextId: 'craftClassSkillText' },
+  { ranksId: 'diplomacyRanks', abilityModId: 'chaMod', totalId: 'diplomacyTotal', classSkillCheckboxId: 'diplomacyClassSkillChk', classSkillTextId: 'diplomacyClassSkillText' },
+  { ranksId: 'disableDeviceRanks', abilityModId: 'dexMod', totalId: 'disableDeviceTotal', classSkillCheckboxId: 'disableDeviceClassSkillChk', classSkillTextId: 'disableDeviceClassSkillText' },
+  { ranksId: 'disguiseRanks', abilityModId: 'chaMod', totalId: 'disguiseTotal', classSkillCheckboxId: 'disguiseClassSkillChk', classSkillTextId: 'disguiseClassSkillText' },
+  { ranksId: 'escapeArtistRanks', abilityModId: 'dexMod', totalId: 'escapeArtistTotal', classSkillCheckboxId: 'escapeArtistClassSkillChk', classSkillTextId: 'escapeArtistClassSkillText' },
+  { ranksId: 'flyRanks', abilityModId: 'dexMod', totalId: 'flyTotal', classSkillCheckboxId: 'flyClassSkillChk', classSkillTextId: 'flyClassSkillText' },
+  { ranksId: 'handleAnimalRanks', abilityModId: 'chaMod', totalId: 'handleAnimalTotal', classSkillCheckboxId: 'handleAnimalClassSkillChk', classSkillTextId: 'handleAnimalClassSkillText' },
+  { ranksId: 'healRanks', abilityModId: 'wisMod', totalId: 'healTotal', classSkillCheckboxId: 'healClassSkillChk', classSkillTextId: 'healClassSkillText' },
+  { ranksId: 'intimidateRanks', abilityModId: 'chaMod', totalId: 'intimidateTotal', classSkillCheckboxId: 'intimidateClassSkillChk', classSkillTextId: 'intimidateClassSkillText' },
+  { ranksId: 'knowledgeArcanaRanks', abilityModId: 'intMod', totalId: 'knowledgeArcanaTotal', classSkillCheckboxId: 'knowledgeArcanaClassSkillChk', classSkillTextId: 'knowledgeArcanaClassSkillText' },
+  { ranksId: 'knowledgeDungeoneeringRanks', abilityModId: 'intMod', totalId: 'knowledgeDungeoneeringTotal', classSkillCheckboxId: 'knowledgeDungeoneeringClassSkillChk', classSkillTextId: 'knowledgeDungeoneeringClassSkillText' },
+  { ranksId: 'knowledgeEngineeringRanks', abilityModId: 'intMod', totalId: 'knowledgeEngineeringTotal', classSkillCheckboxId: 'knowledgeEngineeringClassSkillChk', classSkillTextId: 'knowledgeEngineeringClassSkillText' },
+  { ranksId: 'knowledgeGeographyRanks', abilityModId: 'intMod', totalId: 'knowledgeGeographyTotal', classSkillCheckboxId: 'knowledgeGeographyClassSkillChk', classSkillTextId: 'knowledgeGeographyClassSkillText' },
+  { ranksId: 'knowledgeHistoryRanks', abilityModId: 'intMod', totalId: 'knowledgeHistoryTotal', classSkillCheckboxId: 'knowledgeHistoryClassSkillChk', classSkillTextId: 'knowledgeHistoryClassSkillText' },
+  { ranksId: 'knowledgeLocalRanks', abilityModId: 'intMod', totalId: 'knowledgeLocalTotal', classSkillCheckboxId: 'knowledgeLocalClassSkillChk', classSkillTextId: 'knowledgeLocalClassSkillText' },
+  { ranksId: 'knowledgeNatureRanks', abilityModId: 'intMod', totalId: 'knowledgeNatureTotal', classSkillCheckboxId: 'knowledgeNatureClassSkillChk', classSkillTextId: 'knowledgeNatureClassSkillText' },
+  { ranksId: 'knowledgeNobilityRanks', abilityModId: 'intMod', totalId: 'knowledgeNobilityTotal', classSkillCheckboxId: 'knowledgeNobilityClassSkillChk', classSkillTextId: 'knowledgeNobilityClassSkillText' },
+  { ranksId: 'knowledgePlanesRanks', abilityModId: 'intMod', totalId: 'knowledgePlanesTotal', classSkillCheckboxId: 'knowledgePlanesClassSkillChk', classSkillTextId: 'knowledgePlanesClassSkillText' },
+  { ranksId: 'knowledgeReligionRanks', abilityModId: 'intMod', totalId: 'knowledgeReligionTotal', classSkillCheckboxId: 'knowledgeReligionClassSkillChk', classSkillTextId: 'knowledgeReligionClassSkillText' },
+  { ranksId: 'linguisticsRanks', abilityModId: 'intMod', totalId: 'linguisticsTotal', classSkillCheckboxId: 'linguisticsClassSkillChk', classSkillTextId: 'linguisticsClassSkillText' },
+  { ranksId: 'perceptionRanks', abilityModId: 'wisMod', totalId: 'perceptionTotal', classSkillCheckboxId: 'perceptionClassSkillChk', classSkillTextId: 'perceptionClassSkillText' },
+  { ranksId: 'performRanks', abilityModId: 'chaMod', totalId: 'performTotal', classSkillCheckboxId: 'performClassSkillChk', classSkillTextId: 'performClassSkillText' },
+  { ranksId: 'professionRanks', abilityModId: 'wisMod', totalId: 'professionTotal', classSkillCheckboxId: 'professionClassSkillChk', classSkillTextId: 'professionClassSkillText' },
+  { ranksId: 'rideRanks', abilityModId: 'dexMod', totalId: 'rideTotal', classSkillCheckboxId: 'rideClassSkillChk', classSkillTextId: 'rideClassSkillText' },
+  { ranksId: 'senseMotiveRanks', abilityModId: 'wisMod', totalId: 'senseMotiveTotal', classSkillCheckboxId: 'senseMotiveClassSkillChk', classSkillTextId: 'senseMotiveClassSkillText' },
+  { ranksId: 'sleightOfHandRanks', abilityModId: 'dexMod', totalId: 'sleightOfHandTotal', classSkillCheckboxId: 'sleightOfHandClassSkillChk', classSkillTextId: 'sleightOfHandClassSkillText' },
+  { ranksId: 'spellcraftRanks', abilityModId: 'intMod', totalId: 'spellcraftTotal', classSkillCheckboxId: 'spellcraftClassSkillChk', classSkillTextId: 'spellcraftClassSkillText' },
+  { ranksId: 'stealthRanks', abilityModId: 'dexMod', totalId: 'stealthTotal', classSkillCheckboxId: 'stealthClassSkillChk', classSkillTextId: 'stealthClassSkillText' },
+  { ranksId: 'survivalRanks', abilityModId: 'wisMod', totalId: 'survivalTotal', classSkillCheckboxId: 'survivalClassSkillChk', classSkillTextId: 'survivalClassSkillText' },
+  { ranksId: 'swimRanks', abilityModId: 'strMod', totalId: 'swimTotal', classSkillCheckboxId: 'swimClassSkillChk', classSkillTextId: 'swimClassSkillText' },
+  { ranksId: 'useMagicDeviceRanks', abilityModId: 'chaMod', totalId: 'useMagicDeviceTotal', classSkillCheckboxId: 'useMagicDeviceClassSkillChk', classSkillTextId: 'useMagicDeviceClassSkillText' }
 ];
 
 // --- Definitions that depend on skillConfigs ---
@@ -205,7 +205,58 @@ function getBonusesForTarget(targetKey) {
 }
 
 function updateSkillTotal(skillRanksId, abilityModifierId, skillTotalId) {
+  const skillConfig = skillConfigs.find(sc => sc.totalId === skillTotalId || sc.ranksId === skillRanksId);
+
+  if (!skillConfig || !skillConfig.classSkillCheckboxId || !skillConfig.classSkillTextId) {
+    console.error(`Skill configuration, classSkillCheckboxId, or classSkillTextId not found for skill with totalId: ${skillTotalId} or ranksId: ${skillRanksId}. Check skillConfigs.`);
+    // Fallback calculation in case skillConfig or its new properties are unexpectedly missing
+    const originalRanks = getIntValue(skillRanksId);
+    // The abilityModifierId is the ID of the modifier span, e.g., 'dexMod'.
+    // So getIntValue(abilityModifierId) correctly fetches the modifier value.
+    const originalAbilityMod = getIntValue(abilityModifierId);
+    const originalItemBonuses = typeof getBonusesForTarget === 'function' ? getBonusesForTarget(skillTotalId) : 0;
+    const originalTotalSpan = document.getElementById(skillTotalId);
+    if (originalTotalSpan) {
+      originalTotalSpan.textContent = originalRanks + originalAbilityMod + originalItemBonuses;
+    }
+    return; // Exit if essential config for class skill feature is missing
+  }
+
   const ranks = getIntValue(skillRanksId);
+// feature/bonuses-section
+  // The abilityModifierId is the ID of the modifier span, e.g., 'dexMod'.
+  // So getIntValue(abilityModifierId) correctly fetches the modifier value.
+  const abilityModifier = getIntValue(abilityModifierId);
+
+  const classSkillCheckbox = document.getElementById(skillConfig.classSkillCheckboxId);
+  const classSkillTextSpan = document.getElementById(skillConfig.classSkillTextId);
+  const totalSpan = document.getElementById(skillTotalId);
+
+  let classSkillBonus = 0;
+  // Calculate class skill bonus
+  if (classSkillCheckbox && classSkillCheckbox.checked && ranks >= 1) {
+    classSkillBonus = 3;
+  }
+
+  // Update "Class Skill" text display
+  if (classSkillTextSpan) {
+    if (classSkillCheckbox && classSkillCheckbox.checked) {
+      classSkillTextSpan.textContent = "Class Skill";
+    } else {
+      classSkillTextSpan.textContent = ""; // Clear text if not a class skill or box unchecked
+    }
+  } else {
+    // This is not critical enough to halt, but good to know if it's missing.
+    console.warn(`Class skill text span not found for ID: ${skillConfig.classSkillTextId}`);
+  }
+
+  // Get bonuses from the "Bonuses" section (using skillTotalId as targetKey)
+  const itemBonuses = typeof getBonusesForTarget === 'function' ? getBonusesForTarget(skillTotalId) : 0;
+
+  // Update total display
+  if (totalSpan) {
+    totalSpan.textContent = ranks + abilityModifier + itemBonuses + classSkillBonus;
+=======
   const abilityModifier = getIntValue(abilityModifierId); // This is the modifier value from the span
   const totalSpan = document.getElementById(skillTotalId);
 
@@ -214,8 +265,10 @@ function updateSkillTotal(skillRanksId, abilityModifierId, skillTotalId) {
 
   if (totalSpan) {
     totalSpan.textContent = ranks + abilityModifier + skillBonus;
+// main
   } else {
-    console.error(`Skill total span not found: ${skillTotalId}`);
+    // This error should ideally not happen if skillConfig was found.
+    console.error(`Skill total span (ID: ${skillTotalId}) not found.`);
   }
 }
 
@@ -572,6 +625,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderBonuses();
   updateAllCharacterSheetCalculations(); // Initial full calculation
+// feature/bonuses-section
+
+  // Add event listeners to class skill checkboxes
+  console.log('[DEBUG] Setting up event listeners for class skill checkboxes.');
+  skillConfigs.forEach(skillConfig => {
+    if (skillConfig.classSkillCheckboxId) { // Ensure the property exists
+      const classSkillCheckbox = document.getElementById(skillConfig.classSkillCheckboxId);
+      if (classSkillCheckbox) {
+        classSkillCheckbox.addEventListener('change', () => {
+          console.log(`[DEBUG] Class skill checkbox changed for: ${skillConfig.ranksId}`);
+          // Call the master calculation function to update the specific skill and ensure sheet consistency
+          updateAllCharacterSheetCalculations();
+        });
+      } else {
+        console.warn(`Class skill checkbox not found for ID: ${skillConfig.classSkillCheckboxId}`);
+      }
+    } else {
+      // This might occur if skillConfigs was not updated correctly, though previous steps indicate it was.
+      console.warn(`classSkillCheckboxId missing in skillConfig for ranksId: ${skillConfig.ranksId}`);
+    }
+  });
+  console.log('[DEBUG] Finished setting up event listeners for class skill checkboxes.');
+  // Note: The final call to updateAllCharacterSheetCalculations() is already present above this block.
+=======
+// main
   // --- End Bonuses --- //
 });
 

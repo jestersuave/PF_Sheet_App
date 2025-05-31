@@ -172,178 +172,283 @@
           <h2>Skills</h2>
           <div>
             <label for="acrobaticsRanks">Acrobatics (Dex):</label>
-            <input type="number" id="acrobaticsRanks" value="0">
+            <input type="checkbox" id="acrobaticsClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="acrobaticsClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="acrobaticsRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="acrobaticsTotal">0</span></span>
+            <span id="acrobaticsClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="appraiseRanks">Appraise (Int):</label>
-            <input type="number" id="appraiseRanks" value="0">
+            <input type="checkbox" id="appraiseClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="appraiseClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="appraiseRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="appraiseTotal">0</span></span>
+            <span id="appraiseClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="bluffRanks">Bluff (Cha):</label>
-            <input type="number" id="bluffRanks" value="0">
+            <input type="checkbox" id="bluffClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="bluffClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="bluffRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="bluffTotal">0</span></span>
+            <span id="bluffClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="climbRanks">Climb (Str):</label>
-            <input type="number" id="climbRanks" value="0">
+            <input type="checkbox" id="climbClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="climbClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="climbRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="climbTotal">0</span></span>
+            <span id="climbClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="craftRanks">Craft (Int):</label>
-            <input type="number" id="craftRanks" value="0">
+            <input type="checkbox" id="craftClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="craftClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="craftRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="craftTotal">0</span></span>
+            <span id="craftClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="diplomacyRanks">Diplomacy (Cha):</label>
-            <input type="number" id="diplomacyRanks" value="0">
+            <input type="checkbox" id="diplomacyClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="diplomacyClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="diplomacyRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="diplomacyTotal">0</span></span>
+            <span id="diplomacyClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="disableDeviceRanks">Disable Device (Dex):</label>
-            <input type="number" id="disableDeviceRanks" value="0">
+            <input type="checkbox" id="disableDeviceClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="disableDeviceClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="disableDeviceRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="disableDeviceTotal">0</span></span>
+            <span id="disableDeviceClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="disguiseRanks">Disguise (Cha):</label>
-            <input type="number" id="disguiseRanks" value="0">
+            <input type="checkbox" id="disguiseClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="disguiseClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="disguiseRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="disguiseTotal">0</span></span>
+            <span id="disguiseClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="escapeArtistRanks">Escape Artist (Dex):</label>
-            <input type="number" id="escapeArtistRanks" value="0">
+            <input type="checkbox" id="escapeArtistClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="escapeArtistClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="escapeArtistRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="escapeArtistTotal">0</span></span>
+            <span id="escapeArtistClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="flyRanks">Fly (Dex):</label>
-            <input type="number" id="flyRanks" value="0">
+            <input type="checkbox" id="flyClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="flyClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="flyRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="flyTotal">0</span></span>
+            <span id="flyClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="handleAnimalRanks">Handle Animal (Cha):</label>
-            <input type="number" id="handleAnimalRanks" value="0">
+            <input type="checkbox" id="handleAnimalClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="handleAnimalClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="handleAnimalRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="handleAnimalTotal">0</span></span>
+            <span id="handleAnimalClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="healRanks">Heal (Wis):</label>
-            <input type="number" id="healRanks" value="0">
+            <input type="checkbox" id="healClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="healClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="healRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="healTotal">0</span></span>
+            <span id="healClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="intimidateRanks">Intimidate (Cha):</label>
-            <input type="number" id="intimidateRanks" value="0">
+            <input type="checkbox" id="intimidateClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="intimidateClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="intimidateRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="intimidateTotal">0</span></span>
+            <span id="intimidateClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="knowledgeArcanaRanks">Knowledge (Arcana) (Int):</label>
-            <input type="number" id="knowledgeArcanaRanks" value="0">
+            <input type="checkbox" id="knowledgeArcanaClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="knowledgeArcanaClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="knowledgeArcanaRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="knowledgeArcanaTotal">0</span></span>
+            <span id="knowledgeArcanaClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="knowledgeDungeoneeringRanks">Knowledge (Dungeoneering) (Int):</label>
-            <input type="number" id="knowledgeDungeoneeringRanks" value="0">
+            <input type="checkbox" id="knowledgeDungeoneeringClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="knowledgeDungeoneeringClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="knowledgeDungeoneeringRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="knowledgeDungeoneeringTotal">0</span></span>
+            <span id="knowledgeDungeoneeringClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="knowledgeEngineeringRanks">Knowledge (Engineering) (Int):</label>
-            <input type="number" id="knowledgeEngineeringRanks" value="0">
+            <input type="checkbox" id="knowledgeEngineeringClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="knowledgeEngineeringClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="knowledgeEngineeringRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="knowledgeEngineeringTotal">0</span></span>
+            <span id="knowledgeEngineeringClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="knowledgeGeographyRanks">Knowledge (Geography) (Int):</label>
-            <input type="number" id="knowledgeGeographyRanks" value="0">
+            <input type="checkbox" id="knowledgeGeographyClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="knowledgeGeographyClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="knowledgeGeographyRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="knowledgeGeographyTotal">0</span></span>
+            <span id="knowledgeGeographyClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="knowledgeHistoryRanks">Knowledge (History) (Int):</label>
-            <input type="number" id="knowledgeHistoryRanks" value="0">
+            <input type="checkbox" id="knowledgeHistoryClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="knowledgeHistoryClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="knowledgeHistoryRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="knowledgeHistoryTotal">0</span></span>
+            <span id="knowledgeHistoryClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="knowledgeLocalRanks">Knowledge (Local) (Int):</label>
-            <input type="number" id="knowledgeLocalRanks" value="0">
+            <input type="checkbox" id="knowledgeLocalClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="knowledgeLocalClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="knowledgeLocalRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="knowledgeLocalTotal">0</span></span>
+            <span id="knowledgeLocalClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="knowledgeNatureRanks">Knowledge (Nature) (Int):</label>
-            <input type="number" id="knowledgeNatureRanks" value="0">
+            <input type="checkbox" id="knowledgeNatureClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="knowledgeNatureClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="knowledgeNatureRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="knowledgeNatureTotal">0</span></span>
+            <span id="knowledgeNatureClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="knowledgeNobilityRanks">Knowledge (Nobility) (Int):</label>
-            <input type="number" id="knowledgeNobilityRanks" value="0">
+            <input type="checkbox" id="knowledgeNobilityClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="knowledgeNobilityClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="knowledgeNobilityRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="knowledgeNobilityTotal">0</span></span>
+            <span id="knowledgeNobilityClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="knowledgePlanesRanks">Knowledge (Planes) (Int):</label>
-            <input type="number" id="knowledgePlanesRanks" value="0">
+            <input type="checkbox" id="knowledgePlanesClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="knowledgePlanesClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="knowledgePlanesRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="knowledgePlanesTotal">0</span></span>
+            <span id="knowledgePlanesClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="knowledgeReligionRanks">Knowledge (Religion) (Int):</label>
-            <input type="number" id="knowledgeReligionRanks" value="0">
+            <input type="checkbox" id="knowledgeReligionClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="knowledgeReligionClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="knowledgeReligionRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="knowledgeReligionTotal">0</span></span>
+            <span id="knowledgeReligionClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="linguisticsRanks">Linguistics (Int):</label>
-            <input type="number" id="linguisticsRanks" value="0">
+            <input type="checkbox" id="linguisticsClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="linguisticsClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="linguisticsRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="linguisticsTotal">0</span></span>
+            <span id="linguisticsClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="perceptionRanks">Perception (Wis):</label>
-            <input type="number" id="perceptionRanks" value="0">
+            <input type="checkbox" id="perceptionClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="perceptionClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="perceptionRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="perceptionTotal">0</span></span>
+            <span id="perceptionClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="performRanks">Perform (Cha):</label>
-            <input type="number" id="performRanks" value="0">
+            <input type="checkbox" id="performClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="performClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="performRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="performTotal">0</span></span>
+            <span id="performClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="professionRanks">Profession (Wis):</label>
-            <input type="number" id="professionRanks" value="0">
+            <input type="checkbox" id="professionClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="professionClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="professionRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="professionTotal">0</span></span>
+            <span id="professionClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="rideRanks">Ride (Dex):</label>
-            <input type="number" id="rideRanks" value="0">
+            <input type="checkbox" id="rideClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="rideClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="rideRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="rideTotal">0</span></span>
+            <span id="rideClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="senseMotiveRanks">Sense Motive (Wis):</label>
-            <input type="number" id="senseMotiveRanks" value="0">
+            <input type="checkbox" id="senseMotiveClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="senseMotiveClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="senseMotiveRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="senseMotiveTotal">0</span></span>
+            <span id="senseMotiveClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="sleightOfHandRanks">Sleight of Hand (Dex):</label>
-            <input type="number" id="sleightOfHandRanks" value="0">
+            <input type="checkbox" id="sleightOfHandClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="sleightOfHandClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="sleightOfHandRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="sleightOfHandTotal">0</span></span>
+            <span id="sleightOfHandClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="spellcraftRanks">Spellcraft (Int):</label>
-            <input type="number" id="spellcraftRanks" value="0">
+            <input type="checkbox" id="spellcraftClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="spellcraftClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="spellcraftRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="spellcraftTotal">0</span></span>
+            <span id="spellcraftClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="stealthRanks">Stealth (Dex):</label>
-            <input type="number" id="stealthRanks" value="0">
+            <input type="checkbox" id="stealthClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="stealthClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="stealthRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="stealthTotal">0</span></span>
+            <span id="stealthClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="survivalRanks">Survival (Wis):</label>
-            <input type="number" id="survivalRanks" value="0">
+            <input type="checkbox" id="survivalClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="survivalClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="survivalRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="survivalTotal">0</span></span>
+            <span id="survivalClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="swimRanks">Swim (Str):</label>
-            <input type="number" id="swimRanks" value="0">
+            <input type="checkbox" id="swimClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="swimClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="swimRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="swimTotal">0</span></span>
+            <span id="swimClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
             <label for="useMagicDeviceRanks">Use Magic Device (Cha):</label>
-            <input type="number" id="useMagicDeviceRanks" value="0">
+            <input type="checkbox" id="useMagicDeviceClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
+            <label for="useMagicDeviceClassSkillChk" class="class-skill-checkbox-label">CS</label>
+            <input type="number" id="useMagicDeviceRanks" value="0" class="skill-rank-input">
             <span>Total: <span id="useMagicDeviceTotal">0</span></span>
+            <span id="useMagicDeviceClassSkillText" class="class-skill-text-display"></span>
           </div>
         </div> <!-- End skills -->
 

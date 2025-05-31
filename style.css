@@ -429,3 +429,47 @@ span { /* General spans, often used for "Modifier:" or "Total:" text */
   clear: both;
   display: table;
 }
+/* feature/bonuses-section */
+
+/* Skill Section Enhancements for Class Skills */
+
+.class-skill-text-display {
+  font-size: 0.8em; /* Smaller font */
+  color: #006400; /* Dark green color */
+  margin-left: 8px; /* Space after the total */
+  font-style: italic;
+  vertical-align: middle; /* Align with other text on the line */
+}
+
+.class-skill-checkbox-label {
+  font-size: 0.9em;
+  margin-left: 8px; /* Space before "CS" label (after main skill name label) */
+  margin-right: 0; /* No space needed if checkbox is immediately after */
+  cursor: pointer;
+  vertical-align: middle;
+  min-width: auto; /* Override general label min-width */
+  /* display: inline-flex; align-items: center; /* Optional for precise vertical centering with text */
+}
+
+.class-skill-checkbox {
+  margin-left: 3px; /* Space after "CS" label and before checkbox */
+  margin-right: 5px; /* Space after checkbox before rank input or "Total:" span */
+  vertical-align: middle; /* Align checkbox with text */
+  cursor: pointer;
+  flex-shrink: 0; /* Prevent checkbox from shrinking if skill name is long */
+}
+
+input.skill-rank-input {
+  width: 40px; /* Make skill rank inputs a bit smaller */
+  /* padding, border, margin-right are inherited from input[type="number"] */
+  flex-shrink: 0; /* Prevent rank input from shrinking */
+}
+
+/* #skills > div is already display: flex; align-items: center; */
+/* The main skill label (#skills label) already has flex-shrink: 0; */
+/* The total span (e.g. <span>Total: <span id="acrobaticsTotal">0</span></span>) might need flex-shrink: 0 if things get too crowded */
+#skills > div > span { /* Targeting the "Total: ..." span container */
+    flex-shrink: 0; /* Prevent "Total: X" from shrinking */
+}
+=======
+/* main */
