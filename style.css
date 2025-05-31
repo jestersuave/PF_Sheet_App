@@ -105,13 +105,22 @@ h2 {
 
 /* Styling for individual items within sections (label, input, span) */
 #abilityScores > div,
-#skills > div,
+/* #skills > div, */ /* Will be styled separately for compactness */
 #combatStats > div,
 #savingThrows > div {
   display: flex;
   align-items: center;
   margin-bottom: 6px; /* Space between rows */
   padding: 4px;
+  border-bottom: 1px solid #eee; /* Light separator for rows */
+}
+
+#skills > div {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap; /* Ensure skills items stay on one line */
+  margin-bottom: 4px; /* Reduced space between skill rows */
+  padding: 2px 0; /* Reduced padding, only top/bottom */
   border-bottom: 1px solid #eee; /* Light separator for rows */
 }
 
@@ -160,8 +169,11 @@ span { /* General spans, often used for "Modifier:" or "Total:" text */
 #abilityScores input[type="number"] { width: 50px; }
 
 /* Skills */
-#skills label { min-width: 200px; } /* Skills often have longer names */
-#skills input[type="number"] { width: 50px; }
+#skills label {
+  min-width: 170px; /* Skills often have longer names - Compacted */
+  margin-right: 4px; /* Reduced space after main skill label */
+}
+#skills input[type="number"] { width: 50px; } /* This is general, skill-rank-input is more specific */
 
 /* Combat Stats */
 #combatStats label { min-width: 150px; }
@@ -443,7 +455,7 @@ span { /* General spans, often used for "Modifier:" or "Total:" text */
 
 .class-skill-checkbox-label {
   font-size: 0.9em;
-  margin-left: 8px; /* Space before "CS" label (after main skill name label) */
+  margin-left: 4px; /* Space before "CS" label (after main skill name label) - Compacted */
   margin-right: 0; /* No space needed if checkbox is immediately after */
   cursor: pointer;
   vertical-align: middle;
@@ -453,7 +465,7 @@ span { /* General spans, often used for "Modifier:" or "Total:" text */
 
 .class-skill-checkbox {
   margin-left: 3px; /* Space after "CS" label and before checkbox */
-  margin-right: 5px; /* Space after checkbox before rank input or "Total:" span */
+  margin-right: 3px; /* Space after checkbox before rank input or "Total:" span - Compacted */
   vertical-align: middle; /* Align checkbox with text */
   cursor: pointer;
   flex-shrink: 0; /* Prevent checkbox from shrinking if skill name is long */
@@ -461,15 +473,182 @@ span { /* General spans, often used for "Modifier:" or "Total:" text */
 
 input.skill-rank-input {
   width: 40px; /* Make skill rank inputs a bit smaller */
-  /* padding, border, margin-right are inherited from input[type="number"] */
+  /* padding, border are inherited from input[type="number"] */
+  margin-right: 4px; /* Compacted space after rank input */
   flex-shrink: 0; /* Prevent rank input from shrinking */
 }
 
-/* #skills > div is already display: flex; align-items: center; */
+/* #skills > div is already display: flex; align-items: center; flex-wrap: nowrap; */
 /* The main skill label (#skills label) already has flex-shrink: 0; */
 /* The total span (e.g. <span>Total: <span id="acrobaticsTotal">0</span></span>) might need flex-shrink: 0 if things get too crowded */
 #skills > div > span { /* Targeting the "Total: ..." span container */
     flex-shrink: 0; /* Prevent "Total: X" from shrinking */
+    margin-left: auto; /* Push total to the right, utilizing flex space */
 }
-=======
-/* main */
+
+/* --- Dark Mode Styles --- */
+body.dark-mode {
+  background-color: #000033; /* Dark navy blue */
+  color: #e0e0e0; /* Light grey for text */
+}
+
+body.dark-mode #sheet-container {
+  background-color: #0a0a3a; /* Slightly lighter navy/dark grey */
+  border-color: #444;
+  box-shadow: 3px 3px 8px rgba(0,0,0,0.5); /* Darker shadow */
+}
+
+body.dark-mode h2 {
+  color: #c0c0ff; /* Light blue/purple for headings */
+  border-bottom-color: #555;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode input[type="number"],
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #1a1a4a; /* Darker input background */
+  color: #e0e0e0; /* Light text for inputs */
+  border-color: #555; /* Darker border for inputs */
+}
+
+/* Ensure placeholder text in dark mode is visible */
+body.dark-mode input[type="text"]::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #aaa;
+}
+
+
+body.dark-mode button,
+body.dark-mode #addCustomRollBtn, /* Specific ID for an add button */
+body.dark-mode #addBonusBtn {      /* Specific ID for an add button */
+  background-color: #2a2a5a;
+  color: #e0e0e0;
+  border-color: #555;
+}
+body.dark-mode button:hover,
+body.dark-mode #addCustomRollBtn:hover,
+body.dark-mode #addBonusBtn:hover {
+  background-color: #3a3a6a; /* Slightly lighter on hover */
+}
+
+/* Specific button styling for dark mode */
+body.dark-mode .custom-roll-form button.save-roll-btn,
+body.dark-mode .bonus-form button.save-bonus-btn {
+  background-color: #005000; /* Darker green */
+  color: #e0e0e0;
+}
+body.dark-mode .custom-roll-form button.save-roll-btn:hover,
+body.dark-mode .bonus-form button.save-bonus-btn:hover {
+  background-color: #007000; /* Lighter green on hover */
+}
+
+body.dark-mode .custom-roll-form button.cancel-roll-btn,
+body.dark-mode .bonus-form button.cancel-bonus-btn,
+body.dark-mode .displayed-bonus button.delete-bonus-btn,
+body.dark-mode #customRollsDisplayContainer .displayed-roll button { /* General delete for custom rolls */
+  background-color: #800000; /* Darker red */
+  color: #e0e0e0;
+}
+body.dark-mode .custom-roll-form button.cancel-roll-btn:hover,
+body.dark-mode .bonus-form button.cancel-bonus-btn:hover,
+body.dark-mode .displayed-bonus button.delete-bonus-btn:hover,
+body.dark-mode #customRollsDisplayContainer .displayed-roll button:hover {
+  background-color: #a00000; /* Lighter red on hover */
+}
+
+
+body.dark-mode #abilityScores,
+body.dark-mode #skills,
+body.dark-mode #combatStats,
+body.dark-mode #savingThrows,
+body.dark-mode #customRollsSection,
+body.dark-mode #bonusesSection {
+  border-color: #444;
+  background-color: #101040; /* Dark background for sections */
+}
+
+body.dark-mode #customRollFormContainer .custom-roll-form,
+body.dark-mode #bonusFormContainer .bonus-form {
+  background-color: #181848; /* Slightly lighter for forms within sections */
+  border-color: #444;
+}
+
+/* Row separators in dark mode */
+body.dark-mode #abilityScores > div,
+body.dark-mode #skills > div,
+body.dark-mode #combatStats > div,
+body.dark-mode #savingThrows > div {
+  border-bottom-color: #333; /* Darker separator */
+}
+/* Remove border for last child still applies */
+body.dark-mode #abilityScores > div:last-child,
+body.dark-mode #skills > div:last-child,
+body.dark-mode #combatStats > div:last-child,
+body.dark-mode #savingThrows > div:last-child {
+  border-bottom: none;
+}
+
+
+body.dark-mode [id$="Mod"],
+body.dark-mode [id$="Total"] {
+  color: #87cefa; /* Light sky blue for calculated values */
+  background-color: #202050; /* Dark blue/purple background for these values */
+  border-radius: 2px; /* Keep border radius consistent */
+}
+
+body.dark-mode #customRollsDisplayContainer .displayed-roll,
+body.dark-mode #bonusesDisplayContainer .displayed-bonus {
+  background-color: #181848; /* Background for displayed items */
+  border-color: #444; /* Border for displayed items */
+}
+
+body.dark-mode label {
+  color: #d0d0d0; /* Lighter color for labels */
+}
+body.dark-mode #charInfo label { /* charInfo labels are bold */
+  color: #e0e0e0;
+}
+body.dark-mode .class-skill-checkbox-label {
+  color: #c0c0c0; /* Specific adjustment if needed for CS label */
+}
+
+body.dark-mode .class-skill-text-display {
+  color: #7fdd7f; /* Light green for "Class Skill" text */
+}
+
+/* Adjustments for specific spans if needed */
+body.dark-mode span { /* General spans */
+  /* color: #e0e0e0; */ /* Already covered by body.dark-mode */
+}
+
+body.dark-mode #combatStats > div > span:not([id$="Total"]) { /* "Total AC:", "Melee Attack:" etc. */
+    font-weight: bold; /* Keep bold */
+    /* color: #c0c0ff; */ /* Inherits or use a specific light color */
+}
+
+body.dark-mode .displayed-bonus .bonus-applies-to {
+  color: #aaa; /* Lighter italic text */
+}
+
+body.dark-mode .displayed-bonus .bonus-description {
+  color: #ccc; /* Lighter description text */
+}
+
+/* Theme toggle button itself in dark mode - optional if general button styles are enough */
+body.dark-mode #themeToggleBtn {
+  background-color: #000033; /* Darker, like body */
+  color: #c0c0ff; /* Contrasting text */
+  border: 1px solid #c0c0ff; /* Contrasting border */
+}
+body.dark-mode #themeToggleBtn:hover {
+  background-color: #1a1a4a;
+}
+
+/* Link color in dark mode if any links exist or are added */
+body.dark-mode a {
+  color: #9dbdff;
+}
+body.dark-mode a:hover {
+  color: #b8ceff;
+}
