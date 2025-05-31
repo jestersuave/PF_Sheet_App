@@ -337,6 +337,12 @@ span { /* General spans, often used for "Modifier:" or "Total:" text */
   border-radius: 3px;
 }
 
+.bonus-form input#bonusValue_temp {
+  width: 70px;
+  padding: 5px; /* Match other inputs */
+  /* margin-left: 5px; /* Only if label is inline and needs space */
+}
+
 .bonus-form .checkbox-group label {
     min-width: unset; /* Override default for checkbox labels */
     display: inline-block; /* Keep checkbox and label on same line */
