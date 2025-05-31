@@ -1,3 +1,19 @@
+// --- Global Bonus Data ---
+const bonusTypes = [
+  "Alchemical", "Armour", "Circumstance", "Competence", "Deflection",
+  "Dodge", "Enhancement", "Inherent", "Insight", "Luck", "Morale",
+  "Natural Armour", "Profane", "Racial", "Sacred", "Shield", "Size", "Trait"
+];
+
+const bonusApplicationTargets = [
+  "AC", "Fortitude Save", "Reflex Save", "Will Save",
+  "Attack Rolls", "Damage Rolls", "Strength Score", "Dexterity Score",
+  "Constitution Score", "Intelligence Score", "Wisdom Score", "Charisma Score",
+  "Specific Skill" // User might need to specify which skill later
+];
+
+let characterBonuses = [];
+
 // Function to calculate ability modifier
 function calculateAbilityModifier(score) {
   return Math.floor((score - 10) / 2);
@@ -371,4 +387,172 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   renderCustomRolls(); // Initial render (will be empty at first)
   // --- End Custom Dice Rolls --- //
+
+  // --- Bonuses --- //
+  const addBonusBtn = document.getElementById('addBonusBtn');
+  const bonusFormContainer = document.getElementById('bonusFormContainer');
+  const bonusesDisplayContainer = document.getElementById('bonusesDisplayContainer');
+
+  if (addBonusBtn) {
+    addBonusBtn.addEventListener('click', createNewBonusForm);
+  } else {
+    console.error('Add Bonus button (addBonusBtn) not found.');
+  }
+
+  if (bonusesDisplayContainer) {
+    bonusesDisplayContainer.addEventListener('click', function(event) {
+      if (event.target.classList.contains('delete-bonus-btn')) {
+        const bonusDiv = event.target.closest('.displayed-bonus');
+        if (bonusDiv && bonusDiv.dataset.bonusId) {
+          const bonusIdToDelete = bonusDiv.dataset.bonusId;
+          characterBonuses = characterBonuses.filter(bonus => bonus.id !== bonusIdToDelete);
+          renderBonuses(); // Re-render the list
+        }
+      }
+    });
+  } else {
+    console.error('Bonuses display container (bonusesDisplayContainer) not found for delete listener.');
+  }
+
+  renderBonuses(); // Initial render for bonuses
+  // --- End Bonuses --- //
 });
+
+function createNewBonusForm() {
+  // Ensure bonusFormContainer is available (it's fetched in DOMContentLoaded)
+  const bonusFormContainerRef = document.getElementById('bonusFormContainer');
+  if (!bonusFormContainerRef) {
+    console.error('bonusFormContainer not found from within createNewBonusForm');
+    return;
+  }
+  // Prevent multiple forms
+  if (bonusFormContainerRef.querySelector('.bonus-form')) {
+    alert('A bonus form is already open. Please complete or cancel it first.');
+    return;
+  }
+
+  const formDiv = document.createElement('div');
+  formDiv.classList.add('bonus-form');
+
+  let formHTML = `
+    <div>
+      <label for="bonusTypeSelect_temp">Bonus Type:</label>
+      <select id="bonusTypeSelect_temp" name="bonusTypeSelect_temp">
+        <option value="">-- Select Type --</option>
+        ${bonusTypes.map(type => `<option value="${type}">${type}</option>`).join('')}
+      </select>
+    </div>
+    <div><label>Applies To (select at least one):</label></div>
+    <div class="checkbox-group">`;
+
+  bonusApplicationTargets.forEach(target => {
+    // Create a unique ID for each checkbox for the label's 'for' attribute
+    const checkboxId = `bonusTarget_${target.replace(/\s+/g, '')}_temp`;
+    formHTML += `
+      <div style="margin-bottom: 3px;"> <!-- Wrapper for each checkbox + label -->
+          <input type="checkbox" id="${checkboxId}" name="bonusTarget_temp" value="${target}">
+          <label for="${checkboxId}">${target}</label>
+      </div>`;
+  });
+
+  formHTML += `
+    </div>
+    <div>
+      <label for="bonusDescription_temp">Description/Notes:</label>
+      <textarea id="bonusDescription_temp" name="bonusDescription_temp" placeholder="e.g., +2 insight bonus to Perception checks for spotting traps"></textarea>
+    </div>
+    <div style="margin-top: 10px;">
+      <button class="save-bonus-btn">Save Bonus</button>
+      <button type="button" class="cancel-bonus-btn">Cancel</button>
+    </div>`;
+
+  formDiv.innerHTML = formHTML;
+  bonusFormContainerRef.appendChild(formDiv); // Use the ref fetched inside this function
+
+  // Event Listeners for the new form's buttons
+  const saveBtn = formDiv.querySelector('.save-bonus-btn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', function() {
+      const selectedType = formDiv.querySelector('#bonusTypeSelect_temp').value;
+      const descriptionText = formDiv.querySelector('#bonusDescription_temp').value;
+
+      const selectedTargets = [];
+      formDiv.querySelectorAll('input[name="bonusTarget_temp"]:checked').forEach(checkbox => {
+        selectedTargets.push(checkbox.value);
+      });
+
+      // Validation
+      if (!selectedType) {
+        alert("Please select a bonus type.");
+        return;
+      }
+      if (selectedTargets.length === 0) {
+        alert("Please select at least one target for the bonus.");
+        return;
+      }
+
+      const newBonus = {
+        id: Date.now().toString(),
+        type: selectedType,
+        appliesTo: selectedTargets,
+        description: descriptionText.trim()
+      };
+
+      characterBonuses.push(newBonus);
+      renderBonuses();
+      formDiv.remove();
+    });
+  } else {
+    console.error('Save Bonus button not found in new bonus form.');
+  }
+
+  const cancelBtn = formDiv.querySelector('.cancel-bonus-btn');
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', function() {
+      formDiv.remove();
+    });
+  } else {
+    console.error('Cancel Bonus button not found in new bonus form.');
+  }
+}
+
+function renderBonuses() {
+  const displayContainer = document.getElementById('bonusesDisplayContainer');
+  if (!displayContainer) {
+    console.error('bonusesDisplayContainer not found for rendering');
+    return;
+  }
+  displayContainer.innerHTML = ''; // Clear existing bonuses
+
+  characterBonuses.forEach(bonus => {
+    const bonusDiv = document.createElement('div');
+    bonusDiv.classList.add('displayed-bonus');
+    bonusDiv.dataset.bonusId = bonus.id;
+
+    const summaryP = document.createElement('p');
+    summaryP.classList.add('bonus-summary');
+    summaryP.textContent = `Type: ${bonus.type}`;
+
+    const appliesToP = document.createElement('p');
+    appliesToP.classList.add('bonus-applies-to');
+    appliesToP.textContent = `Applies to: ${bonus.appliesTo.join(', ')}`;
+
+    const descriptionP = document.createElement('p');
+    descriptionP.classList.add('bonus-description');
+    descriptionP.textContent = bonus.description || '(No description)'; // Handle empty description
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.classList.add('delete-bonus-btn');
+    deleteBtn.textContent = 'Delete';
+    // No need to add event listener here, it's handled by delegation
+
+    bonusDiv.appendChild(deleteBtn); // Add delete button first to float right
+    bonusDiv.appendChild(summaryP);
+    bonusDiv.appendChild(appliesToP);
+    if (bonus.description) { // Only add description if it exists
+        bonusDiv.appendChild(descriptionP);
+    }
+
+    displayContainer.appendChild(bonusDiv);
+  });
+}
