@@ -429,6 +429,7 @@ span { /* General spans, often used for "Modifier:" or "Total:" text */
   clear: both;
   display: table;
 }
+/* feature/bonuses-section */
 
 /* Skill Section Enhancements for Class Skills */
 
@@ -470,3 +471,5 @@ input.skill-rank-input {
 #skills > div > span { /* Targeting the "Total: ..." span container */
     flex-shrink: 0; /* Prevent "Total: X" from shrinking */
 }
+=======
+/* main */

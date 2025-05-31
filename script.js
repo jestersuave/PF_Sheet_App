@@ -223,6 +223,7 @@ function updateSkillTotal(skillRanksId, abilityModifierId, skillTotalId) {
   }
 
   const ranks = getIntValue(skillRanksId);
+// feature/bonuses-section
   // The abilityModifierId is the ID of the modifier span, e.g., 'dexMod'.
   // So getIntValue(abilityModifierId) correctly fetches the modifier value.
   const abilityModifier = getIntValue(abilityModifierId);
@@ -255,6 +256,16 @@ function updateSkillTotal(skillRanksId, abilityModifierId, skillTotalId) {
   // Update total display
   if (totalSpan) {
     totalSpan.textContent = ranks + abilityModifier + itemBonuses + classSkillBonus;
+=======
+  const abilityModifier = getIntValue(abilityModifierId); // This is the modifier value from the span
+  const totalSpan = document.getElementById(skillTotalId);
+
+  // Get bonuses for this specific skill (skillTotalId is the targetKey)
+  const skillBonus = getBonusesForTarget(skillTotalId);
+
+  if (totalSpan) {
+    totalSpan.textContent = ranks + abilityModifier + skillBonus;
+// main
   } else {
     // This error should ideally not happen if skillConfig was found.
     console.error(`Skill total span (ID: ${skillTotalId}) not found.`);
@@ -614,6 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderBonuses();
   updateAllCharacterSheetCalculations(); // Initial full calculation
+// feature/bonuses-section
 
   // Add event listeners to class skill checkboxes
   console.log('[DEBUG] Setting up event listeners for class skill checkboxes.');
@@ -636,6 +648,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   console.log('[DEBUG] Finished setting up event listeners for class skill checkboxes.');
   // Note: The final call to updateAllCharacterSheetCalculations() is already present above this block.
+=======
+// main
   // --- End Bonuses --- //
 });
 
