@@ -5,15 +5,9 @@ const bonusTypes = [
   "Natural Armour", "Profane", "Racial", "Sacred", "Shield", "Size", "Trait"
 ];
 
-// The old bonusApplicationTargets is removed / replaced by the one generated below.
-// let characterBonuses = []; // This will be moved after the new definitions.
+let characterBonuses = [];
 
 // --- Ability Scores ---
-// Ensure skillConfigs is defined before this section.
-// It is defined later in the provided script.js, so this will be a structural change.
-// For this operation, we will assume skillConfigs is available globally when this runs.
-// The actual definition of skillConfigs will be kept where it is, but its content is needed here.
-
 const coreBonusMappings = {
   "AC": { targetKey: "acTotal" },
   "Fortitude Save": { targetKey: "fortTotal" },
@@ -30,21 +24,7 @@ const coreBonusMappings = {
   "Charisma Score": { targetKey: "chaScore" }
 };
 
-// skillConfigs will be used here but is defined later in the file.
-// This is a known structural dependency. The provided code assumes skillConfigs exists.
-// In a real refactor, skillConfigs would be moved before this or passed/accessed differently.
-// For now, we proceed with the assumption it's accessible.
 const skillBonusMappings = {};
-// skillConfigs needs to be accessible here.
-// We will populate this dynamically AFTER skillConfigs is defined.
-// This means the generation of bonusTargetMappings and bonusApplicationTargets
-// will also need to be done after skillConfigs is defined.
-
-// Placeholder for skillConfigs-dependent mappings
-// const bonusTargetMappings = { ...coreBonusMappings, ...skillBonusMappings };
-// const bonusApplicationTargets = Object.keys(bonusTargetMappings);
-
-let characterBonuses = [];
 
 // Function to calculate ability modifier
 function calculateAbilityModifier(score) {
@@ -62,20 +42,6 @@ function getIntValue(elementId) {
   console.warn(`Element ${elementId} not found, defaulting to 0.`);
   return 0;
 }
-
-
-// --- Global Bonus Data Setup (Postponed part due to skillConfigs dependency) ---
-// This section will be moved down to be after skillConfigs is defined.
-// For now, we'll define a temporary bonusApplicationTargets for the form to work.
-// This is a workaround for the current subtask, real solution is reordering.
-
-const TEMPORARY_bonusApplicationTargets_UNTIL_REORDER = [
-  "AC", "Fortitude Save", "Reflex Save", "Will Save",
-  "Attack Rolls", "Damage Rolls", "Initiative", "Strength Score", "Dexterity Score",
-  "Constitution Score", "Intelligence Score", "Wisdom Score", "Charisma Score",
-  // Skills will be missing here until full reordering
-];
-
 
 // --- Ability Scores ---
 const abilityScoreConfigs = [
@@ -143,14 +109,10 @@ const skillConfigs = [
 ];
 
 // --- Definitions that depend on skillConfigs ---
-// Now that skillConfigs is defined, we can fully define the bonus mappings.
-
 skillConfigs.forEach(skill => {
   const skillNamePart = skill.ranksId.replace('Ranks', '');
-  // Correctly create a user-friendly name, e.g., "Knowledge (Arcana)" from "knowledgeArcana"
-  let userFriendlyName = skillNamePart.replace(/([A-Z])/g, ' $1').trim(); // Add space before capitals
+  let userFriendlyName = skillNamePart.replace(/([A-Z])/g, ' $1').trim();
   userFriendlyName = userFriendlyName.charAt(0).toUpperCase() + userFriendlyName.slice(1) + " Skill";
-  // Handle "Knowledge" skills specifically if they need different formatting
   if (userFriendlyName.startsWith("Knowledge ")) {
       const specificKnowledge = userFriendlyName.substring("Knowledge ".length).replace(" Skill", "");
       userFriendlyName = `Knowledge (${specificKnowledge}) Skill`;
@@ -164,14 +126,11 @@ const bonusApplicationTargets = Object.keys(bonusTargetMappings);
 
 function getBonusesForTarget(targetKey) {
   let totalBonus = 0;
-  const applicableBonusesByType = {}; // To handle stacking for named bonuses
+  const applicableBonusesByType = {};
 
   for (const bonus of characterBonuses) {
-    // Check if this bonus applies to the targetKey
     let applies = false;
     for (const appliesToName of bonus.appliesTo) {
-      // 'appliesToName' is the user-friendly name from the checkbox, e.g., "Fortitude Save"
-      // We need to look up its mapping in bonusTargetMappings
       if (bonusTargetMappings[appliesToName] && bonusTargetMappings[appliesToName].targetKey === targetKey) {
         applies = true;
         break;
@@ -182,22 +141,16 @@ function getBonusesForTarget(targetKey) {
       const bonusType = bonus.type;
       const bonusValue = parseInt(bonus.value, 10) || 0;
 
-      // Pathfinder stacking: same type doesn't stack, take highest. Different types stack.
-      // "Trait" and "Racial" are handled by this logic if they are in `bonusTypes`.
-      // Dodge, Circumstance, and Untyped bonuses stack with themselves and others.
       if (bonusType === "Dodge" || bonusType === "Circumstance" || !bonusTypes.includes(bonusType)) {
-        // These types stack or are untyped
         totalBonus += bonusValue;
-      } else { // It's a named bonus type that doesn't stack with itself (e.g. Morale, Competence, etc.)
+      } else {
         if (!applicableBonusesByType[bonusType] || Math.abs(bonusValue) > Math.abs(applicableBonusesByType[bonusType].value)) {
-          // Store the bonus if it's the first of its type or has a larger absolute magnitude
           applicableBonusesByType[bonusType] = { value: bonusValue, type: bonusType };
         }
       }
     }
   }
 
-  // Sum up the highest value for each named bonus type that was stored
   for (const type in applicableBonusesByType) {
     totalBonus += applicableBonusesByType[type].value;
   }
@@ -209,23 +162,17 @@ function updateSkillTotal(skillRanksId, abilityModifierId, skillTotalId) {
 
   if (!skillConfig || !skillConfig.classSkillCheckboxId || !skillConfig.classSkillTextId) {
     console.error(`Skill configuration, classSkillCheckboxId, or classSkillTextId not found for skill with totalId: ${skillTotalId} or ranksId: ${skillRanksId}. Check skillConfigs.`);
-    // Fallback calculation in case skillConfig or its new properties are unexpectedly missing
     const originalRanks = getIntValue(skillRanksId);
-    // The abilityModifierId is the ID of the modifier span, e.g., 'dexMod'.
-    // So getIntValue(abilityModifierId) correctly fetches the modifier value.
     const originalAbilityMod = getIntValue(abilityModifierId);
     const originalItemBonuses = typeof getBonusesForTarget === 'function' ? getBonusesForTarget(skillTotalId) : 0;
     const originalTotalSpan = document.getElementById(skillTotalId);
     if (originalTotalSpan) {
       originalTotalSpan.textContent = originalRanks + originalAbilityMod + originalItemBonuses;
     }
-    return; // Exit if essential config for class skill feature is missing
+    return;
   }
 
   const ranks = getIntValue(skillRanksId);
-// feature/bonuses-section
-  // The abilityModifierId is the ID of the modifier span, e.g., 'dexMod'.
-  // So getIntValue(abilityModifierId) correctly fetches the modifier value.
   const abilityModifier = getIntValue(abilityModifierId);
 
   const classSkillCheckbox = document.getElementById(skillConfig.classSkillCheckboxId);
@@ -233,59 +180,32 @@ function updateSkillTotal(skillRanksId, abilityModifierId, skillTotalId) {
   const totalSpan = document.getElementById(skillTotalId);
 
   let classSkillBonus = 0;
-  // Calculate class skill bonus
   if (classSkillCheckbox && classSkillCheckbox.checked && ranks >= 1) {
     classSkillBonus = 3;
   }
 
-  // Update "Class Skill" text display
   if (classSkillTextSpan) {
     if (classSkillCheckbox && classSkillCheckbox.checked) {
       classSkillTextSpan.textContent = "Class Skill";
     } else {
-      classSkillTextSpan.textContent = ""; // Clear text if not a class skill or box unchecked
+      classSkillTextSpan.textContent = "";
     }
   } else {
-    // This is not critical enough to halt, but good to know if it's missing.
     console.warn(`Class skill text span not found for ID: ${skillConfig.classSkillTextId}`);
   }
 
-  // Get bonuses from the "Bonuses" section (using skillTotalId as targetKey)
   const itemBonuses = typeof getBonusesForTarget === 'function' ? getBonusesForTarget(skillTotalId) : 0;
 
-  // Update total display
   if (totalSpan) {
     totalSpan.textContent = ranks + abilityModifier + itemBonuses + classSkillBonus;
-=======
-  const abilityModifier = getIntValue(abilityModifierId); // This is the modifier value from the span
-  const totalSpan = document.getElementById(skillTotalId);
-
-  // Get bonuses for this specific skill (skillTotalId is the targetKey)
-  const skillBonus = getBonusesForTarget(skillTotalId);
-
-  if (totalSpan) {
-    totalSpan.textContent = ranks + abilityModifier + skillBonus;
-// main
   } else {
-    // This error should ideally not happen if skillConfig was found.
     console.error(`Skill total span (ID: ${skillTotalId}) not found.`);
   }
 }
 
-// updateDependentSkills is called when an ability score INPUT changes.
-// It should use the new updateAllCharacterSheetCalculations to ensure bonuses are included.
-// However, the direct trigger for updateDependentSkills is already inside updateAbilityModifierDisplay logic,
-// which is part of the chain reaction from ability score input.
-// The new central function updateAllCharacterSheetCalculations will handle skill updates.
-// So, we might not need to change updateDependentSkills itself, but ensure its calls are correct
-// or superseded by calls to updateAllCharacterSheetCalculations.
-// For now, let's keep it, as it's called by the original ability score update logic.
-// The main update function will call updateSkillTotal for all skills anyway.
-
 function updateDependentSkills(abilityModId) {
   skillConfigs.forEach(skill => {
     if (skill.abilityModId === abilityModId) {
-      // This will now include bonuses due to the change in updateSkillTotal
       updateSkillTotal(skill.ranksId, skill.abilityModId, skill.totalId);
     }
   });
@@ -295,9 +215,9 @@ function updateDependentSkills(abilityModId) {
 function updateCombatStats() {
   const strMod = getIntValue('strMod');
   const dexMod = getIntValue('dexMod');
-  const conMod = getIntValue('conMod'); // Needed for HP
+  const conMod = getIntValue('conMod');
 
-  const hpBase = getIntValue('hpBase'); // HP calculation remains the same for now
+  const hpBase = getIntValue('hpBase');
   document.getElementById('hpTotal').textContent = hpBase + conMod;
 
   // AC Calculation
@@ -318,11 +238,10 @@ function updateCombatStats() {
   document.getElementById('rangedAttack').textContent = bab + dexMod + sizeModAttack + generalAttackBonuses;
 
   // CMB/CMD - Assuming general attack bonuses might apply
-  const cmbBase = bab + strMod + sizeModAttack; // Base CMB without general attack bonuses that might not apply to maneuvers
-  const cmdBase = 10 + bab + strMod + dexMod + sizeModAttack; // Base CMD
-  // TODO: Consider specific CMB/CMD bonuses if added to bonusTargetMappings
-  document.getElementById('cmbTotal').textContent = cmbBase + getBonusesForTarget('CMB'); // Assuming 'CMB' could be a targetKey
-  document.getElementById('cmdTotal').textContent = cmdBase + getBonusesForTarget('CMD'); // Assuming 'CMD' could be a targetKey
+  const cmbBase = bab + strMod + sizeModAttack;
+  const cmdBase = 10 + bab + strMod + dexMod + sizeModAttack;
+  document.getElementById('cmbTotal').textContent = cmbBase + getBonusesForTarget('CMB');
+  document.getElementById('cmdTotal').textContent = cmdBase + getBonusesForTarget('CMD');
 
   // Initiative Calculation
   const initiativeMiscMod = getIntValue('initiativeMiscMod');
@@ -378,8 +297,6 @@ function updateAllCharacterSheetCalculations() {
 
   // Step 3: Update all skills
   skillConfigs.forEach(skill => {
-    // updateSkillTotal internally calls getIntValue(skill.abilityModId)
-    // which now correctly reflects the modifier from the effective score.
     updateSkillTotal(skill.ranksId, skill.abilityModId, skill.totalId);
   });
   console.log("[DEBUG] updateAllCharacterSheetCalculations completed");
@@ -388,43 +305,28 @@ function updateAllCharacterSheetCalculations() {
 
 // --- Event Listeners & Initial Calculation ---
 document.addEventListener('DOMContentLoaded', () => {
-  // Initial calculation for ability scores needs to be part of the full update cycle
-  // to correctly incorporate any initially defined bonuses (if data persistence were added).
-  // updateAbilityModifierDisplay and updateDependentSkills are called by updateAllCharacterSheetCalculations.
-
   // Add event listeners to ability score inputs
   abilityScoreConfigs.forEach(ability => {
     const scoreInput = document.getElementById(ability.scoreId);
     if (scoreInput) {
       scoreInput.addEventListener('input', () => {
-        // When a raw ability score is manually changed, we need to update its modifier first,
-        // then trigger a full recalculation to ensure all dependent stats and bonuses are applied.
-        // The original updateAbilityModifierDisplay is fine for the direct mod.
         updateAbilityModifierDisplay(ability.scoreId, ability.modId);
-        // Then, a full recalc including all bonuses.
         updateAllCharacterSheetCalculations();
       });
     }
   });
 
   // Initial calculation for all skills and add event listeners
-  // The initial skill calculation is now part of updateAllCharacterSheetCalculations.
   skillConfigs.forEach((skill) => {
     const ranksInput = document.getElementById(skill.ranksId);
     if (ranksInput) {
       ranksInput.addEventListener('input', () => {
-        // When skill ranks change, only that skill and its dependencies need update.
-        // However, for simplicity and to ensure bonus interactions, a full recalc might be easier.
-        // For now, let's stick to targeted update for skill ranks.
-        // updateSkillTotal(skill.ranksId, skill.abilityModId, skill.totalId);
-        // OR, if complex interactions are expected:
-        updateAllCharacterSheetCalculations(); // This ensures everything is up-to-date
+        updateAllCharacterSheetCalculations();
       });
     }
   });
   
   // Event listeners for combat stats and saving throw base values
-  // These should also trigger a full recalculation if they affect bases upon which bonuses apply.
   const inputIdsToTriggerFullRecalc = [
     'hpBase', 'armorBonus', 'shieldBonus', 'sizeModAc', 'naturalArmor', 
     'deflectionMod', 'miscAcBonus', 'bab', 'sizeModAttack', 'initiativeMiscMod',
@@ -439,10 +341,6 @@ document.addEventListener('DOMContentLoaded', () => {
       inputElement.addEventListener('input', updateAllCharacterSheetCalculations);
     }
   });
-
-  // Initial calculations are now part of updateAllCharacterSheetCalculations
-  // updateCombatStats();
-  // updateSavingThrows();
   
   // --- Basic Assertions for calculateAbilityModifier ---
   console.assert(calculateAbilityModifier(10) === 0, "Test Failed: Modifier for 10 should be 0");
@@ -452,16 +350,11 @@ document.addEventListener('DOMContentLoaded', () => {
   console.assert(calculateAbilityModifier(1) === -5, "Test Failed: Modifier for 1 should be -5");
   console.log("calculateAbilityModifier tests completed.");
 
-  // Log initial calculated values for key fields
-  // These will be logged after the first run of updateAllCharacterSheetCalculations
-  // console.log("--- Initial Calculated Values ---");
-  // ...
-
   // --- Custom Dice Rolls --- //
   const addCustomRollBtn = document.getElementById('addCustomRollBtn');
   const customRollFormContainer = document.getElementById('customRollFormContainer');
   const customRollsDisplayContainer = document.getElementById('customRollsDisplayContainer');
-  let customRolls = []; // To store custom roll objects
+  let customRolls = [];
 
   function createNewRollForm() {
     if (!customRollFormContainer) {
@@ -478,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <input type="text" class="roll-description-input" name="rollDescription_temp" placeholder="e.g., Longsword Damage">
         </div>
         <div><label>Dice (enter quantity):</label></div>
-        <div style="display: flex; flex-wrap: wrap;">`; // Wrapper for dice inputs
+        <div style="display: flex; flex-wrap: wrap;">`;
 
     const diceTypes = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'];
     diceTypes.forEach(die => {
@@ -488,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="number" class="dice-input" data-die="${die}" name="${die}_count_temp" value="0" min="0" style="width: 45px;">
             </div>`;
     });
-    formHTML += `</div>`; // End dice wrapper
+    formHTML += `</div>`;
     formHTML += `<div style="margin-top: 10px;">`;
     formHTML += `<button class="save-roll-btn">Save Roll</button>`;
     formHTML += `<button class="cancel-roll-btn" type="button" style="margin-left: 10px; background-color: #f44336; color:white; border:none; padding: 6px 12px; border-radius:3px; cursor:pointer;">Cancel</button>`;
@@ -522,13 +415,13 @@ document.addEventListener('DOMContentLoaded', () => {
              }
 
             const newRoll = {
-                id: Date.now().toString(), // Simple unique ID
-                description: description || "Custom Roll", // Default description if empty
+                id: Date.now().toString(),
+                description: description || "Custom Roll",
                 dice: diceCounts
             };
 
             customRolls.push(newRoll);
-            renderCustomRolls(); // New function to re-render all displayed rolls
+            renderCustomRolls();
             formDiv.remove(); 
         });
     } else {
@@ -550,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error('customRollsDisplayContainer not found');
           return;
       }
-      customRollsDisplayContainer.innerHTML = ''; // Clear existing displayed rolls
+      customRollsDisplayContainer.innerHTML = '';
 
       customRolls.forEach(roll => {
           const rollDiv = document.createElement('div');
@@ -615,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const bonusIdToDelete = bonusDiv.dataset.bonusId;
           characterBonuses = characterBonuses.filter(bonus => bonus.id !== bonusIdToDelete);
           renderBonuses();
-          updateAllCharacterSheetCalculations(); // Recalculate after deleting a bonus
+          updateAllCharacterSheetCalculations();
         }
       }
     });
@@ -625,32 +518,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderBonuses();
   updateAllCharacterSheetCalculations(); // Initial full calculation
-// feature/bonuses-section
 
   // Add event listeners to class skill checkboxes
   console.log('[DEBUG] Setting up event listeners for class skill checkboxes.');
   skillConfigs.forEach(skillConfig => {
-    if (skillConfig.classSkillCheckboxId) { // Ensure the property exists
+    if (skillConfig.classSkillCheckboxId) {
       const classSkillCheckbox = document.getElementById(skillConfig.classSkillCheckboxId);
       if (classSkillCheckbox) {
         classSkillCheckbox.addEventListener('change', () => {
           console.log(`[DEBUG] Class skill checkbox changed for: ${skillConfig.ranksId}`);
-          // Call the master calculation function to update the specific skill and ensure sheet consistency
           updateAllCharacterSheetCalculations();
         });
       } else {
         console.warn(`Class skill checkbox not found for ID: ${skillConfig.classSkillCheckboxId}`);
       }
     } else {
-      // This might occur if skillConfigs was not updated correctly, though previous steps indicate it was.
       console.warn(`classSkillCheckboxId missing in skillConfig for ranksId: ${skillConfig.ranksId}`);
     }
   });
   console.log('[DEBUG] Finished setting up event listeners for class skill checkboxes.');
-  // Note: The final call to updateAllCharacterSheetCalculations() is already present above this block.
-=======
-// main
-  // --- End Bonuses --- //
 });
 
 function createNewBonusForm() {
@@ -738,7 +624,7 @@ function createNewBonusForm() {
       };
       characterBonuses.push(newBonus);
       renderBonuses();
-      updateAllCharacterSheetCalculations(); // Recalculate after adding a new bonus
+      updateAllCharacterSheetCalculations();
       formDiv.remove();
     });
   } else {
@@ -751,7 +637,7 @@ function createNewBonusForm() {
       formDiv.remove();
     });
   } else {
-    console.error('[DEBUG] Cancel Bonus button not found in new bonus form.'); // <-- ADD [DEBUG]
+    console.error('[DEBUG] Cancel Bonus button not found in new bonus form.');
   }
 }
 
@@ -761,7 +647,7 @@ function renderBonuses() {
     console.error('bonusesDisplayContainer not found for rendering');
     return;
   }
-  displayContainer.innerHTML = ''; // Clear existing bonuses
+  displayContainer.innerHTML = '';
 
   characterBonuses.forEach(bonus => {
     const bonusDiv = document.createElement('div');
@@ -770,9 +656,8 @@ function renderBonuses() {
 
     const summaryP = document.createElement('p');
     summaryP.classList.add('bonus-summary');
-    // Format the value with a sign
     const valueString = bonus.value >= 0 ? `+${bonus.value}` : bonus.value.toString();
-    summaryP.textContent = `Type: ${bonus.type} (${valueString})`; // <-- MODIFY THIS to include value
+    summaryP.textContent = `Type: ${bonus.type} (${valueString})`;
 
     const appliesToP = document.createElement('p');
     appliesToP.classList.add('bonus-applies-to');
@@ -780,17 +665,16 @@ function renderBonuses() {
 
     const descriptionP = document.createElement('p');
     descriptionP.classList.add('bonus-description');
-    descriptionP.textContent = bonus.description || '(No description)'; // Handle empty description
+    descriptionP.textContent = bonus.description || '(No description)';
 
     const deleteBtn = document.createElement('button');
     deleteBtn.classList.add('delete-bonus-btn');
     deleteBtn.textContent = 'Delete';
-    // No need to add event listener here, it's handled by delegation
 
-    bonusDiv.appendChild(deleteBtn); // Add delete button first to float right
+    bonusDiv.appendChild(deleteBtn);
     bonusDiv.appendChild(summaryP);
     bonusDiv.appendChild(appliesToP);
-    if (bonus.description) { // Only add description if it exists
+    if (bonus.description) {
         bonusDiv.appendChild(descriptionP);
     }
 
