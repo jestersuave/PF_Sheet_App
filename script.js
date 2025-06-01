@@ -144,6 +144,7 @@ const defenseConfig = {
   deflectionModId: 'deflectionMod',
   miscAcBonusId: 'miscAcBonus',
   statSelectId: 'acStatSelectDropdown',
+  statSelectBtnId: 'acStatSelectBtn', // Corrected line: extraneous ']' removed
   statSelectBtnId: 'acStatSelectBtn',
   defaultStatKey: 'dex'
 };
@@ -400,6 +401,11 @@ function initializeCustomDropdowns() {
 
     const button = document.getElementById(config.statSelectBtnId);
     const optionsContainer = document.getElementById(config.statSelectId);
+
+    if (button && optionsContainer) {
+      // Initial button text update
+      updateStatSelectButtonText(config.statSelectBtnId, config.statSelectId, config.defaultStatKey);
+
 
     if (button && optionsContainer) {
       // Initial button text update
