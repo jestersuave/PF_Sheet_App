@@ -302,6 +302,40 @@ function updateAllCharacterSheetCalculations() {
   console.log("[DEBUG] updateAllCharacterSheetCalculations completed");
 }
 
+// --- Webhook Function ---
+function sendToWebhook(webhookData) {
+  const webhookUrl = localStorage.getItem('webhookUrl');
+
+  if (!webhookUrl) {
+    console.log('[Webhook] No webhook URL configured. Skipping send.');
+    return;
+  }
+
+  console.log('[Webhook] Sending data to:', webhookUrl, webhookData);
+
+  fetch(webhookUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(webhookData),
+  })
+  .then(response => {
+    if (!response.ok) {
+      // Log the response status and text for more detailed error info
+      response.text().then(text => {
+        console.error('[Webhook] Error sending data:', response.status, response.statusText, text);
+      });
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    console.log('[Webhook] Data sent successfully:', response.status);
+    // It might be useful to log response.json() if the webhook returns a meaningful body
+    // return response.json();
+  })
+  .catch(error => {
+    console.error('[Webhook] Failed to send data:', error);
+  });
+}
 
 // --- Event Listeners & Initial Calculation ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -470,7 +504,6 @@ function rollDice(diceNotationInput) {
       }
     }
     firstTermProcessed = true;
-    }
   }
 
   rollsDescription += individualRolls.length > 0 ? individualRolls.join(', ') : "None";
@@ -639,13 +672,19 @@ function rollDice(diceNotationInput) {
             showModal(`${roll.description} Roll`, result.rollsDescription);
 
             // Prepare and send to webhook
+            const characterName = document.getElementById('charName') ? document.getElementById('charName').value.trim() || "Unnamed Character" : "Unnamed Character";
             const webhookData = {
-              roll_type: `Custom: ${roll.description}`,
-              dice_notation: result.diceNotation, // or just diceNotation variable from above
-              individual_rolls: result.individualRolls,
-              modifier: result.modifier,
-              total: result.total,
-              full_description: result.rollsDescription
+              username: `${characterName} (Pathfinder Sheet)`,
+              embeds: [{
+                author: {
+                  name: characterName
+                },
+                title: `Custom Roll: ${roll.description || 'Unnamed Custom Roll'}`,
+                description: `**${result.total}**
+*${result.diceNotation} (Rolls: ${result.individualRolls.join(', ')}) Modifier: ${result.modifier >= 0 ? '+' : ''}${result.modifier}*`,
+                color: 5814783, // Blue
+                timestamp: new Date().toISOString(),
+              }]
             };
             sendToWebhook(webhookData);
           });
@@ -767,13 +806,19 @@ function rollDice(diceNotationInput) {
         showModal(`${skillName} Roll`, result.rollsDescription);
 
         // Prepare and send to webhook
+        const characterName = document.getElementById('charName') ? document.getElementById('charName').value.trim() || "Unnamed Character" : "Unnamed Character";
         const webhookData = {
-          roll_type: `Skill: ${skillName}`,
-          dice_notation: result.diceNotation,
-          individual_rolls: result.individualRolls,
-          modifier: result.modifier,
-          total: result.total,
-          full_description: result.rollsDescription
+          username: `${characterName} (Pathfinder Sheet)`,
+          embeds: [{
+            author: {
+              name: characterName
+            },
+            title: `Skill Roll: ${skillName}`,
+            description: `**${result.total}**
+*${result.diceNotation} (Rolls: ${result.individualRolls.join(', ')}) Modifier: ${result.modifier >= 0 ? '+' : ''}${result.modifier}*`,
+            color: 5814783, // Blue
+            timestamp: new Date().toISOString(),
+          }]
         };
         sendToWebhook(webhookData);
       } else {
@@ -795,13 +840,19 @@ function rollDice(diceNotationInput) {
         showModal(`${statName}`, result.rollsDescription);
 
         // Prepare and send to webhook
+        const characterName = document.getElementById('charName') ? document.getElementById('charName').value.trim() || "Unnamed Character" : "Unnamed Character";
         const webhookData = {
-          roll_type: `Stat: ${statName}`,
-          dice_notation: result.diceNotation,
-          individual_rolls: result.individualRolls,
-          modifier: result.modifier,
-          total: result.total,
-          full_description: result.rollsDescription
+          username: `${characterName} (Pathfinder Sheet)`,
+          embeds: [{
+            author: {
+              name: characterName
+            },
+            title: `Stat Check: ${statName}`,
+            description: `**${result.total}**
+*${result.diceNotation} (Rolls: ${result.individualRolls.join(', ')}) Modifier: ${result.modifier >= 0 ? '+' : ''}${result.modifier}*`,
+            color: 5814783, // Blue
+            timestamp: new Date().toISOString(),
+          }]
         };
         sendToWebhook(webhookData);
       } else {
