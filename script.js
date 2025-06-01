@@ -305,6 +305,17 @@ function updateAllCharacterSheetCalculations() {
 
 // --- Event Listeners & Initial Calculation ---
 document.addEventListener('DOMContentLoaded', () => {
+  // Modal Elements
+  const rollResultModal = document.getElementById('rollResultModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalResultText = document.getElementById('modalResultText');
+  const modalCloseBtn = document.querySelector('.modal-close-btn');
+
+  // Webhook UI Elements
+  const webhookUrlInput = document.getElementById('webhookUrlInput');
+  const saveWebhookBtn = document.getElementById('saveWebhookBtn');
+  const webhookStatusMessage = document.getElementById('webhookStatusMessage');
+
   // Theme switching logic
   const themeToggleBtn = document.getElementById('themeToggleBtn');
 
@@ -376,6 +387,161 @@ document.addEventListener('DOMContentLoaded', () => {
   console.assert(calculateAbilityModifier(20) === 5, "Test Failed: Modifier for 20 should be 5");
   console.assert(calculateAbilityModifier(1) === -5, "Test Failed: Modifier for 1 should be -5");
   console.log("calculateAbilityModifier tests completed.");
+
+// --- Dice Rolling Function ---
+function rollDice(diceNotationInput) {
+  let total = 0;
+  let rollsDescription = "Rolls: ";
+  const individualRolls = [];
+  // const modifiers = []; // Store modifiers with their signs and values - Replaced by modifierSum
+  let modifierSum = 0;
+  const storedDiceNotation = diceNotationInput; // Store original input
+
+  // Normalize input: remove whitespace and handle "d6" as "1d6"
+  let normalizedNotation = diceNotationInput.trim();
+  if (normalizedNotation.startsWith('d')) {
+    normalizedNotation = '1' + normalizedNotation;
+  }
+
+  // Error return object
+  const errorReturn = (message) => ({
+    total: NaN,
+    rollsDescription: message,
+    individualRolls: [],
+    modifier: 0,
+    diceNotation: storedDiceNotation
+  });
+
+  // Split by '+' and '-' to separate terms, keeping delimiters
+  // e.g., "2d6+5-1d4-2" -> ["2d6", "+5", "-1d4", "-2"]
+  // e.g., "d20-1" -> ["1d20", "-1"] (after normalization)
+  // e.g., "5+2d6" -> ["5", "+2d6"]
+  const terms = normalizedNotation.match(/[+\-]?[^+\-]+/g) || [];
+  let firstTermProcessed = false;
+
+  for (let i = 0; i < terms.length; i++) {
+    let term = terms[i];
+    let isNegative = term.startsWith('-');
+    let termValueStr = term.replace(/^[+\-]/, '');
+
+    // For the very first term, if it's a number and has no explicit sign, it's positive.
+    // If it's a dice roll like "d20", it's also positive.
+    if (i === 0 && !term.startsWith('+') && !term.startsWith('-')) {
+      isNegative = false;
+    }
+
+    if (termValueStr.includes('d')) {
+      // Dice term
+      let [numDiceStr, numSidesStr] = termValueStr.split('d');
+      let numDice = numDiceStr === '' ? 1 : parseInt(numDiceStr, 10);
+      let numSides = parseInt(numSidesStr, 10);
+
+      if (isNaN(numDice) || numDice <= 0) {
+        return errorReturn(`Error: Invalid number of dice '${numDiceStr}' in term '${term}'`);
+      }
+      if (isNaN(numSides) || numSides <= 0) {
+        return errorReturn(`Error: Invalid number of sides '${numSidesStr}' in term '${term}'`);
+      }
+
+      for (let j = 0; j < numDice; j++) {
+        const roll = Math.floor(Math.random() * numSides) + 1;
+        individualRolls.push(roll);
+        if (isNegative) {
+          total -= roll;
+        } else {
+          total += roll;
+        }
+      }
+    } else {
+      // Modifier term
+      const modifierVal = parseInt(termValueStr, 10);
+      if (isNaN(modifierVal)) {
+        return errorReturn(`Error: Invalid modifier '${termValueStr}' in term '${term}'`);
+      }
+
+      if (isNegative) {
+        total -= modifierVal;
+        modifierSum -= modifierVal;
+      } else {
+        // This handles explicitly positive terms like "+5" or first terms like "5"
+        total += modifierVal;
+        modifierSum += modifierVal;
+      }
+    }
+    firstTermProcessed = true;
+  }
+
+  rollsDescription += individualRolls.length > 0 ? individualRolls.join(', ') : "None";
+
+  if (modifierSum !== 0 || (terms.some(term => !term.includes('d')) && individualRolls.length > 0) || terms.length === 0 && modifierSum !==0 ) {
+     // Show modifier if it's non-zero, or if there was any modifier term and also dice, or if it's just a number
+    rollsDescription += `. Modifier: ${modifierSum >= 0 ? '+' : ''}${modifierSum}`;
+  }
+
+  rollsDescription += `. Total: ${total}`;
+
+  return {
+    total: total,
+    rollsDescription: rollsDescription,
+    individualRolls: individualRolls,
+    modifier: modifierSum,
+    diceNotation: storedDiceNotation // or normalizedNotation, depending on desired output
+  };
+}
+
+
+// --- Webhook Function ---
+async function sendToWebhook(data) {
+  const webhookUrl = localStorage.getItem('webhookUrl');
+  if (!webhookUrl) {
+    // console.log('Webhook URL not configured. Skipping send.');
+    return;
+  }
+
+  const payload = {
+    source: "PathfinderCharacterSheet",
+    roll_type: data.roll_type,
+    dice_notation: data.dice_notation,
+    individual_rolls: data.individual_rolls,
+    modifier: data.modifier,
+    total: data.total,
+    full_description: data.full_description
+  };
+
+  try {
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const webhookStatusMessage = document.getElementById('webhookStatusMessage'); // Get it here, as it might not be global
+
+    if (!response.ok) {
+      console.error('Webhook request failed:', response.status, await response.text());
+      if(webhookStatusMessage) {
+         webhookStatusMessage.textContent = `Webhook error: ${response.status}`;
+         setTimeout(() => { webhookStatusMessage.textContent = ''; }, 3000);
+      }
+    } else {
+      // console.log('Webhook request successful.');
+      if(webhookStatusMessage) {
+         webhookStatusMessage.textContent = 'Roll sent to webhook.';
+         setTimeout(() => { webhookStatusMessage.textContent = ''; }, 2000);
+      }
+    }
+  } catch (error) {
+    console.error('Error sending webhook:', error);
+    const webhookStatusMessage = document.getElementById('webhookStatusMessage'); // Get it here also
+    if(webhookStatusMessage) {
+         webhookStatusMessage.textContent = 'Webhook dispatch error.';
+         setTimeout(() => { webhookStatusMessage.textContent = ''; }, 3000);
+    }
+  }
+}
+
 
   // --- Custom Dice Rolls --- //
   const addCustomRollBtn = document.getElementById('addCustomRollBtn');
@@ -487,7 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           const deleteBtn = document.createElement('button');
           deleteBtn.textContent = 'Delete';
-          deleteBtn.style.marginLeft = '10px';
+          deleteBtn.style.marginLeft = '10px'; // Keep margin for spacing from roll button
           deleteBtn.style.padding = '3px 8px';
           deleteBtn.style.backgroundColor = '#dc3545';
           deleteBtn.style.color = 'white';
@@ -499,9 +665,41 @@ document.addEventListener('DOMContentLoaded', () => {
               renderCustomRolls();
           });
 
+          const rollActionBtn = document.createElement('button');
+          rollActionBtn.textContent = 'Roll';
+          rollActionBtn.classList.add('roll-custom-btn');
+          rollActionBtn.style.marginLeft = '5px'; // Space from dice summary
+          rollActionBtn.style.padding = '3px 8px'; // Match delete button padding for consistency
+          rollActionBtn.style.backgroundColor = '#28a745'; // A green color for roll
+          rollActionBtn.style.color = 'white';
+          rollActionBtn.style.border = 'none';
+          rollActionBtn.style.borderRadius = '3px';
+          rollActionBtn.style.cursor = 'pointer';
+
+          rollActionBtn.addEventListener('click', function() {
+            let diceNotation = roll.dice.map(d => `${d.count}${d.die}`).join('+');
+            if (!diceNotation) {
+                showModal(`${roll.description} Roll Error`, "No dice specified for this roll.");
+                return;
+            }
+            const result = rollDice(diceNotation);
+            showModal(`${roll.description} Roll`, result.rollsDescription);
+
+            // Prepare and send to webhook
+            const webhookData = {
+              roll_type: `Custom: ${roll.description}`,
+              dice_notation: result.diceNotation, // or just diceNotation variable from above
+              individual_rolls: result.individualRolls,
+              modifier: result.modifier,
+              total: result.total,
+              full_description: result.rollsDescription
+            };
+            sendToWebhook(webhookData);
+          });
 
           rollDiv.appendChild(descriptionSpan);
           rollDiv.appendChild(diceSummarySpan);
+          rollDiv.appendChild(rollActionBtn); // Roll button before delete button
           rollDiv.appendChild(deleteBtn);
           customRollsDisplayContainer.appendChild(rollDiv);
       });
@@ -564,6 +762,127 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   console.log('[DEBUG] Finished setting up event listeners for class skill checkboxes.');
+
+  // --- Modal Functions ---
+  function showModal(title, resultContent) {
+    if (modalTitle && modalResultText && rollResultModal) {
+      modalTitle.textContent = title;
+      modalResultText.innerHTML = resultContent; // Using innerHTML to allow for formatted descriptions
+      rollResultModal.classList.remove('modal-hidden');
+      rollResultModal.classList.add('modal-visible');
+    } else {
+      console.error('Modal elements not found!');
+    }
+  }
+
+  function hideModal() {
+    if (rollResultModal) {
+      rollResultModal.classList.remove('modal-visible');
+      rollResultModal.classList.add('modal-hidden');
+    }
+  }
+
+  // --- Modal Event Listeners ---
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', hideModal);
+  }
+  if (rollResultModal) {
+    // Optional: Close modal if user clicks outside the modal content
+    rollResultModal.addEventListener('click', function(event) {
+      if (event.target === rollResultModal) { // Check if the click is on the overlay itself
+        hideModal();
+      }
+    });
+  }
+
+  // Example usage (can be removed or tied to actual roll button later):
+  // document.getElementById('someButtonToTestModal').addEventListener('click', () => {
+  //   const rollResult = rollDice("1d20+5");
+  //   showModal("Test Roll: 1d20+5", `${rollResult.rollsDescription}<br><br>Total: ${rollResult.total}`);
+  // });
+
+  // --- Skill and Stat Roll Button Event Listeners ---
+  document.querySelectorAll('.roll-skill-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const skillName = this.dataset.skillname;
+      const totalId = this.dataset.totalid;
+      const skillTotalElement = document.getElementById(totalId);
+      if (skillTotalElement) {
+        const bonus = parseInt(skillTotalElement.textContent, 10) || 0;
+        const rollNotation = `1d20+${bonus}`;
+        const result = rollDice(rollNotation);
+        showModal(`${skillName} Roll`, result.rollsDescription);
+
+        // Prepare and send to webhook
+        const webhookData = {
+          roll_type: `Skill: ${skillName}`,
+          dice_notation: result.diceNotation,
+          individual_rolls: result.individualRolls,
+          modifier: result.modifier,
+          total: result.total,
+          full_description: result.rollsDescription
+        };
+        sendToWebhook(webhookData);
+      } else {
+        console.error('Skill total element not found for ID:', totalId);
+        showModal(`${skillName} Roll Error`, "Could not find skill total to perform roll.");
+      }
+    });
+  });
+
+  document.querySelectorAll('.roll-stat-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const statName = this.dataset.statname;
+      const modId = this.dataset.modid;
+      const statModElement = document.getElementById(modId);
+      if (statModElement) {
+        const bonus = parseInt(statModElement.textContent, 10) || 0;
+        const rollNotation = `1d20+${bonus}`;
+        const result = rollDice(rollNotation);
+        showModal(`${statName}`, result.rollsDescription);
+
+        // Prepare and send to webhook
+        const webhookData = {
+          roll_type: `Stat: ${statName}`,
+          dice_notation: result.diceNotation,
+          individual_rolls: result.individualRolls,
+          modifier: result.modifier,
+          total: result.total,
+          full_description: result.rollsDescription
+        };
+        sendToWebhook(webhookData);
+      } else {
+        console.error('Stat modifier element not found for ID:', modId);
+        showModal(`${statName} Error`, "Could not find stat modifier to perform roll.");
+      }
+    });
+  });
+
+  // --- Webhook URL Load and Save ---
+  if (webhookUrlInput) {
+    const savedWebhookUrl = localStorage.getItem('webhookUrl');
+    if (savedWebhookUrl) {
+      webhookUrlInput.value = savedWebhookUrl;
+      if (webhookStatusMessage) {
+        webhookStatusMessage.textContent = 'Saved Webhook URL loaded.';
+        setTimeout(() => { webhookStatusMessage.textContent = ''; }, 3000);
+      }
+    }
+  }
+
+  if (saveWebhookBtn && webhookUrlInput && webhookStatusMessage) {
+    saveWebhookBtn.addEventListener('click', function() {
+      const urlToSave = webhookUrlInput.value.trim();
+      localStorage.setItem('webhookUrl', urlToSave);
+      webhookStatusMessage.textContent = 'Webhook URL saved!';
+      setTimeout(() => { webhookStatusMessage.textContent = ''; }, 3000);
+    });
+  } else {
+    if (!saveWebhookBtn) console.error('Save Webhook Button (saveWebhookBtn) not found.');
+    if (!webhookUrlInput) console.error('Webhook URL Input (webhookUrlInput) not found.');
+    if (!webhookStatusMessage) console.error('Webhook Status Message (webhookStatusMessage) not found.');
+  }
+
 });
 
 function createNewBonusForm() {

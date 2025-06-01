@@ -37,31 +37,37 @@
             <label for="strScore">Strength:</label>
             <input type="number" id="strScore" value="10">
             <span>Modifier: <span id="strMod">0</span></span>
+            <button class="roll-stat-btn" data-statname="Strength Check" data-modid="strMod">Roll</button>
           </div>
           <div>
             <label for="dexScore">Dexterity:</label>
             <input type="number" id="dexScore" value="10">
             <span>Modifier: <span id="dexMod">0</span></span>
+            <button class="roll-stat-btn" data-statname="Dexterity Check" data-modid="dexMod">Roll</button>
           </div>
           <div>
             <label for="conScore">Constitution:</label>
             <input type="number" id="conScore" value="10">
             <span>Modifier: <span id="conMod">0</span></span>
+            <button class="roll-stat-btn" data-statname="Constitution Check" data-modid="conMod">Roll</button>
           </div>
           <div>
             <label for="intScore">Intelligence:</label>
             <input type="number" id="intScore" value="10">
             <span>Modifier: <span id="intMod">0</span></span>
+            <button class="roll-stat-btn" data-statname="Intelligence Check" data-modid="intMod">Roll</button>
           </div>
           <div>
             <label for="wisScore">Wisdom:</label>
             <input type="number" id="wisScore" value="10">
             <span>Modifier: <span id="wisMod">0</span></span>
+            <button class="roll-stat-btn" data-statname="Wisdom Check" data-modid="wisMod">Roll</button>
           </div>
           <div>
             <label for="chaScore">Charisma:</label>
             <input type="number" id="chaScore" value="10">
             <span>Modifier: <span id="chaMod">0</span></span>
+            <button class="roll-stat-btn" data-statname="Charisma Check" data-modid="chaMod">Roll</button>
           </div>
         </div> <!-- End abilityScores -->
 
@@ -178,7 +184,7 @@
             <input type="checkbox" id="acrobaticsClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="acrobaticsClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="acrobaticsRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="acrobaticsTotal">0</span></span>
+            <span>Total: <span id="acrobaticsTotal">0</span></span><button class="roll-skill-btn" data-skillname="Acrobatics" data-totalid="acrobaticsTotal">Roll</button>
             <span id="acrobaticsClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -186,7 +192,7 @@
             <input type="checkbox" id="appraiseClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="appraiseClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="appraiseRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="appraiseTotal">0</span></span>
+            <span>Total: <span id="appraiseTotal">0</span></span><button class="roll-skill-btn" data-skillname="Appraise" data-totalid="appraiseTotal">Roll</button>
             <span id="appraiseClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -194,7 +200,7 @@
             <input type="checkbox" id="bluffClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="bluffClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="bluffRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="bluffTotal">0</span></span>
+            <span>Total: <span id="bluffTotal">0</span></span><button class="roll-skill-btn" data-skillname="Bluff" data-totalid="bluffTotal">Roll</button>
             <span id="bluffClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -202,7 +208,7 @@
             <input type="checkbox" id="climbClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="climbClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="climbRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="climbTotal">0</span></span>
+            <span>Total: <span id="climbTotal">0</span></span><button class="roll-skill-btn" data-skillname="Climb" data-totalid="climbTotal">Roll</button>
             <span id="climbClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -210,7 +216,7 @@
             <input type="checkbox" id="craftClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="craftClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="craftRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="craftTotal">0</span></span>
+            <span>Total: <span id="craftTotal">0</span></span><button class="roll-skill-btn" data-skillname="Craft" data-totalid="craftTotal">Roll</button>
             <span id="craftClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -218,7 +224,7 @@
             <input type="checkbox" id="diplomacyClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="diplomacyClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="diplomacyRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="diplomacyTotal">0</span></span>
+            <span>Total: <span id="diplomacyTotal">0</span></span><button class="roll-skill-btn" data-skillname="Diplomacy" data-totalid="diplomacyTotal">Roll</button>
             <span id="diplomacyClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -226,7 +232,7 @@
             <input type="checkbox" id="disableDeviceClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="disableDeviceClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="disableDeviceRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="disableDeviceTotal">0</span></span>
+            <span>Total: <span id="disableDeviceTotal">0</span></span><button class="roll-skill-btn" data-skillname="Disable Device" data-totalid="disableDeviceTotal">Roll</button>
             <span id="disableDeviceClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -234,7 +240,7 @@
             <input type="checkbox" id="disguiseClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="disguiseClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="disguiseRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="disguiseTotal">0</span></span>
+            <span>Total: <span id="disguiseTotal">0</span></span><button class="roll-skill-btn" data-skillname="Disguise" data-totalid="disguiseTotal">Roll</button>
             <span id="disguiseClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -242,7 +248,7 @@
             <input type="checkbox" id="escapeArtistClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="escapeArtistClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="escapeArtistRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="escapeArtistTotal">0</span></span>
+            <span>Total: <span id="escapeArtistTotal">0</span></span><button class="roll-skill-btn" data-skillname="Escape Artist" data-totalid="escapeArtistTotal">Roll</button>
             <span id="escapeArtistClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -250,7 +256,7 @@
             <input type="checkbox" id="flyClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="flyClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="flyRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="flyTotal">0</span></span>
+            <span>Total: <span id="flyTotal">0</span></span><button class="roll-skill-btn" data-skillname="Fly" data-totalid="flyTotal">Roll</button>
             <span id="flyClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -258,7 +264,7 @@
             <input type="checkbox" id="handleAnimalClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="handleAnimalClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="handleAnimalRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="handleAnimalTotal">0</span></span>
+            <span>Total: <span id="handleAnimalTotal">0</span></span><button class="roll-skill-btn" data-skillname="Handle Animal" data-totalid="handleAnimalTotal">Roll</button>
             <span id="handleAnimalClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -266,7 +272,7 @@
             <input type="checkbox" id="healClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="healClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="healRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="healTotal">0</span></span>
+            <span>Total: <span id="healTotal">0</span></span><button class="roll-skill-btn" data-skillname="Heal" data-totalid="healTotal">Roll</button>
             <span id="healClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -274,7 +280,7 @@
             <input type="checkbox" id="intimidateClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="intimidateClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="intimidateRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="intimidateTotal">0</span></span>
+            <span>Total: <span id="intimidateTotal">0</span></span><button class="roll-skill-btn" data-skillname="Intimidate" data-totalid="intimidateTotal">Roll</button>
             <span id="intimidateClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -282,7 +288,7 @@
             <input type="checkbox" id="knowledgeArcanaClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeArcanaClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeArcanaRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="knowledgeArcanaTotal">0</span></span>
+            <span>Total: <span id="knowledgeArcanaTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Arcana)" data-totalid="knowledgeArcanaTotal">Roll</button>
             <span id="knowledgeArcanaClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -290,7 +296,7 @@
             <input type="checkbox" id="knowledgeDungeoneeringClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeDungeoneeringClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeDungeoneeringRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="knowledgeDungeoneeringTotal">0</span></span>
+            <span>Total: <span id="knowledgeDungeoneeringTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Dungeoneering)" data-totalid="knowledgeDungeoneeringTotal">Roll</button>
             <span id="knowledgeDungeoneeringClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -298,7 +304,7 @@
             <input type="checkbox" id="knowledgeEngineeringClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeEngineeringClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeEngineeringRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="knowledgeEngineeringTotal">0</span></span>
+            <span>Total: <span id="knowledgeEngineeringTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Engineering)" data-totalid="knowledgeEngineeringTotal">Roll</button>
             <span id="knowledgeEngineeringClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -306,7 +312,7 @@
             <input type="checkbox" id="knowledgeGeographyClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeGeographyClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeGeographyRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="knowledgeGeographyTotal">0</span></span>
+            <span>Total: <span id="knowledgeGeographyTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Geography)" data-totalid="knowledgeGeographyTotal">Roll</button>
             <span id="knowledgeGeographyClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -314,7 +320,7 @@
             <input type="checkbox" id="knowledgeHistoryClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeHistoryClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeHistoryRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="knowledgeHistoryTotal">0</span></span>
+            <span>Total: <span id="knowledgeHistoryTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (History)" data-totalid="knowledgeHistoryTotal">Roll</button>
             <span id="knowledgeHistoryClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -322,7 +328,7 @@
             <input type="checkbox" id="knowledgeLocalClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeLocalClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeLocalRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="knowledgeLocalTotal">0</span></span>
+            <span>Total: <span id="knowledgeLocalTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Local)" data-totalid="knowledgeLocalTotal">Roll</button>
             <span id="knowledgeLocalClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -330,7 +336,7 @@
             <input type="checkbox" id="knowledgeNatureClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeNatureClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeNatureRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="knowledgeNatureTotal">0</span></span>
+            <span>Total: <span id="knowledgeNatureTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Nature)" data-totalid="knowledgeNatureTotal">Roll</button>
             <span id="knowledgeNatureClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -338,7 +344,7 @@
             <input type="checkbox" id="knowledgeNobilityClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeNobilityClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeNobilityRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="knowledgeNobilityTotal">0</span></span>
+            <span>Total: <span id="knowledgeNobilityTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Nobility)" data-totalid="knowledgeNobilityTotal">Roll</button>
             <span id="knowledgeNobilityClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -346,7 +352,7 @@
             <input type="checkbox" id="knowledgePlanesClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgePlanesClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgePlanesRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="knowledgePlanesTotal">0</span></span>
+            <span>Total: <span id="knowledgePlanesTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Planes)" data-totalid="knowledgePlanesTotal">Roll</button>
             <span id="knowledgePlanesClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -354,7 +360,7 @@
             <input type="checkbox" id="knowledgeReligionClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeReligionClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeReligionRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="knowledgeReligionTotal">0</span></span>
+            <span>Total: <span id="knowledgeReligionTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Religion)" data-totalid="knowledgeReligionTotal">Roll</button>
             <span id="knowledgeReligionClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -362,7 +368,7 @@
             <input type="checkbox" id="linguisticsClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="linguisticsClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="linguisticsRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="linguisticsTotal">0</span></span>
+            <span>Total: <span id="linguisticsTotal">0</span></span><button class="roll-skill-btn" data-skillname="Linguistics" data-totalid="linguisticsTotal">Roll</button>
             <span id="linguisticsClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -370,7 +376,7 @@
             <input type="checkbox" id="perceptionClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="perceptionClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="perceptionRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="perceptionTotal">0</span></span>
+            <span>Total: <span id="perceptionTotal">0</span></span><button class="roll-skill-btn" data-skillname="Perception" data-totalid="perceptionTotal">Roll</button>
             <span id="perceptionClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -378,7 +384,7 @@
             <input type="checkbox" id="performClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="performClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="performRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="performTotal">0</span></span>
+            <span>Total: <span id="performTotal">0</span></span><button class="roll-skill-btn" data-skillname="Perform" data-totalid="performTotal">Roll</button>
             <span id="performClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -386,7 +392,7 @@
             <input type="checkbox" id="professionClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="professionClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="professionRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="professionTotal">0</span></span>
+            <span>Total: <span id="professionTotal">0</span></span><button class="roll-skill-btn" data-skillname="Profession" data-totalid="professionTotal">Roll</button>
             <span id="professionClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -394,7 +400,7 @@
             <input type="checkbox" id="rideClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="rideClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="rideRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="rideTotal">0</span></span>
+            <span>Total: <span id="rideTotal">0</span></span><button class="roll-skill-btn" data-skillname="Ride" data-totalid="rideTotal">Roll</button>
             <span id="rideClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -402,7 +408,7 @@
             <input type="checkbox" id="senseMotiveClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="senseMotiveClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="senseMotiveRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="senseMotiveTotal">0</span></span>
+            <span>Total: <span id="senseMotiveTotal">0</span></span><button class="roll-skill-btn" data-skillname="Sense Motive" data-totalid="senseMotiveTotal">Roll</button>
             <span id="senseMotiveClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -410,7 +416,7 @@
             <input type="checkbox" id="sleightOfHandClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="sleightOfHandClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="sleightOfHandRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="sleightOfHandTotal">0</span></span>
+            <span>Total: <span id="sleightOfHandTotal">0</span></span><button class="roll-skill-btn" data-skillname="Sleight of Hand" data-totalid="sleightOfHandTotal">Roll</button>
             <span id="sleightOfHandClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -418,7 +424,7 @@
             <input type="checkbox" id="spellcraftClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="spellcraftClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="spellcraftRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="spellcraftTotal">0</span></span>
+            <span>Total: <span id="spellcraftTotal">0</span></span><button class="roll-skill-btn" data-skillname="Spellcraft" data-totalid="spellcraftTotal">Roll</button>
             <span id="spellcraftClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -426,7 +432,7 @@
             <input type="checkbox" id="stealthClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="stealthClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="stealthRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="stealthTotal">0</span></span>
+            <span>Total: <span id="stealthTotal">0</span></span><button class="roll-skill-btn" data-skillname="Stealth" data-totalid="stealthTotal">Roll</button>
             <span id="stealthClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -434,7 +440,7 @@
             <input type="checkbox" id="survivalClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="survivalClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="survivalRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="survivalTotal">0</span></span>
+            <span>Total: <span id="survivalTotal">0</span></span><button class="roll-skill-btn" data-skillname="Survival" data-totalid="survivalTotal">Roll</button>
             <span id="survivalClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -442,7 +448,7 @@
             <input type="checkbox" id="swimClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="swimClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="swimRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="swimTotal">0</span></span>
+            <span>Total: <span id="swimTotal">0</span></span><button class="roll-skill-btn" data-skillname="Swim" data-totalid="swimTotal">Roll</button>
             <span id="swimClassSkillText" class="class-skill-text-display"></span>
           </div>
           <div>
@@ -450,7 +456,7 @@
             <input type="checkbox" id="useMagicDeviceClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="useMagicDeviceClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="useMagicDeviceRanks" value="0" class="skill-rank-input">
-            <span>Total: <span id="useMagicDeviceTotal">0</span></span>
+            <span>Total: <span id="useMagicDeviceTotal">0</span></span><button class="roll-skill-btn" data-skillname="Use Magic Device" data-totalid="useMagicDeviceTotal">Roll</button>
             <span id="useMagicDeviceClassSkillText" class="class-skill-text-display"></span>
           </div>
         </div> <!-- End skills -->
@@ -478,7 +484,27 @@
         </div>
       </div> <!-- End main-right-column -->
     </div> <!-- End main-content -->
+
+    <div id="webhookConfigSection">
+      <h2>Webhook Configuration</h2>
+      <div>
+        <label for="webhookUrlInput">Webhook URL:</label>
+        <input type="text" id="webhookUrlInput" placeholder="Enter your webhook URL here">
+        <button id="saveWebhookBtn">Save Webhook</button>
+      </div>
+      <p class="webhook-status-message" id="webhookStatusMessage" style="font-size: 0.9em; margin-top: 5px;"></p>
+    </div>
+
   </div> <!-- End sheet-container -->
+
+  <div id="rollResultModal" class="modal-hidden">
+    <div class="modal-content">
+      <span class="modal-close-btn">&times;</span>
+      <h3 id="modalTitle">Roll Result</h3>
+      <div id="modalResultText" style="font-size: 2em; text-align: center; margin-top: 15px;"></div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
