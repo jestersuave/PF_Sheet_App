@@ -511,11 +511,6 @@ function rollDice(diceNotation) {
       }
     }
     firstTermProcessed = true;
-        modifiers.push({ value: modifierVal, sign: '-' });
-      } else {
-        total += modifierVal;
-        modifiers.push({ value: modifierVal, sign: '+' });
-      }
     }
   }
 
