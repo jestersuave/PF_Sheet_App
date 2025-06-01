@@ -470,7 +470,6 @@ function rollDice(diceNotationInput) {
       }
     }
     firstTermProcessed = true;
-    }
   }
 
   rollsDescription += individualRolls.length > 0 ? individualRolls.join(', ') : "None";
