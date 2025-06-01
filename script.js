@@ -305,6 +305,33 @@ function updateAllCharacterSheetCalculations() {
 
 // --- Event Listeners & Initial Calculation ---
 document.addEventListener('DOMContentLoaded', () => {
+  // Theme switching logic
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+  // Apply saved theme on load
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+  }
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      if (document.body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
+        // Or localStorage.removeItem('theme');
+      }
+    });
+  } else {
+    console.warn('Theme toggle button (themeToggleBtn) not found.');
+  }
+
+  // Initial calculation for ability scores needs to be part of the full update cycle
+  // to correctly incorporate any initially defined bonuses (if data persistence were added).
+  // updateAbilityModifierDisplay and updateDependentSkills are called by updateAllCharacterSheetCalculations.
+
   // Add event listeners to ability score inputs
   abilityScoreConfigs.forEach(ability => {
     const scoreInput = document.getElementById(ability.scoreId);
