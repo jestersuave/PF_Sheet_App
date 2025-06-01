@@ -305,6 +305,12 @@ function updateAllCharacterSheetCalculations() {
 
 // --- Event Listeners & Initial Calculation ---
 document.addEventListener('DOMContentLoaded', () => {
+  // Modal Elements
+  const rollResultModal = document.getElementById('rollResultModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalResultText = document.getElementById('modalResultText');
+  const modalCloseBtn = document.querySelector('.modal-close-btn');
+
   // Theme switching logic
   const themeToggleBtn = document.getElementById('themeToggleBtn');
 
@@ -376,6 +382,96 @@ document.addEventListener('DOMContentLoaded', () => {
   console.assert(calculateAbilityModifier(20) === 5, "Test Failed: Modifier for 20 should be 5");
   console.assert(calculateAbilityModifier(1) === -5, "Test Failed: Modifier for 1 should be -5");
   console.log("calculateAbilityModifier tests completed.");
+
+// --- Dice Rolling Function ---
+function rollDice(diceNotation) {
+  let total = 0;
+  let rollsDescription = "Rolls: ";
+  const individualRolls = [];
+  const modifiers = []; // Store modifiers with their signs and values
+
+  // Normalize input: remove whitespace and handle "d6" as "1d6"
+  let normalizedNotation = diceNotation.trim();
+  if (normalizedNotation.startsWith('d')) {
+    normalizedNotation = '1' + normalizedNotation;
+  }
+
+  // Split by '+' and '-' to separate terms, keeping delimiters
+  // e.g., "2d6+5-1d4-2" -> ["2d6", "+5", "-1d4", "-2"]
+  // e.g., "d20-1" -> ["1d20", "-1"] (after normalization)
+  // e.g., "5+2d6" -> ["5", "+2d6"]
+  const terms = normalizedNotation.match(/[+\-]?[^+\-]+/g) || [];
+
+  for (let i = 0; i < terms.length; i++) {
+    let term = terms[i];
+    let isNegative = term.startsWith('-');
+    let termValueStr = term.replace(/^[+\-]/, ''); // Remove leading + or - to get the value part
+
+    // If it's the first term and has no sign, it's implicitly positive.
+    if (i === 0 && !term.startsWith('+') && !term.startsWith('-')) {
+      isNegative = false;
+    }
+
+    if (termValueStr.includes('d')) {
+      // This is a dice term (e.g., "2d6", "d20" which became "1d20")
+      let [numDiceStr, numSidesStr] = termValueStr.split('d');
+
+      let numDice = parseInt(numDiceStr, 10);
+      // If numDiceStr was empty (e.g., "d6" -> "1d6", numDiceStr is "1"), this is fine.
+      // If it was explicitly "1d6", numDiceStr is "1".
+      // If it was "d6" and normalized to "1d6", split gives numDiceStr="1"
+      if (numDiceStr === '') numDice = 1; // Handles cases like "d6" if split results in "" for numDice
+      else numDice = parseInt(numDiceStr, 10);
+
+      let numSides = parseInt(numSidesStr, 10);
+
+      if (isNaN(numDice) || numDice <= 0) {
+        console.error(`Invalid number of dice: '${numDiceStr}' in term '${term}'`);
+        return { total: NaN, rollsDescription: `Error: Invalid number of dice in '${term}'` };
+      }
+      if (isNaN(numSides) || numSides <= 0) {
+        console.error(`Invalid number of sides: '${numSidesStr}' in term '${term}'`);
+        return { total: NaN, rollsDescription: `Error: Invalid number of sides in '${term}'` };
+      }
+
+      for (let j = 0; j < numDice; j++) {
+        const roll = Math.floor(Math.random() * numSides) + 1;
+        individualRolls.push(roll);
+        if (isNegative) {
+          total -= roll;
+        } else {
+          total += roll;
+        }
+      }
+    } else {
+      // This is a modifier term (e.g., "5", "+5", "-2")
+      const modifierVal = parseInt(termValueStr, 10);
+      if (isNaN(modifierVal)) {
+        console.error(`Invalid modifier: '${termValueStr}' in term '${term}'`);
+        return { total: NaN, rollsDescription: `Error: Invalid modifier '${term}'` };
+      }
+
+      if (isNegative) {
+        total -= modifierVal;
+        modifiers.push({ value: modifierVal, sign: '-' });
+      } else {
+        total += modifierVal;
+        modifiers.push({ value: modifierVal, sign: '+' });
+      }
+    }
+  }
+
+  rollsDescription += individualRolls.length > 0 ? individualRolls.join(', ') : "None";
+
+  if (modifiers.length > 0) {
+    const modifierStr = modifiers.map(m => `${m.sign}${m.value}`).join(' ');
+    rollsDescription += `. Modifier: ${modifierStr}`;
+  }
+
+  rollsDescription += `. Total: ${total}`;
+
+  return { total: total, rollsDescription: rollsDescription };
+}
 
   // --- Custom Dice Rolls --- //
   const addCustomRollBtn = document.getElementById('addCustomRollBtn');
@@ -487,7 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           const deleteBtn = document.createElement('button');
           deleteBtn.textContent = 'Delete';
-          deleteBtn.style.marginLeft = '10px';
+          deleteBtn.style.marginLeft = '10px'; // Keep margin for spacing from roll button
           deleteBtn.style.padding = '3px 8px';
           deleteBtn.style.backgroundColor = '#dc3545';
           deleteBtn.style.color = 'white';
@@ -499,9 +595,30 @@ document.addEventListener('DOMContentLoaded', () => {
               renderCustomRolls();
           });
 
+          const rollActionBtn = document.createElement('button');
+          rollActionBtn.textContent = 'Roll';
+          rollActionBtn.classList.add('roll-custom-btn');
+          rollActionBtn.style.marginLeft = '5px'; // Space from dice summary
+          rollActionBtn.style.padding = '3px 8px'; // Match delete button padding for consistency
+          rollActionBtn.style.backgroundColor = '#28a745'; // A green color for roll
+          rollActionBtn.style.color = 'white';
+          rollActionBtn.style.border = 'none';
+          rollActionBtn.style.borderRadius = '3px';
+          rollActionBtn.style.cursor = 'pointer';
+
+          rollActionBtn.addEventListener('click', function() {
+            let diceNotation = roll.dice.map(d => `${d.count}${d.die}`).join('+');
+            if (!diceNotation) {
+                showModal(`${roll.description} Roll Error`, "No dice specified for this roll.");
+                return;
+            }
+            const result = rollDice(diceNotation);
+            showModal(`${roll.description} Roll`, result.rollsDescription);
+          });
 
           rollDiv.appendChild(descriptionSpan);
           rollDiv.appendChild(diceSummarySpan);
+          rollDiv.appendChild(rollActionBtn); // Roll button before delete button
           rollDiv.appendChild(deleteBtn);
           customRollsDisplayContainer.appendChild(rollDiv);
       });
@@ -564,6 +681,80 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   console.log('[DEBUG] Finished setting up event listeners for class skill checkboxes.');
+
+  // --- Modal Functions ---
+  function showModal(title, resultContent) {
+    if (modalTitle && modalResultText && rollResultModal) {
+      modalTitle.textContent = title;
+      modalResultText.innerHTML = resultContent; // Using innerHTML to allow for formatted descriptions
+      rollResultModal.classList.remove('modal-hidden');
+      rollResultModal.classList.add('modal-visible');
+    } else {
+      console.error('Modal elements not found!');
+    }
+  }
+
+  function hideModal() {
+    if (rollResultModal) {
+      rollResultModal.classList.remove('modal-visible');
+      rollResultModal.classList.add('modal-hidden');
+    }
+  }
+
+  // --- Modal Event Listeners ---
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', hideModal);
+  }
+  if (rollResultModal) {
+    // Optional: Close modal if user clicks outside the modal content
+    rollResultModal.addEventListener('click', function(event) {
+      if (event.target === rollResultModal) { // Check if the click is on the overlay itself
+        hideModal();
+      }
+    });
+  }
+
+  // Example usage (can be removed or tied to actual roll button later):
+  // document.getElementById('someButtonToTestModal').addEventListener('click', () => {
+  //   const rollResult = rollDice("1d20+5");
+  //   showModal("Test Roll: 1d20+5", `${rollResult.rollsDescription}<br><br>Total: ${rollResult.total}`);
+  // });
+
+  // --- Skill and Stat Roll Button Event Listeners ---
+  document.querySelectorAll('.roll-skill-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const skillName = this.dataset.skillname;
+      const totalId = this.dataset.totalid;
+      const skillTotalElement = document.getElementById(totalId);
+      if (skillTotalElement) {
+        const bonus = parseInt(skillTotalElement.textContent, 10) || 0;
+        const rollNotation = `1d20+${bonus}`;
+        const result = rollDice(rollNotation);
+        showModal(`${skillName} Roll`, result.rollsDescription);
+      } else {
+        console.error('Skill total element not found for ID:', totalId);
+        showModal(`${skillName} Roll Error`, "Could not find skill total to perform roll.");
+      }
+    });
+  });
+
+  document.querySelectorAll('.roll-stat-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const statName = this.dataset.statname;
+      const modId = this.dataset.modid;
+      const statModElement = document.getElementById(modId);
+      if (statModElement) {
+        const bonus = parseInt(statModElement.textContent, 10) || 0;
+        const rollNotation = `1d20+${bonus}`;
+        const result = rollDice(rollNotation);
+        showModal(`${statName}`, result.rollsDescription);
+      } else {
+        console.error('Stat modifier element not found for ID:', modId);
+        showModal(`${statName} Error`, "Could not find stat modifier to perform roll.");
+      }
+    });
+  });
+
 });
 
 function createNewBonusForm() {

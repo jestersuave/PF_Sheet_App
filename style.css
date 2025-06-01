@@ -486,6 +486,32 @@ input.skill-rank-input {
     margin-left: auto; /* Push total to the right, utilizing flex space */
 }
 
+/* --- Roll Button Styles --- */
+.roll-skill-btn,
+.roll-stat-btn,
+.roll-custom-btn {
+  padding: 3px 8px; /* Adjusted padding */
+  font-size: 0.85em; /* Slightly larger for better readability */
+  margin-left: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px; /* Slightly more rounded */
+  background-color: #e9e9e9; /* Lighter grey for differentiation */
+  color: #333;
+  cursor: pointer;
+  vertical-align: middle;
+  line-height: 1; /* Ensure text is centered well if padding is uneven */
+  transition: background-color 0.15s ease-in-out; /* Smooth transition for hover */
+}
+
+.roll-skill-btn:hover,
+.roll-stat-btn:hover,
+.roll-custom-btn:hover {
+  background-color: #d5d5d5; /* Darken on hover */
+}
+
+/* Note: .roll-custom-btn specific styles (like its green background) are applied inline in JS for now.
+   If those were to be moved to CSS, they would override parts of the above. */
+
 /* --- Dark Mode Styles --- */
 body.dark-mode {
   background-color: #000033; /* Dark navy blue */
@@ -555,6 +581,29 @@ body.dark-mode .bonus-form button.cancel-bonus-btn:hover,
 body.dark-mode .displayed-bonus button.delete-bonus-btn:hover,
 body.dark-mode #customRollsDisplayContainer .displayed-roll button:hover {
   background-color: #a00000; /* Lighter red on hover */
+}
+
+/* Dark Mode Roll Button Styles (These are more specific than general dark mode button) */
+body.dark-mode .roll-skill-btn,
+body.dark-mode .roll-stat-btn,
+body.dark-mode .roll-custom-btn {
+  background-color: #2c2c60; /* Darker background for buttons */
+  color: #d0d0d0; /* Light text */
+  border-color: #505070; /* Border color for dark mode */
+}
+
+body.dark-mode .roll-skill-btn:hover,
+body.dark-mode .roll-stat-btn:hover,
+body.dark-mode .roll-custom-btn:hover {
+  background-color: #3a3a7a; /* Slightly lighter on hover in dark mode */
+}
+/* Ensure custom roll button (green in light mode) gets dark mode override if not handled by general button */
+body.dark-mode .roll-custom-btn { /* This selector is the same as above, so it's fine */
+    background-color: #1d6a2a; /* Darker green for dark mode */
+    border-color: #28502f;
+}
+body.dark-mode .roll-custom-btn:hover {
+    background-color: #278838; /* Slightly lighter green for hover in dark mode */
 }
 
 
@@ -652,3 +701,81 @@ body.dark-mode a {
 body.dark-mode a:hover {
   color: #b8ceff;
 }
+
+/* --- Modal Styles --- */
+.modal-hidden {
+  display: none;
+}
+
+.modal-visible {
+  display: flex; /* Use flex to center content */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.6); /* Black w/ opacity for overlay */
+  align-items: center; /* Vertical center */
+  justify-content: center; /* Horizontal center */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto; /* Auto margins for centering, though flex handles it */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px; /* Max width for the modal */
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  position: relative; /* For positioning the close button */
+}
+
+.modal-close-btn {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.modal-close-btn:hover,
+.modal-close-btn:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#modalTitle {
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+#modalResultText {
+  font-size: 1.8em; /* Large font for result, adjusted from 2em for balance */
+  text-align: center;
+  word-wrap: break-word; /* Ensure long descriptions wrap */
+}
+
+/* Dark Mode Modal Styles */
+body.dark-mode .modal-content {
+  background-color: #1a1a4a; /* Dark background for modal content */
+  color: #e0e0e0; /* Light text */
+  border-color: #555; /* Darker border */
+}
+
+body.dark-mode .modal-close-btn {
+  color: #ccc; /* Lighter close button for dark mode */
+}
+
+body.dark-mode .modal-close-btn:hover,
+body.dark-mode .modal-close-btn:focus {
+  color: #fff; /* White hover/focus for close button */
+}
+
+body.dark-mode #modalTitle {
+   color: #c0c0ff; /* Matching h2 in dark mode */
+}
+/* modalResultText color will be inherited from .modal-content */
