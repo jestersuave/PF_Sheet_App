@@ -107,7 +107,8 @@ h2 {
 #abilityScores > div,
 /* #skills > div, */ /* Will be styled separately for compactness */
 #combatStats > div,
-#savingThrows > div {
+#savingThrows > div,
+#skills > div { /* Apply common flex properties but override specifics below */
   display: flex;
   align-items: center;
   margin-bottom: 6px; /* Space between rows */
@@ -118,7 +119,8 @@ h2 {
 #skills > div {
   display: flex;
   align-items: center;
-  flex-wrap: nowrap; /* Ensure skills items stay on one line */
+  /* flex-wrap: nowrap; */ /* Allow skill items to wrap if they become too long - CHANGED */
+  flex-wrap: wrap;
   margin-bottom: 4px; /* Reduced space between skill rows */
   padding: 2px 0; /* Reduced padding, only top/bottom */
   border-bottom: 1px solid #eee; /* Light separator for rows */
@@ -489,9 +491,10 @@ input.skill-rank-input {
 /* --- Roll Button Styles --- */
 .roll-skill-btn,
 .roll-stat-btn,
-.roll-custom-btn {
-  padding: 3px 8px; /* Adjusted padding */
-  font-size: 0.85em; /* Slightly larger for better readability */
+.roll-custom-btn,
+.roll-save-btn { /* Added new class */
+  padding: 3px 8px;
+  font-size: 0.85em;
   margin-left: 8px;
   border: 1px solid #ccc;
   border-radius: 4px; /* Slightly more rounded */
@@ -505,8 +508,9 @@ input.skill-rank-input {
 
 .roll-skill-btn:hover,
 .roll-stat-btn:hover,
-.roll-custom-btn:hover {
-  background-color: #d5d5d5; /* Darken on hover */
+.roll-custom-btn:hover,
+.roll-save-btn:hover { /* Added new class */
+  background-color: #d5d5d5;
 }
 
 /* Note: .roll-custom-btn specific styles (like its green background) are applied inline in JS for now.
@@ -586,16 +590,18 @@ body.dark-mode #customRollsDisplayContainer .displayed-roll button:hover {
 /* Dark Mode Roll Button Styles (These are more specific than general dark mode button) */
 body.dark-mode .roll-skill-btn,
 body.dark-mode .roll-stat-btn,
-body.dark-mode .roll-custom-btn {
-  background-color: #2c2c60; /* Darker background for buttons */
-  color: #d0d0d0; /* Light text */
-  border-color: #505070; /* Border color for dark mode */
+body.dark-mode .roll-custom-btn,
+body.dark-mode .roll-save-btn { /* Added new class */
+  background-color: #2c2c60;
+  color: #d0d0d0;
+  border-color: #505070;
 }
 
 body.dark-mode .roll-skill-btn:hover,
 body.dark-mode .roll-stat-btn:hover,
-body.dark-mode .roll-custom-btn:hover {
-  background-color: #3a3a7a; /* Slightly lighter on hover in dark mode */
+body.dark-mode .roll-custom-btn:hover,
+body.dark-mode .roll-save-btn:hover { /* Added new class */
+  background-color: #3a3a7a;
 }
 /* Ensure custom roll button (green in light mode) gets dark mode override if not handled by general button */
 body.dark-mode .roll-custom-btn { /* This selector is the same as above, so it's fine */
@@ -864,3 +870,67 @@ body.dark-mode #modalTitle {
    color: #c0c0ff; /* Matching h2 in dark mode */
 }
 /* modalResultText color will be inherited from .modal-content */
+
+/* Styling for the container of stat selection dropdowns */
+.stat-dropdown-container {
+  display: flex;
+  align-items: center;
+  margin-top: 4px; /* Add some space above the dropdown */
+  margin-bottom: 4px; /* Add some space below the dropdown */
+  flex-wrap: wrap; /* Allow wrapping if space is tight */
+}
+
+.stat-dropdown-container label {
+  min-width: 70px; /* Adjust as needed, e.g., "Based on:" */
+  margin-right: 5px;
+  font-size: 0.9em; /* Slightly smaller label */
+}
+
+.stat-select-dropdown {
+  flex-grow: 1; /* Allow dropdown to take available space */
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  min-width: 150px; /* Minimum width for the dropdown */
+  max-width: 100%; /* Ensure it doesn't overflow its container */
+  /* For multi-select, height might need adjustment or be left to browser default */
+  height: 60px; /* Adjust height for a few visible options, or remove for default */
+}
+
+/* Adjustments for skills section to accommodate dropdowns */
+/* #skills > div is already flex-wrap: wrap; */
+
+#skills .stat-dropdown-container {
+  width: 100%; /* Make dropdown container take full width in skills to appear below the rank */
+  margin-left: 0; /* Align with the skill label */
+  /* margin-top is already handled */
+}
+
+#skills .stat-dropdown-container label {
+  min-width: 60px; /* "Based on:" */
+}
+
+#skills .stat-select-dropdown {
+   /* flex-grow is fine, width will be constrained by container */
+}
+
+/* Saving Throws, Combat Stats - Dropdown layout */
+#savingThrows .stat-dropdown-container,
+#combatStats .stat-dropdown-container {
+  /* Default flex behavior should be fine, adjust if specific wrapping is needed */
+  /* Example: ensure it's on its own line if desired */
+   width: 100%;
+   margin-left: 0; /* Align with the main label of the save/stat */
+}
+
+#savingThrows .stat-dropdown-container label,
+#combatStats .stat-dropdown-container label {
+  min-width: 75px; /* "Based on:" or "Based on (Bonuses to AC):" */
+}
+
+/* Dark Mode for Stat Select Dropdowns */
+body.dark-mode .stat-select-dropdown {
+  background-color: #1a1a4a;
+  color: #e0e0e0;
+  border-color: #555;
+}
