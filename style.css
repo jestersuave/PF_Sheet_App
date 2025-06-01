@@ -607,6 +607,94 @@ body.dark-mode .roll-custom-btn:hover {
 }
 
 
+/* --- Webhook Configuration Styles --- */
+#webhookConfigSection {
+  border: 1px solid #aaa;
+  padding: 10px;
+  border-radius: 3px;
+  margin-top: 15px; /* Space from previous section */
+}
+
+#webhookConfigSection h2 { /* Uses existing h2 styles, but you can override if needed */
+  margin-top: 0; /* No top margin if it's the first element in its own section */
+}
+
+#webhookConfigSection > div { /* The div containing label, input, and button */
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between label, input, and button */
+  margin-bottom: 5px; /* Space before the status message */
+}
+
+#webhookConfigSection label {
+  min-width: auto; /* Override default label min-width if too large */
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+#webhookConfigSection input[type="text"] {
+  flex-grow: 1; /* Allow input to take available space */
+  padding: 6px; /* Consistent padding */
+  /* width is handled by flex-grow, but set a min-width if desired */
+  min-width: 200px;
+}
+
+#webhookConfigSection button {
+  padding: 6px 12px;
+  background-color: #4CAF50; /* Green for save, consistent with other save buttons */
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#webhookConfigSection button:hover {
+  background-color: #45a049;
+}
+
+.webhook-status-message {
+    color: #333; /* Default text color */
+    min-height: 1.2em; /* Reserve space even if empty */
+}
+
+
+/* Dark Mode Webhook Configuration Styles */
+body.dark-mode #webhookConfigSection {
+  border-color: #444;
+  background-color: #101040; /* Dark background for sections */
+}
+
+body.dark-mode #webhookConfigSection label {
+  color: #d0d0d0;
+}
+
+body.dark-mode #webhookConfigSection input[type="text"] {
+  background-color: #1a1a4a;
+  color: #e0e0e0;
+  border-color: #555;
+}
+
+body.dark-mode #webhookConfigSection input[type="text"]::placeholder {
+  color: #aaa;
+}
+
+body.dark-mode #webhookConfigSection button {
+  background-color: #005000; /* Darker green */
+  color: #e0e0e0;
+  border-color: #555; /* Though current buttons are borderless */
+}
+
+body.dark-mode #webhookConfigSection button:hover {
+  background-color: #007000; /* Lighter green on hover */
+}
+
+body.dark-mode .webhook-status-message {
+    color: #ccc; /* Lighter text for status message */
+}
+
+=======
+
 body.dark-mode #abilityScores,
 body.dark-mode #skills,
 body.dark-mode #combatStats,
