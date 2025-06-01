@@ -302,6 +302,40 @@ function updateAllCharacterSheetCalculations() {
   console.log("[DEBUG] updateAllCharacterSheetCalculations completed");
 }
 
+// --- Webhook Function ---
+function sendToWebhook(webhookData) {
+  const webhookUrl = localStorage.getItem('webhookUrl');
+
+  if (!webhookUrl) {
+    console.log('[Webhook] No webhook URL configured. Skipping send.');
+    return;
+  }
+
+  console.log('[Webhook] Sending data to:', webhookUrl, webhookData);
+
+  fetch(webhookUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(webhookData),
+  })
+  .then(response => {
+    if (!response.ok) {
+      // Log the response status and text for more detailed error info
+      response.text().then(text => {
+        console.error('[Webhook] Error sending data:', response.status, response.statusText, text);
+      });
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    console.log('[Webhook] Data sent successfully:', response.status);
+    // It might be useful to log response.json() if the webhook returns a meaningful body
+    // return response.json();
+  })
+  .catch(error => {
+    console.error('[Webhook] Failed to send data:', error);
+  });
+}
 
 // --- Event Listeners & Initial Calculation ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -470,7 +504,6 @@ function rollDice(diceNotationInput) {
       }
     }
     firstTermProcessed = true;
-    }
   }
 
   rollsDescription += individualRolls.length > 0 ? individualRolls.join(', ') : "None";
