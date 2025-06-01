@@ -825,7 +825,7 @@ function rollDice(diceNotationInput) {
 *${result.diceNotation} (Rolls: ${result.individualRolls.join(', ')}) Modifier: ${result.modifier >= 0 ? '+' : ''}${result.modifier}*`,
             color: 5814783, // Blue
             timestamp: new Date().toISOString(),
-          }]
+          }],
           content: result.rollsDescription,
           roll_type: `Skill: ${skillName}`,
           dice_notation: result.diceNotation,
