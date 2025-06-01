@@ -429,7 +429,6 @@ function rollDice(diceNotation) {
   // e.g., "5+2d6" -> ["5", "+2d6"]
   const terms = normalizedNotation.match(/[+\-]?[^+\-]+/g) || [];
   let firstTermProcessed = false;
-  let firstTermProcessed = false;
 
   for (let i = 0; i < terms.length; i++) {
     let term = terms[i];
@@ -438,7 +437,6 @@ function rollDice(diceNotation) {
 
     // For the very first term, if it's a number and has no explicit sign, it's positive.
     // If it's a dice roll like "d20", it's also positive.
-    let termValueStr = term.replace(/^[+\-]/, ''); // Remove leading + or - to get the value part
 
     // If it's the first term and has no sign, it's implicitly positive.
 
@@ -513,11 +511,6 @@ function rollDice(diceNotation) {
       }
     }
     firstTermProcessed = true;
-        modifiers.push({ value: modifierVal, sign: '-' });
-      } else {
-        total += modifierVal;
-        modifiers.push({ value: modifierVal, sign: '+' });
-      }
     }
   }
 
