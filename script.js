@@ -418,7 +418,8 @@ function rollDice(diceNotationInput) {
   // e.g., "d20-1" -> ["1d20", "-1"] (after normalization)
   // e.g., "5+2d6" -> ["5", "+2d6"]
   const terms = normalizedNotation.match(/[+\-]?[^+\-]+/g) || [];
-  // let firstTermProcessed = false; // This variable was removed in a previous step
+
+  let firstTermProcessed = false;
 
   for (let i = 0; i < terms.length; i++) {
     let term = terms[i];
@@ -468,7 +469,8 @@ function rollDice(diceNotationInput) {
         modifierSum += modifierVal;
       }
     }
-    // firstTermProcessed = true; // This line was removed in a previous step
+    firstTermProcessed = true;
+    }
   }
 
   rollsDescription += individualRolls.length > 0 ? individualRolls.join(', ') : "None";
