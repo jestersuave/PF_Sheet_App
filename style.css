@@ -606,6 +606,7 @@ body.dark-mode .roll-custom-btn:hover {
     background-color: #278838; /* Slightly lighter green for hover in dark mode */
 }
 
+
 /* --- Webhook Configuration Styles --- */
 #webhookConfigSection {
   border: 1px solid #aaa;
@@ -692,6 +693,7 @@ body.dark-mode .webhook-status-message {
     color: #ccc; /* Lighter text for status message */
 }
 
+=======
 
 body.dark-mode #abilityScores,
 body.dark-mode #skills,

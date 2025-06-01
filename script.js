@@ -311,10 +311,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalResultText = document.getElementById('modalResultText');
   const modalCloseBtn = document.querySelector('.modal-close-btn');
 
+
   // Webhook UI Elements
   const webhookUrlInput = document.getElementById('webhookUrlInput');
   const saveWebhookBtn = document.getElementById('saveWebhookBtn');
   const webhookStatusMessage = document.getElementById('webhookStatusMessage');
+
+=======
 
   // Theme switching logic
   const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -389,6 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log("calculateAbilityModifier tests completed.");
 
 // --- Dice Rolling Function ---
+
 function rollDice(diceNotationInput) {
   let total = 0;
   let rollsDescription = "Rolls: ";
@@ -399,9 +403,21 @@ function rollDice(diceNotationInput) {
 
   // Normalize input: remove whitespace and handle "d6" as "1d6"
   let normalizedNotation = diceNotationInput.trim();
+=======
+function rollDice(diceNotation) {
+  let total = 0;
+  let rollsDescription = "Rolls: ";
+  const individualRolls = [];
+  const modifiers = []; // Store modifiers with their signs and values
+
+  // Normalize input: remove whitespace and handle "d6" as "1d6"
+  let normalizedNotation = diceNotation.trim();
+
+
   if (normalizedNotation.startsWith('d')) {
     normalizedNotation = '1' + normalizedNotation;
   }
+
 
   // Error return object
   const errorReturn = (message) => ({
@@ -412,25 +428,37 @@ function rollDice(diceNotationInput) {
     diceNotation: storedDiceNotation
   });
 
+=======
+
   // Split by '+' and '-' to separate terms, keeping delimiters
   // e.g., "2d6+5-1d4-2" -> ["2d6", "+5", "-1d4", "-2"]
   // e.g., "d20-1" -> ["1d20", "-1"] (after normalization)
   // e.g., "5+2d6" -> ["5", "+2d6"]
   const terms = normalizedNotation.match(/[+\-]?[^+\-]+/g) || [];
+
   let firstTermProcessed = false;
+=======
+
 
   for (let i = 0; i < terms.length; i++) {
     let term = terms[i];
     let isNegative = term.startsWith('-');
+
     let termValueStr = term.replace(/^[+\-]/, '');
 
     // For the very first term, if it's a number and has no explicit sign, it's positive.
     // If it's a dice roll like "d20", it's also positive.
+=======
+    let termValueStr = term.replace(/^[+\-]/, ''); // Remove leading + or - to get the value part
+
+    // If it's the first term and has no sign, it's implicitly positive.
+
     if (i === 0 && !term.startsWith('+') && !term.startsWith('-')) {
       isNegative = false;
     }
 
     if (termValueStr.includes('d')) {
+
       // Dice term
       let [numDiceStr, numSidesStr] = termValueStr.split('d');
       let numDice = numDiceStr === '' ? 1 : parseInt(numDiceStr, 10);
@@ -441,6 +469,27 @@ function rollDice(diceNotationInput) {
       }
       if (isNaN(numSides) || numSides <= 0) {
         return errorReturn(`Error: Invalid number of sides '${numSidesStr}' in term '${term}'`);
+=======
+      // This is a dice term (e.g., "2d6", "d20" which became "1d20")
+      let [numDiceStr, numSidesStr] = termValueStr.split('d');
+
+      let numDice = parseInt(numDiceStr, 10);
+      // If numDiceStr was empty (e.g., "d6" -> "1d6", numDiceStr is "1"), this is fine.
+      // If it was explicitly "1d6", numDiceStr is "1".
+      // If it was "d6" and normalized to "1d6", split gives numDiceStr="1"
+      if (numDiceStr === '') numDice = 1; // Handles cases like "d6" if split results in "" for numDice
+      else numDice = parseInt(numDiceStr, 10);
+
+      let numSides = parseInt(numSidesStr, 10);
+
+      if (isNaN(numDice) || numDice <= 0) {
+        console.error(`Invalid number of dice: '${numDiceStr}' in term '${term}'`);
+        return { total: NaN, rollsDescription: `Error: Invalid number of dice in '${term}'` };
+      }
+      if (isNaN(numSides) || numSides <= 0) {
+        console.error(`Invalid number of sides: '${numSidesStr}' in term '${term}'`);
+        return { total: NaN, rollsDescription: `Error: Invalid number of sides in '${term}'` };
+
       }
 
       for (let j = 0; j < numDice; j++) {
@@ -453,14 +502,23 @@ function rollDice(diceNotationInput) {
         }
       }
     } else {
+
       // Modifier term
       const modifierVal = parseInt(termValueStr, 10);
       if (isNaN(modifierVal)) {
         return errorReturn(`Error: Invalid modifier '${termValueStr}' in term '${term}'`);
+=======
+      // This is a modifier term (e.g., "5", "+5", "-2")
+      const modifierVal = parseInt(termValueStr, 10);
+      if (isNaN(modifierVal)) {
+        console.error(`Invalid modifier: '${termValueStr}' in term '${term}'`);
+        return { total: NaN, rollsDescription: `Error: Invalid modifier '${term}'` };
+
       }
 
       if (isNegative) {
         total -= modifierVal;
+
         modifierSum -= modifierVal;
       } else {
         // This handles explicitly positive terms like "+5" or first terms like "5"
@@ -469,16 +527,31 @@ function rollDice(diceNotationInput) {
       }
     }
     firstTermProcessed = true;
+=======
+        modifiers.push({ value: modifierVal, sign: '-' });
+      } else {
+        total += modifierVal;
+        modifiers.push({ value: modifierVal, sign: '+' });
+      }
+    }
+
   }
 
   rollsDescription += individualRolls.length > 0 ? individualRolls.join(', ') : "None";
 
+
   if (modifierSum !== 0 || (terms.some(term => !term.includes('d')) && individualRolls.length > 0) || terms.length === 0 && modifierSum !==0 ) {
      // Show modifier if it's non-zero, or if there was any modifier term and also dice, or if it's just a number
     rollsDescription += `. Modifier: ${modifierSum >= 0 ? '+' : ''}${modifierSum}`;
+=======
+  if (modifiers.length > 0) {
+    const modifierStr = modifiers.map(m => `${m.sign}${m.value}`).join(' ');
+    rollsDescription += `. Modifier: ${modifierStr}`;
+
   }
 
   rollsDescription += `. Total: ${total}`;
+
 
   return {
     total: total,
@@ -540,6 +613,11 @@ async function sendToWebhook(data) {
          setTimeout(() => { webhookStatusMessage.textContent = ''; }, 3000);
     }
   }
+}
+
+
+=======
+  return { total: total, rollsDescription: rollsDescription };
 }
 
 
@@ -685,6 +763,7 @@ async function sendToWebhook(data) {
             const result = rollDice(diceNotation);
             showModal(`${roll.description} Roll`, result.rollsDescription);
 
+
             // Prepare and send to webhook
             const webhookData = {
               roll_type: `Custom: ${roll.description}`,
@@ -695,6 +774,8 @@ async function sendToWebhook(data) {
               full_description: result.rollsDescription
             };
             sendToWebhook(webhookData);
+=======
+
           });
 
           rollDiv.appendChild(descriptionSpan);
@@ -813,6 +894,7 @@ async function sendToWebhook(data) {
         const result = rollDice(rollNotation);
         showModal(`${skillName} Roll`, result.rollsDescription);
 
+
         // Prepare and send to webhook
         const webhookData = {
           roll_type: `Skill: ${skillName}`,
@@ -823,6 +905,8 @@ async function sendToWebhook(data) {
           full_description: result.rollsDescription
         };
         sendToWebhook(webhookData);
+=======
+
       } else {
         console.error('Skill total element not found for ID:', totalId);
         showModal(`${skillName} Roll Error`, "Could not find skill total to perform roll.");
@@ -841,6 +925,7 @@ async function sendToWebhook(data) {
         const result = rollDice(rollNotation);
         showModal(`${statName}`, result.rollsDescription);
 
+
         // Prepare and send to webhook
         const webhookData = {
           roll_type: `Stat: ${statName}`,
@@ -851,12 +936,15 @@ async function sendToWebhook(data) {
           full_description: result.rollsDescription
         };
         sendToWebhook(webhookData);
+=======
+
       } else {
         console.error('Stat modifier element not found for ID:', modId);
         showModal(`${statName} Error`, "Could not find stat modifier to perform roll.");
       }
     });
   });
+
 
   // --- Webhook URL Load and Save ---
   if (webhookUrlInput) {
@@ -882,6 +970,8 @@ async function sendToWebhook(data) {
     if (!webhookUrlInput) console.error('Webhook URL Input (webhookUrlInput) not found.');
     if (!webhookStatusMessage) console.error('Webhook Status Message (webhookStatusMessage) not found.');
   }
+
+=======
 
 });
 
