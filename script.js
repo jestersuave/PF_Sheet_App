@@ -685,6 +685,13 @@ function rollDice(diceNotationInput) {
                 color: 5814783, // Blue
                 timestamp: new Date().toISOString(),
               }]
+              content: result.rollsDescription,
+              roll_type: `Custom: ${roll.description}`,
+              dice_notation: result.diceNotation, // or just diceNotation variable from above
+              individual_rolls: result.individualRolls,
+              modifier: result.modifier,
+              total: result.total,
+              full_description: result.rollsDescription
             };
             sendToWebhook(webhookData);
           });
@@ -819,6 +826,13 @@ function rollDice(diceNotationInput) {
             color: 5814783, // Blue
             timestamp: new Date().toISOString(),
           }]
+          content: result.rollsDescription,
+          roll_type: `Skill: ${skillName}`,
+          dice_notation: result.diceNotation,
+          individual_rolls: result.individualRolls,
+          modifier: result.modifier,
+          total: result.total,
+          full_description: result.rollsDescription
         };
         sendToWebhook(webhookData);
       } else {
@@ -853,6 +867,13 @@ function rollDice(diceNotationInput) {
             color: 5814783, // Blue
             timestamp: new Date().toISOString(),
           }]
+          content: result.rollsDescription,
+          roll_type: `Stat: ${statName}`,
+          dice_notation: result.diceNotation,
+          individual_rolls: result.individualRolls,
+          modifier: result.modifier,
+          total: result.total,
+          full_description: result.rollsDescription
         };
         sendToWebhook(webhookData);
       } else {
