@@ -76,51 +76,54 @@
           <div>
             <label for="fortBase">Fortitude Base:</label>
             <input type="number" id="fortBase" value="0">
-            <div class="stat-dropdown-container">
-              <label for="fortStatSelect">Based on:</label>
-              <select multiple id="fortStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default (Con)</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="fortStatSelectBtn">Based on:</label>
+              <button id="fortStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="fortStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="fortStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="fortStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="fortStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="fortStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="fortStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="fortStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="fortStat" value="doubleDefault"> Double Default (Con)</label>
+              </div>
             </div>
             <span>Total: <span id="fortTotal">0</span></span><button class="roll-save-btn" data-savename="Fortitude" data-totalid="fortTotal">Roll</button>
           </div>
           <div>
             <label for="refBase">Reflex Base:</label>
             <input type="number" id="refBase" value="0">
-            <div class="stat-dropdown-container">
-              <label for="refStatSelect">Based on:</label>
-              <select multiple id="refStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default (Dex)</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="refStatSelectBtn">Based on:</label>
+              <button id="refStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="refStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="refStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="refStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="refStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="refStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="refStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="refStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="refStat" value="doubleDefault"> Double Default (Dex)</label>
+              </div>
             </div>
             <span>Total: <span id="refTotal">0</span></span><button class="roll-save-btn" data-savename="Reflex" data-totalid="refTotal">Roll</button>
           </div>
           <div>
             <label for="willBase">Will Base:</label>
             <input type="number" id="willBase" value="0">
-            <div class="stat-dropdown-container">
-              <label for="willStatSelect">Based on:</label>
-              <select multiple id="willStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default (Wis)</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="willStatSelectBtn">Based on:</label>
+              <button id="willStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="willStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="willStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="willStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="willStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="willStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="willStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="willStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="willStat" value="doubleDefault"> Double Default (Wis)</label>
+              </div>
             </div>
             <span>Total: <span id="willTotal">0</span></span><button class="roll-save-btn" data-savename="Will" data-totalid="willTotal">Roll</button>
           </div>
@@ -158,17 +161,18 @@
             <input type="number" id="miscAcBonus" value="0">
           </div>
           <div>
-            <div class="stat-dropdown-container">
-              <label for="acStatSelect">Based on (Bonuses to AC):</label>
-              <select multiple id="acStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default (Dex)</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="acStatSelectBtn">Based on (Bonuses to AC):</label>
+              <button id="acStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="acStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="acStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="acStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="acStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="acStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="acStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="acStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="acStat" value="doubleDefault"> Double Default (Dex)</label>
+              </div>
             </div>
             <span>Total AC: <span id="acTotal">10</span></span>
           </div>
@@ -181,32 +185,34 @@
             <input type="number" id="sizeModAttack" value="0">
           </div>
           <div>
-            <div class="stat-dropdown-container">
-              <label for="meleeAttackStatSelect">Based on:</label>
-              <select multiple id="meleeAttackStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default (Str)</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="meleeAttackStatSelectBtn">Based on:</label>
+              <button id="meleeAttackStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="meleeAttackStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="meleeAttackStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="meleeAttackStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="meleeAttackStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="meleeAttackStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="meleeAttackStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="meleeAttackStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="meleeAttackStat" value="doubleDefault"> Double Default (Str)</label>
+              </div>
             </div>
             <span>Melee Attack: <span id="meleeAttack">0</span></span>
           </div>
           <div>
-            <div class="stat-dropdown-container">
-              <label for="rangedAttackStatSelect">Based on:</label>
-              <select multiple id="rangedAttackStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default (Dex)</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="rangedAttackStatSelectBtn">Based on:</label>
+              <button id="rangedAttackStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="rangedAttackStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="rangedAttackStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="rangedAttackStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="rangedAttackStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="rangedAttackStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="rangedAttackStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="rangedAttackStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="rangedAttackStat" value="doubleDefault"> Double Default (Dex)</label>
+              </div>
             </div>
             <span>Ranged Attack: <span id="rangedAttack">0</span></span>
           </div>
@@ -232,17 +238,18 @@
             <input type="checkbox" id="acrobaticsClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="acrobaticsClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="acrobaticsRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="acrobaticsStatSelect">Based on:</label>
-              <select multiple id="acrobaticsStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="acrobaticsStatSelectBtn">Based on:</label>
+              <button id="acrobaticsStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="acrobaticsStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="acrobaticsStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="acrobaticsStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="acrobaticsStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="acrobaticsStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="acrobaticsStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="acrobaticsStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="acrobaticsStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="acrobaticsTotal">0</span></span><button class="roll-skill-btn" data-skillname="Acrobatics" data-totalid="acrobaticsTotal">Roll</button>
             <span id="acrobaticsClassSkillText" class="class-skill-text-display"></span>
@@ -252,17 +259,18 @@
             <input type="checkbox" id="appraiseClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="appraiseClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="appraiseRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="appraiseStatSelect">Based on:</label>
-              <select multiple id="appraiseStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="appraiseStatSelectBtn">Based on:</label>
+              <button id="appraiseStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="appraiseStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="appraiseStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="appraiseStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="appraiseStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="appraiseStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="appraiseStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="appraiseStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="appraiseStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="appraiseTotal">0</span></span><button class="roll-skill-btn" data-skillname="Appraise" data-totalid="appraiseTotal">Roll</button>
             <span id="appraiseClassSkillText" class="class-skill-text-display"></span>
@@ -272,17 +280,18 @@
             <input type="checkbox" id="bluffClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="bluffClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="bluffRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="bluffStatSelect">Based on:</label>
-              <select multiple id="bluffStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="bluffStatSelectBtn">Based on:</label>
+              <button id="bluffStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="bluffStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="bluffStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="bluffStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="bluffStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="bluffStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="bluffStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="bluffStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="bluffStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="bluffTotal">0</span></span><button class="roll-skill-btn" data-skillname="Bluff" data-totalid="bluffTotal">Roll</button>
             <span id="bluffClassSkillText" class="class-skill-text-display"></span>
@@ -292,17 +301,18 @@
             <input type="checkbox" id="climbClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="climbClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="climbRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="climbStatSelect">Based on:</label>
-              <select multiple id="climbStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="climbStatSelectBtn">Based on:</label>
+              <button id="climbStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="climbStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="climbStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="climbStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="climbStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="climbStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="climbStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="climbStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="climbStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="climbTotal">0</span></span><button class="roll-skill-btn" data-skillname="Climb" data-totalid="climbTotal">Roll</button>
             <span id="climbClassSkillText" class="class-skill-text-display"></span>
@@ -312,17 +322,18 @@
             <input type="checkbox" id="craftClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="craftClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="craftRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="craftStatSelect">Based on:</label>
-              <select multiple id="craftStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="craftStatSelectBtn">Based on:</label>
+              <button id="craftStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="craftStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="craftStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="craftStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="craftStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="craftStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="craftStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="craftStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="craftStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="craftTotal">0</span></span><button class="roll-skill-btn" data-skillname="Craft" data-totalid="craftTotal">Roll</button>
             <span id="craftClassSkillText" class="class-skill-text-display"></span>
@@ -332,17 +343,18 @@
             <input type="checkbox" id="diplomacyClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="diplomacyClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="diplomacyRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="diplomacyStatSelect">Based on:</label>
-              <select multiple id="diplomacyStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="diplomacyStatSelectBtn">Based on:</label>
+              <button id="diplomacyStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="diplomacyStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="diplomacyStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="diplomacyStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="diplomacyStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="diplomacyStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="diplomacyStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="diplomacyStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="diplomacyStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="diplomacyTotal">0</span></span><button class="roll-skill-btn" data-skillname="Diplomacy" data-totalid="diplomacyTotal">Roll</button>
             <span id="diplomacyClassSkillText" class="class-skill-text-display"></span>
@@ -352,17 +364,18 @@
             <input type="checkbox" id="disableDeviceClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="disableDeviceClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="disableDeviceRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="disableDeviceStatSelect">Based on:</label>
-              <select multiple id="disableDeviceStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="disableDeviceStatSelectBtn">Based on:</label>
+              <button id="disableDeviceStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="disableDeviceStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="disableDeviceStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="disableDeviceStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="disableDeviceStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="disableDeviceStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="disableDeviceStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="disableDeviceStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="disableDeviceStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="disableDeviceTotal">0</span></span><button class="roll-skill-btn" data-skillname="Disable Device" data-totalid="disableDeviceTotal">Roll</button>
             <span id="disableDeviceClassSkillText" class="class-skill-text-display"></span>
@@ -372,17 +385,18 @@
             <input type="checkbox" id="disguiseClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="disguiseClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="disguiseRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="disguiseStatSelect">Based on:</label>
-              <select multiple id="disguiseStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="disguiseStatSelectBtn">Based on:</label>
+              <button id="disguiseStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="disguiseStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="disguiseStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="disguiseStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="disguiseStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="disguiseStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="disguiseStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="disguiseStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="disguiseStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="disguiseTotal">0</span></span><button class="roll-skill-btn" data-skillname="Disguise" data-totalid="disguiseTotal">Roll</button>
             <span id="disguiseClassSkillText" class="class-skill-text-display"></span>
@@ -392,17 +406,18 @@
             <input type="checkbox" id="escapeArtistClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="escapeArtistClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="escapeArtistRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="escapeArtistStatSelect">Based on:</label>
-              <select multiple id="escapeArtistStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="escapeArtistStatSelectBtn">Based on:</label>
+              <button id="escapeArtistStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="escapeArtistStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="escapeArtistStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="escapeArtistStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="escapeArtistStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="escapeArtistStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="escapeArtistStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="escapeArtistStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="escapeArtistStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="escapeArtistTotal">0</span></span><button class="roll-skill-btn" data-skillname="Escape Artist" data-totalid="escapeArtistTotal">Roll</button>
             <span id="escapeArtistClassSkillText" class="class-skill-text-display"></span>
@@ -412,17 +427,18 @@
             <input type="checkbox" id="flyClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="flyClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="flyRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="flyStatSelect">Based on:</label>
-              <select multiple id="flyStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="flyStatSelectBtn">Based on:</label>
+              <button id="flyStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="flyStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="flyStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="flyStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="flyStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="flyStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="flyStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="flyStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="flyStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="flyTotal">0</span></span><button class="roll-skill-btn" data-skillname="Fly" data-totalid="flyTotal">Roll</button>
             <span id="flyClassSkillText" class="class-skill-text-display"></span>
@@ -432,17 +448,18 @@
             <input type="checkbox" id="handleAnimalClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="handleAnimalClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="handleAnimalRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="handleAnimalStatSelect">Based on:</label>
-              <select multiple id="handleAnimalStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="handleAnimalStatSelectBtn">Based on:</label>
+              <button id="handleAnimalStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="handleAnimalStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="handleAnimalStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="handleAnimalStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="handleAnimalStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="handleAnimalStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="handleAnimalStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="handleAnimalStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="handleAnimalStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="handleAnimalTotal">0</span></span><button class="roll-skill-btn" data-skillname="Handle Animal" data-totalid="handleAnimalTotal">Roll</button>
             <span id="handleAnimalClassSkillText" class="class-skill-text-display"></span>
@@ -452,17 +469,18 @@
             <input type="checkbox" id="healClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="healClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="healRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="healStatSelect">Based on:</label>
-              <select multiple id="healStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="healStatSelectBtn">Based on:</label>
+              <button id="healStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="healStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="healStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="healStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="healStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="healStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="healStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="healStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="healStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="healTotal">0</span></span><button class="roll-skill-btn" data-skillname="Heal" data-totalid="healTotal">Roll</button>
             <span id="healClassSkillText" class="class-skill-text-display"></span>
@@ -472,17 +490,18 @@
             <input type="checkbox" id="intimidateClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="intimidateClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="intimidateRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="intimidateStatSelect">Based on:</label>
-              <select multiple id="intimidateStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="intimidateStatSelectBtn">Based on:</label>
+              <button id="intimidateStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="intimidateStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="intimidateStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="intimidateStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="intimidateStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="intimidateStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="intimidateStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="intimidateStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="intimidateStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="intimidateTotal">0</span></span><button class="roll-skill-btn" data-skillname="Intimidate" data-totalid="intimidateTotal">Roll</button>
             <span id="intimidateClassSkillText" class="class-skill-text-display"></span>
@@ -492,17 +511,18 @@
             <input type="checkbox" id="knowledgeArcanaClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeArcanaClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeArcanaRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="knowledgeArcanaStatSelect">Based on:</label>
-              <select multiple id="knowledgeArcanaStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="knowledgeArcanaStatSelectBtn">Based on:</label>
+              <button id="knowledgeArcanaStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="knowledgeArcanaStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="knowledgeArcanaStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="knowledgeArcanaStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="knowledgeArcanaStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="knowledgeArcanaStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="knowledgeArcanaStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="knowledgeArcanaStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="knowledgeArcanaStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="knowledgeArcanaTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Arcana)" data-totalid="knowledgeArcanaTotal">Roll</button>
             <span id="knowledgeArcanaClassSkillText" class="class-skill-text-display"></span>
@@ -512,17 +532,18 @@
             <input type="checkbox" id="knowledgeDungeoneeringClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeDungeoneeringClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeDungeoneeringRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="knowledgeDungeoneeringStatSelect">Based on:</label>
-              <select multiple id="knowledgeDungeoneeringStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="knowledgeDungeoneeringStatSelectBtn">Based on:</label>
+              <button id="knowledgeDungeoneeringStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="knowledgeDungeoneeringStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="knowledgeDungeoneeringStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="knowledgeDungeoneeringStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="knowledgeDungeoneeringStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="knowledgeDungeoneeringStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="knowledgeDungeoneeringStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="knowledgeDungeoneeringStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="knowledgeDungeoneeringStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="knowledgeDungeoneeringTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Dungeoneering)" data-totalid="knowledgeDungeoneeringTotal">Roll</button>
             <span id="knowledgeDungeoneeringClassSkillText" class="class-skill-text-display"></span>
@@ -532,17 +553,18 @@
             <input type="checkbox" id="knowledgeEngineeringClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeEngineeringClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeEngineeringRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="knowledgeEngineeringStatSelect">Based on:</label>
-              <select multiple id="knowledgeEngineeringStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="knowledgeEngineeringStatSelectBtn">Based on:</label>
+              <button id="knowledgeEngineeringStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="knowledgeEngineeringStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="knowledgeEngineeringStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="knowledgeEngineeringStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="knowledgeEngineeringStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="knowledgeEngineeringStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="knowledgeEngineeringStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="knowledgeEngineeringStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="knowledgeEngineeringStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="knowledgeEngineeringTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Engineering)" data-totalid="knowledgeEngineeringTotal">Roll</button>
             <span id="knowledgeEngineeringClassSkillText" class="class-skill-text-display"></span>
@@ -552,17 +574,18 @@
             <input type="checkbox" id="knowledgeGeographyClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeGeographyClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeGeographyRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="knowledgeGeographyStatSelect">Based on:</label>
-              <select multiple id="knowledgeGeographyStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="knowledgeGeographyStatSelectBtn">Based on:</label>
+              <button id="knowledgeGeographyStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="knowledgeGeographyStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="knowledgeGeographyStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="knowledgeGeographyStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="knowledgeGeographyStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="knowledgeGeographyStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="knowledgeGeographyStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="knowledgeGeographyStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="knowledgeGeographyStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="knowledgeGeographyTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Geography)" data-totalid="knowledgeGeographyTotal">Roll</button>
             <span id="knowledgeGeographyClassSkillText" class="class-skill-text-display"></span>
@@ -572,17 +595,18 @@
             <input type="checkbox" id="knowledgeHistoryClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeHistoryClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeHistoryRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="knowledgeHistoryStatSelect">Based on:</label>
-              <select multiple id="knowledgeHistoryStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="knowledgeHistoryStatSelectBtn">Based on:</label>
+              <button id="knowledgeHistoryStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="knowledgeHistoryStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="knowledgeHistoryStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="knowledgeHistoryStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="knowledgeHistoryStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="knowledgeHistoryStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="knowledgeHistoryStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="knowledgeHistoryStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="knowledgeHistoryStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="knowledgeHistoryTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (History)" data-totalid="knowledgeHistoryTotal">Roll</button>
             <span id="knowledgeHistoryClassSkillText" class="class-skill-text-display"></span>
@@ -592,17 +616,18 @@
             <input type="checkbox" id="knowledgeLocalClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeLocalClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeLocalRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="knowledgeLocalStatSelect">Based on:</label>
-              <select multiple id="knowledgeLocalStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="knowledgeLocalStatSelectBtn">Based on:</label>
+              <button id="knowledgeLocalStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="knowledgeLocalStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="knowledgeLocalStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="knowledgeLocalStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="knowledgeLocalStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="knowledgeLocalStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="knowledgeLocalStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="knowledgeLocalStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="knowledgeLocalStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="knowledgeLocalTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Local)" data-totalid="knowledgeLocalTotal">Roll</button>
             <span id="knowledgeLocalClassSkillText" class="class-skill-text-display"></span>
@@ -612,17 +637,18 @@
             <input type="checkbox" id="knowledgeNatureClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeNatureClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeNatureRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="knowledgeNatureStatSelect">Based on:</label>
-              <select multiple id="knowledgeNatureStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="knowledgeNatureStatSelectBtn">Based on:</label>
+              <button id="knowledgeNatureStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="knowledgeNatureStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="knowledgeNatureStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="knowledgeNatureStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="knowledgeNatureStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="knowledgeNatureStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="knowledgeNatureStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="knowledgeNatureStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="knowledgeNatureStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="knowledgeNatureTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Nature)" data-totalid="knowledgeNatureTotal">Roll</button>
             <span id="knowledgeNatureClassSkillText" class="class-skill-text-display"></span>
@@ -632,17 +658,18 @@
             <input type="checkbox" id="knowledgeNobilityClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeNobilityClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeNobilityRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="knowledgeNobilityStatSelect">Based on:</label>
-              <select multiple id="knowledgeNobilityStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="knowledgeNobilityStatSelectBtn">Based on:</label>
+              <button id="knowledgeNobilityStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="knowledgeNobilityStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="knowledgeNobilityStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="knowledgeNobilityStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="knowledgeNobilityStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="knowledgeNobilityStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="knowledgeNobilityStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="knowledgeNobilityStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="knowledgeNobilityStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="knowledgeNobilityTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Nobility)" data-totalid="knowledgeNobilityTotal">Roll</button>
             <span id="knowledgeNobilityClassSkillText" class="class-skill-text-display"></span>
@@ -652,17 +679,18 @@
             <input type="checkbox" id="knowledgePlanesClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgePlanesClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgePlanesRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="knowledgePlanesStatSelect">Based on:</label>
-              <select multiple id="knowledgePlanesStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="knowledgePlanesStatSelectBtn">Based on:</label>
+              <button id="knowledgePlanesStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="knowledgePlanesStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="knowledgePlanesStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="knowledgePlanesStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="knowledgePlanesStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="knowledgePlanesStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="knowledgePlanesStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="knowledgePlanesStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="knowledgePlanesStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="knowledgePlanesTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Planes)" data-totalid="knowledgePlanesTotal">Roll</button>
             <span id="knowledgePlanesClassSkillText" class="class-skill-text-display"></span>
@@ -672,17 +700,18 @@
             <input type="checkbox" id="knowledgeReligionClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="knowledgeReligionClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="knowledgeReligionRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="knowledgeReligionStatSelect">Based on:</label>
-              <select multiple id="knowledgeReligionStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="knowledgeReligionStatSelectBtn">Based on:</label>
+              <button id="knowledgeReligionStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="knowledgeReligionStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="knowledgeReligionStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="knowledgeReligionStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="knowledgeReligionStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="knowledgeReligionStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="knowledgeReligionStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="knowledgeReligionStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="knowledgeReligionStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="knowledgeReligionTotal">0</span></span><button class="roll-skill-btn" data-skillname="Knowledge (Religion)" data-totalid="knowledgeReligionTotal">Roll</button>
             <span id="knowledgeReligionClassSkillText" class="class-skill-text-display"></span>
@@ -692,17 +721,18 @@
             <input type="checkbox" id="linguisticsClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="linguisticsClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="linguisticsRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="linguisticsStatSelect">Based on:</label>
-              <select multiple id="linguisticsStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="linguisticsStatSelectBtn">Based on:</label>
+              <button id="linguisticsStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="linguisticsStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="linguisticsStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="linguisticsStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="linguisticsStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="linguisticsStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="linguisticsStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="linguisticsStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="linguisticsStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="linguisticsTotal">0</span></span><button class="roll-skill-btn" data-skillname="Linguistics" data-totalid="linguisticsTotal">Roll</button>
             <span id="linguisticsClassSkillText" class="class-skill-text-display"></span>
@@ -712,17 +742,18 @@
             <input type="checkbox" id="perceptionClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="perceptionClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="perceptionRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="perceptionStatSelect">Based on:</label>
-              <select multiple id="perceptionStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="perceptionStatSelectBtn">Based on:</label>
+              <button id="perceptionStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="perceptionStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="perceptionStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="perceptionStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="perceptionStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="perceptionStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="perceptionStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="perceptionStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="perceptionStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="perceptionTotal">0</span></span><button class="roll-skill-btn" data-skillname="Perception" data-totalid="perceptionTotal">Roll</button>
             <span id="perceptionClassSkillText" class="class-skill-text-display"></span>
@@ -732,17 +763,18 @@
             <input type="checkbox" id="performClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="performClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="performRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="performStatSelect">Based on:</label>
-              <select multiple id="performStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="performStatSelectBtn">Based on:</label>
+              <button id="performStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="performStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="performStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="performStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="performStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="performStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="performStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="performStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="performStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="performTotal">0</span></span><button class="roll-skill-btn" data-skillname="Perform" data-totalid="performTotal">Roll</button>
             <span id="performClassSkillText" class="class-skill-text-display"></span>
@@ -752,17 +784,18 @@
             <input type="checkbox" id="professionClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="professionClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="professionRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="professionStatSelect">Based on:</label>
-              <select multiple id="professionStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="professionStatSelectBtn">Based on:</label>
+              <button id="professionStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="professionStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="professionStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="professionStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="professionStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="professionStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="professionStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="professionStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="professionStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="professionTotal">0</span></span><button class="roll-skill-btn" data-skillname="Profession" data-totalid="professionTotal">Roll</button>
             <span id="professionClassSkillText" class="class-skill-text-display"></span>
@@ -772,17 +805,18 @@
             <input type="checkbox" id="rideClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="rideClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="rideRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="rideStatSelect">Based on:</label>
-              <select multiple id="rideStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="rideStatSelectBtn">Based on:</label>
+              <button id="rideStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="rideStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="rideStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="rideStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="rideStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="rideStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="rideStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="rideStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="rideStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="rideTotal">0</span></span><button class="roll-skill-btn" data-skillname="Ride" data-totalid="rideTotal">Roll</button>
             <span id="rideClassSkillText" class="class-skill-text-display"></span>
@@ -792,17 +826,18 @@
             <input type="checkbox" id="senseMotiveClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="senseMotiveClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="senseMotiveRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="senseMotiveStatSelect">Based on:</label>
-              <select multiple id="senseMotiveStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="senseMotiveStatSelectBtn">Based on:</label>
+              <button id="senseMotiveStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="senseMotiveStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="senseMotiveStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="senseMotiveStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="senseMotiveStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="senseMotiveStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="senseMotiveStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="senseMotiveStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="senseMotiveStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="senseMotiveTotal">0</span></span><button class="roll-skill-btn" data-skillname="Sense Motive" data-totalid="senseMotiveTotal">Roll</button>
             <span id="senseMotiveClassSkillText" class="class-skill-text-display"></span>
@@ -812,17 +847,18 @@
             <input type="checkbox" id="sleightOfHandClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="sleightOfHandClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="sleightOfHandRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="sleightOfHandStatSelect">Based on:</label>
-              <select multiple id="sleightOfHandStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="sleightOfHandStatSelectBtn">Based on:</label>
+              <button id="sleightOfHandStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="sleightOfHandStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="sleightOfHandStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="sleightOfHandStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="sleightOfHandStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="sleightOfHandStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="sleightOfHandStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="sleightOfHandStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="sleightOfHandStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="sleightOfHandTotal">0</span></span><button class="roll-skill-btn" data-skillname="Sleight of Hand" data-totalid="sleightOfHandTotal">Roll</button>
             <span id="sleightOfHandClassSkillText" class="class-skill-text-display"></span>
@@ -832,17 +868,18 @@
             <input type="checkbox" id="spellcraftClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="spellcraftClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="spellcraftRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="spellcraftStatSelect">Based on:</label>
-              <select multiple id="spellcraftStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="spellcraftStatSelectBtn">Based on:</label>
+              <button id="spellcraftStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="spellcraftStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="spellcraftStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="spellcraftStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="spellcraftStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="spellcraftStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="spellcraftStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="spellcraftStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="spellcraftStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="spellcraftTotal">0</span></span><button class="roll-skill-btn" data-skillname="Spellcraft" data-totalid="spellcraftTotal">Roll</button>
             <span id="spellcraftClassSkillText" class="class-skill-text-display"></span>
@@ -852,17 +889,18 @@
             <input type="checkbox" id="stealthClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="stealthClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="stealthRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="stealthStatSelect">Based on:</label>
-              <select multiple id="stealthStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="stealthStatSelectBtn">Based on:</label>
+              <button id="stealthStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="stealthStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="stealthStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="stealthStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="stealthStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="stealthStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="stealthStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="stealthStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="stealthStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="stealthTotal">0</span></span><button class="roll-skill-btn" data-skillname="Stealth" data-totalid="stealthTotal">Roll</button>
             <span id="stealthClassSkillText" class="class-skill-text-display"></span>
@@ -872,17 +910,18 @@
             <input type="checkbox" id="survivalClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="survivalClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="survivalRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="survivalStatSelect">Based on:</label>
-              <select multiple id="survivalStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="survivalStatSelectBtn">Based on:</label>
+              <button id="survivalStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="survivalStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="survivalStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="survivalStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="survivalStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="survivalStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="survivalStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="survivalStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="survivalStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="survivalTotal">0</span></span><button class="roll-skill-btn" data-skillname="Survival" data-totalid="survivalTotal">Roll</button>
             <span id="survivalClassSkillText" class="class-skill-text-display"></span>
@@ -892,17 +931,18 @@
             <input type="checkbox" id="swimClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="swimClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="swimRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="swimStatSelect">Based on:</label>
-              <select multiple id="swimStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="swimStatSelectBtn">Based on:</label>
+              <button id="swimStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="swimStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="swimStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="swimStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="swimStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="swimStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="swimStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="swimStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="swimStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="swimTotal">0</span></span><button class="roll-skill-btn" data-skillname="Swim" data-totalid="swimTotal">Roll</button>
             <span id="swimClassSkillText" class="class-skill-text-display"></span>
@@ -912,17 +952,18 @@
             <input type="checkbox" id="useMagicDeviceClassSkillChk" class="class-skill-checkbox" title="Mark as Class Skill">
             <label for="useMagicDeviceClassSkillChk" class="class-skill-checkbox-label">CS</label>
             <input type="number" id="useMagicDeviceRanks" value="0" class="skill-rank-input">
-            <div class="stat-dropdown-container">
-              <label for="useMagicDeviceStatSelect">Based on:</label>
-              <select multiple id="useMagicDeviceStatSelect" class="stat-select-dropdown">
-                <option value="str">Strength</option>
-                <option value="dex">Dexterity</option>
-                <option value="con">Constitution</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-                <option value="doubleDefault">Double Default</option>
-              </select>
+            <div class="stat-dropdown-container custom-stat-dropdown">
+              <label for="useMagicDeviceStatSelectBtn">Based on:</label>
+              <button id="useMagicDeviceStatSelectBtn" class="stat-select-button">Select Stats</button>
+              <div id="useMagicDeviceStatSelectDropdown" class="stat-select-dropdown-options" style="display: none;">
+                <label><input type="checkbox" name="useMagicDeviceStat" value="str"> Strength</label>
+                <label><input type="checkbox" name="useMagicDeviceStat" value="dex"> Dexterity</label>
+                <label><input type="checkbox" name="useMagicDeviceStat" value="con"> Constitution</label>
+                <label><input type="checkbox" name="useMagicDeviceStat" value="int"> Intelligence</label>
+                <label><input type="checkbox" name="useMagicDeviceStat" value="wis"> Wisdom</label>
+                <label><input type="checkbox" name="useMagicDeviceStat" value="cha"> Charisma</label>
+                <label><input type="checkbox" name="useMagicDeviceStat" value="doubleDefault"> Double Default</label>
+              </div>
             </div>
             <span>Total: <span id="useMagicDeviceTotal">0</span></span><button class="roll-skill-btn" data-skillname="Use Magic Device" data-totalid="useMagicDeviceTotal">Roll</button>
             <span id="useMagicDeviceClassSkillText" class="class-skill-text-display"></span>

@@ -878,59 +878,177 @@ body.dark-mode #modalTitle {
   margin-top: 4px; /* Add some space above the dropdown */
   margin-bottom: 4px; /* Add some space below the dropdown */
   flex-wrap: wrap; /* Allow wrapping if space is tight */
+  /* position: relative; /* This will be on .custom-stat-dropdown if needed */
 }
 
-.stat-dropdown-container label {
-  min-width: 70px; /* Adjust as needed, e.g., "Based on:" */
+.stat-dropdown-container label { /* This is the label like "Based on:" */
+  min-width: 70px;
   margin-right: 5px;
-  font-size: 0.9em; /* Slightly smaller label */
+  font-size: 0.9em;
+  flex-shrink: 0; /* Prevent this label from shrinking */
 }
 
+/* Old .stat-select-dropdown style for <select multiple> - REMOVE OR COMMENT OUT */
+/*
 .stat-select-dropdown {
-  flex-grow: 1; /* Allow dropdown to take available space */
+  flex-grow: 1;
   padding: 4px;
   border: 1px solid #ccc;
   border-radius: 3px;
-  min-width: 150px; /* Minimum width for the dropdown */
-  max-width: 100%; /* Ensure it doesn't overflow its container */
-  /* For multi-select, height might need adjustment or be left to browser default */
-  height: 60px; /* Adjust height for a few visible options, or remove for default */
+  min-width: 150px;
+  max-width: 100%;
+  height: 60px;
 }
+*/
+
+/* NEW STYLES FOR CUSTOM CHECKBOX DROPDOWN */
+.custom-stat-dropdown {
+  position: relative; /* For positioning the absolute dropdown options */
+  /* .stat-dropdown-container already provides flex and alignment */
+}
+
+.stat-select-button {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 5px 8px;
+  text-align: left;
+  cursor: pointer;
+  width: 150px; /* Default width, can be overridden by specific sections */
+  font-size: 0.9em;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1; /* Allow button to take available space in flex container */
+}
+
+.stat-select-button:hover {
+  border-color: #aaa;
+}
+
+.stat-select-button:focus {
+  outline: 1px solid #88b3ff; /* Basic focus indicator */
+}
+
+.stat-select-dropdown-options {
+  display: none; /* Initially hidden, JS will toggle */
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  z-index: 100; /* Ensure it's above other elements */
+  max-height: 200px; /* Limit height and allow scrolling */
+  overflow-y: auto;
+  padding: 5px;
+  margin-top: 2px; /* Small space below the button */
+  min-width: 160px; /* Ensure it's at least as wide as the button */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  width: 100%; /* Default to full width of its relative parent (.custom-stat-dropdown) */
+}
+
+.stat-select-dropdown-options label { /* Labels for checkboxes */
+  display: block;
+  padding: 4px 8px;
+  font-weight: normal;
+  cursor: pointer;
+  margin-bottom: 2px;
+  min-width: unset;
+  font-size: 0.9em;
+  white-space: nowrap; /* Prevent checkbox labels from wrapping */
+}
+
+.stat-select-dropdown-options label:hover {
+  background-color: #f0f0f0;
+}
+
+.stat-select-dropdown-options input[type="checkbox"] {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
 
 /* Adjustments for skills section to accommodate dropdowns */
-/* #skills > div is already flex-wrap: wrap; */
-
-#skills .stat-dropdown-container {
-  width: 100%; /* Make dropdown container take full width in skills to appear below the rank */
-  margin-left: 0; /* Align with the skill label */
-  /* margin-top is already handled */
+#skills .stat-dropdown-container { /* This is the parent flex container */
+  width: 100%;
+  margin-left: 0;
 }
 
-#skills .stat-dropdown-container label {
-  min-width: 60px; /* "Based on:" */
+#skills .stat-dropdown-container label { /* "Based on:" label */
+  min-width: 60px;
 }
 
-#skills .stat-select-dropdown {
-   /* flex-grow is fine, width will be constrained by container */
+#skills .stat-select-button {
+    width: 100%; /* Make button take full width of its container */
+    margin-top: 2px;
+}
+#skills .stat-select-dropdown-options {
+    width: 100%; /* Match button width */
+    /* Position it relative to the .custom-stat-dropdown which is inside .stat-dropdown-container */
 }
 
 /* Saving Throws, Combat Stats - Dropdown layout */
-#savingThrows .stat-dropdown-container,
+#savingThrows .stat-dropdown-container, /* Parent flex container */
 #combatStats .stat-dropdown-container {
-  /* Default flex behavior should be fine, adjust if specific wrapping is needed */
-  /* Example: ensure it's on its own line if desired */
    width: 100%;
-   margin-left: 0; /* Align with the main label of the save/stat */
+   margin-left: 0;
 }
 
-#savingThrows .stat-dropdown-container label,
+#savingThrows .stat-dropdown-container label, /* "Based on:" label */
 #combatStats .stat-dropdown-container label {
-  min-width: 75px; /* "Based on:" or "Based on (Bonuses to AC):" */
+  min-width: 75px;
 }
 
-/* Dark Mode for Stat Select Dropdowns */
+#savingThrows .stat-select-button,
+#combatStats .stat-select-button {
+    /* Default width: 150px from .stat-select-button or flex-grow:1 will apply */
+    /* If .stat-dropdown-container is also .custom-stat-dropdown, button will grow */
+}
+#savingThrows .stat-select-dropdown-options,
+#combatStats .stat-select-dropdown-options {
+    /* min-width ensures it's at least as wide as the button */
+    /* width: 100%; /* to match the container if .custom-stat-dropdown is full width */
+}
+
+
+/* Dark Mode for Custom Stat Select Dropdowns */
+body.dark-mode .stat-select-button {
+  background-color: #1a1a4a;
+  color: #e0e0e0;
+  border-color: #555;
+}
+
+body.dark-mode .stat-select-button:hover {
+  border-color: #777;
+}
+
+body.dark-mode .stat-select-button:focus {
+  outline: 1px solid #588bcf;
+}
+
+body.dark-mode .stat-select-dropdown-options {
+  background-color: #202050; /* Slightly different from button for depth */
+  border-color: #555;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .stat-select-dropdown-options label {
+  color: #e0e0e0;
+}
+
+body.dark-mode .stat-select-dropdown-options label:hover {
+  background-color: #2a2a5a;
+}
+
+body.dark-mode .stat-select-dropdown-options input[type="checkbox"] {
+  accent-color: #588bcf;
+}
+
+/* Ensure old dark mode for .stat-select-dropdown (if any) is removed or commented */
+/*
 body.dark-mode .stat-select-dropdown {
   background-color: #1a1a4a;
   color: #e0e0e0;
   border-color: #555;
 }
+*/
