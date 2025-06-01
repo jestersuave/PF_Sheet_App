@@ -1052,3 +1052,49 @@ body.dark-mode .stat-select-dropdown {
   border-color: #555;
 }
 */
+
+/* === Bonus Form "Applies To" Dropdown Specific Styles === */
+
+/* Ensure the bonus form can act as a positioning context */
+#bonusFormContainer .bonus-form {
+    position: relative;
+}
+
+/* The div containing the "Applies To:" label and the button */
+/* This assumes the div structure from script.js: <div><label.../><button.../></div> */
+/* To make label and button align nicely, this parent div needs to be flex */
+#bonusFormContainer .bonus-form > div:has(> #bonusAppliesToBtn_temp) {
+    display: flex;
+    align-items: center;
+}
+#bonusFormContainer .bonus-form > div:has(> #bonusAppliesToBtn_temp) > label {
+    min-width: 120px; /* From .bonus-form label */
+    margin-bottom: 0; /* Override .bonus-form label margin-bottom */
+}
+
+
+/* Styling for the "Applies To" dropdown options within the bonus form */
+#bonusFormContainer #bonusAppliesToOptions_temp {
+  /* .stat-select-dropdown-options provides most base styles (position, z-index, etc.) */
+  /* The inline style width: 100% was applied in JS. Override if needed or make more specific. */
+  /* Let's make it behave more like other dropdowns and not necessarily full form width */
+  width: auto; /* Override inline 100% if it's too wide */
+  min-width: 250px; /* Ensure it's wide enough for typical target names */
+  max-width: 350px; /* But not excessively wide */
+  left: 0; /* Align with the left of the .bonus-form container (due to .bonus-form being relative) */
+  /* If the button is not at the very left of the form, this might need adjustment,
+     e.g. left: (some offset) or dynamically position with JS (more complex)
+     For now, assuming the button is close enough to the left or this alignment is acceptable.
+     Given the label "Applies To:" is styled with display:block by default in .bonus-form,
+     the button's div is on a new line. So left:0 for the options should align it under the label/button area.
+  */
+}
+
+/* Ensure the button in the bonus form uses available space if its parent div is flex */
+#bonusFormContainer #bonusAppliesToBtn_temp {
+  /* .stat-select-button class already provides flex-grow: 1, padding, etc. */
+  /* This should be sufficient if its parent div is display: flex */
+}
+
+/* Dark Mode adjustments for "Applies To" dropdown - should mostly inherit */
+/* No specific overrides needed if .stat-select-button and .stat-select-dropdown-options dark styles are sufficient */

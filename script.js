@@ -120,6 +120,20 @@ const attackConfigs = [
   { totalId: 'rangedAttack', babId: 'bab', primaryStatModId: 'dexMod', sizeModId: 'sizeModAttack', statSelectId: 'rangedAttackStatSelectDropdown', statSelectBtnId: 'rangedAttackStatSelectBtn', defaultStatKey: 'dex', name: "Ranged Attack" }
 ];
 
+];
+
+// --- Saving Throws, Attack, Defense Configs ---
+const saveConfigs = [
+  { baseId: 'fortBase', totalId: 'fortTotal', abilityModId: 'conMod', statSelectId: 'fortStatSelectDropdown', statSelectBtnId: 'fortStatSelectBtn', saveName: 'Fortitude', defaultStatKey: 'con' },
+  { baseId: 'refBase', totalId: 'refTotal', abilityModId: 'dexMod', statSelectId: 'refStatSelectDropdown', statSelectBtnId: 'refStatSelectBtn', saveName: 'Reflex', defaultStatKey: 'dex' },
+  { baseId: 'willBase', totalId: 'willTotal', abilityModId: 'wisMod', statSelectId: 'willStatSelectDropdown', statSelectBtnId: 'willStatSelectBtn', saveName: 'Will', defaultStatKey: 'wis' }
+];
+
+const attackConfigs = [
+  { totalId: 'meleeAttack', babId: 'bab', primaryStatModId: 'strMod', sizeModId: 'sizeModAttack', statSelectId: 'meleeAttackStatSelectDropdown', statSelectBtnId: 'meleeAttackStatSelectBtn', defaultStatKey: 'str', name: "Melee Attack" },
+  { totalId: 'rangedAttack', babId: 'bab', primaryStatModId: 'dexMod', sizeModId: 'sizeModAttack', statSelectId: 'rangedAttackStatSelectDropdown', statSelectBtnId: 'rangedAttackStatSelectBtn', defaultStatKey: 'dex', name: "Ranged Attack" }
+];
+
 const defenseConfig = {
   totalId: 'acTotal',
   dexModId: 'dexMod',
@@ -391,6 +405,17 @@ function initializeCustomDropdowns() {
       // Initial button text update
       updateStatSelectButtonText(config.statSelectBtnId, config.statSelectId, config.defaultStatKey);
 
+
+  allConfigs.forEach(config => {
+    if (!config.statSelectBtnId || !config.statSelectId) return; // Skip if IDs are missing
+
+    const button = document.getElementById(config.statSelectBtnId);
+    const optionsContainer = document.getElementById(config.statSelectId);
+
+    if (button && optionsContainer) {
+      // Initial button text update
+      updateStatSelectButtonText(config.statSelectBtnId, config.statSelectId, config.defaultStatKey);
+
       button.addEventListener('click', (event) => {
         event.stopPropagation();
         // Close any other dropdown that might be open
@@ -479,6 +504,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const ranksInput = document.getElementById(skill.ranksId);
     if (ranksInput) {
       ranksInput.addEventListener('input', updateAllCharacterSheetCalculations);
+    }
+    const classSkillCheckbox = document.getElementById(skill.classSkillCheckboxId);
+    if (classSkillCheckbox) {
+      classSkillCheckbox.addEventListener('change', updateAllCharacterSheetCalculations);
+    }
     }
     const classSkillCheckbox = document.getElementById(skill.classSkillCheckboxId);
     if (classSkillCheckbox) {
@@ -728,6 +758,83 @@ function createNewBonusForm() {
 
   const formDiv = document.createElement('div');
   formDiv.classList.add('bonus-form');
+  // Start of formHTML modification
+  let formHTML = `
+    <div><label for="bonusTypeSelect_temp">Bonus Type:</label><select id="bonusTypeSelect_temp" name="bonusTypeSelect_temp"><option value="">-- Select Type --</option>${bonusTypes.map(type => `<option value="${type}">${type}</option>`).join('')}</select></div>
+    <div><label for="bonusValue_temp">Bonus Value:</label><input type="number" id="bonusValue_temp" name="bonusValue_temp" value="0"></div>
+
+    <div>
+      <label for="bonusAppliesToBtn_temp">Applies To:</label>
+      <button type="button" id="bonusAppliesToBtn_temp" class="stat-select-button">Select Targets</button>
+    </div>
+    <div id="bonusAppliesToOptions_temp" class="stat-select-dropdown-options" style="display: none;">`; // Removed width: 100%;
+
+  bonusApplicationTargets.forEach(target => {
+    const checkboxId = `bonusTarget_${target.replace(/\s+/g, '').replace(/[()]/g, '')}_temp`;
+    formHTML += `
+      <label style="display: block; padding: 4px 8px; cursor: pointer;">
+          <input type="checkbox" id="${checkboxId}" name="bonusTarget_temp" value="${target}" style="margin-right: 8px; vertical-align: middle;">
+          ${target}
+      </label>`;
+  });
+  formHTML += `</div>`; // Close bonusAppliesToOptions_temp
+
+  formHTML += `
+    <div><label for="bonusDescription_temp">Description/Notes:</label><textarea id="bonusDescription_temp" name="bonusDescription_temp" placeholder="e.g., +2 insight to Perception"></textarea></div>
+    <div style="margin-top: 10px;"><button class="save-bonus-btn">Save Bonus</button><button type="button" class="cancel-bonus-btn">Cancel</button></div>`;
+  // End of formHTML modification
+  formDiv.innerHTML = formHTML;
+  bonusFormContainerRef.appendChild(formDiv);
+
+  // --- Logic for the new "Applies To" custom dropdown ---
+  const appliesToBtn = formDiv.querySelector('#bonusAppliesToBtn_temp');
+  const appliesToOptionsDiv = formDiv.querySelector('#bonusAppliesToOptions_temp');
+
+  if (appliesToBtn && appliesToOptionsDiv) {
+      const appliesToCheckboxes = appliesToOptionsDiv.querySelectorAll('input[name="bonusTarget_temp"]');
+      // Initialize button text
+      updateBonusAppliesToButtonText(appliesToBtn, appliesToOptionsDiv);
+
+      appliesToBtn.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const isHidden = appliesToOptionsDiv.style.display === 'none';
+          // Close other custom dropdowns on the page if any were managed by a similar system
+          // For this specific form, we assume it's the only one of its kind active,
+          // or that its lifecycle is managed by the form's visibility.
+          appliesToOptionsDiv.style.display = isHidden ? 'block' : 'none';
+      });
+
+      appliesToCheckboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', () => {
+              updateBonusAppliesToButtonText(appliesToBtn, appliesToOptionsDiv);
+          });
+      });
+
+      // Click-outside-to-close listener specifically for this dropdown
+      // Wrapped in a named function to potentially manage removal, though complex in this structure
+      const closeAppliesToDropdownListener = (event) => {
+          if (appliesToOptionsDiv.style.display === 'block' &&
+              !appliesToBtn.contains(event.target) &&
+              !appliesToOptionsDiv.contains(event.target)) {
+              appliesToOptionsDiv.style.display = 'none';
+          }
+      };
+      // Add this listener with capture to ensure it can act before other potential stopPropagation calls.
+      // It's added to the document and will be active as long as the formDiv exists.
+      // When formDiv is removed (on save/cancel), this listener ideally should be cleaned up
+      // if it were attached to formDiv. Since it's on document, it's more complex.
+      // A simpler approach might be to rely on the form's modal nature or handle within form's main event flow.
+      // For now, let's keep it simple. If this becomes an issue, a more robust cleanup is needed.
+      document.addEventListener('click', closeAppliesToDropdownListener, true);
+
+      // Attempt to remove the listener when the form is removed.
+      const originalRemove = formDiv.remove;
+      formDiv.remove = function() {
+          document.removeEventListener('click', closeAppliesToDropdownListener, true);
+          originalRemove.apply(this, arguments);
+      };
+  }
+
   let formHTML = `<div><label for="bonusTypeSelect_temp">Bonus Type:</label><select id="bonusTypeSelect_temp" name="bonusTypeSelect_temp"><option value="">-- Select Type --</option>${bonusTypes.map(type => `<option value="${type}">${type}</option>`).join('')}</select></div><div><label for="bonusValue_temp">Bonus Value:</label><input type="number" id="bonusValue_temp" name="bonusValue_temp" value="0"></div><div><label>Applies To (select at least one):</label></div><div class="checkbox-group">`;
   bonusApplicationTargets.forEach(target => {
     const checkboxId = `bonusTarget_${target.replace(/\s+/g, '').replace(/[()]/g, '')}_temp`;
@@ -750,6 +857,21 @@ function createNewBonusForm() {
     formDiv.remove();
   });
   formDiv.querySelector('.cancel-bonus-btn').addEventListener('click', () => formDiv.remove());
+}
+
+function updateBonusAppliesToButtonText(buttonElement, optionsContainerElement) {
+    if (!buttonElement || !optionsContainerElement) return;
+
+    const checkedCheckboxes = Array.from(optionsContainerElement.querySelectorAll('input[type="checkbox"]:checked'));
+    const selectedTargets = checkedCheckboxes.map(cb => cb.value);
+
+    if (selectedTargets.length === 0) {
+        buttonElement.textContent = 'Select Targets';
+    } else if (selectedTargets.length <= 2) {
+        buttonElement.textContent = selectedTargets.join(', ');
+    } else {
+        buttonElement.textContent = `${selectedTargets.length} Targets Selected`;
+    }
 }
 
 function renderBonuses() {
