@@ -673,6 +673,7 @@ function rollDice(diceNotationInput) {
 
             // Prepare and send to webhook
             const webhookData = {
+              content: result.rollsDescription,
               roll_type: `Custom: ${roll.description}`,
               dice_notation: result.diceNotation, // or just diceNotation variable from above
               individual_rolls: result.individualRolls,
@@ -801,6 +802,7 @@ function rollDice(diceNotationInput) {
 
         // Prepare and send to webhook
         const webhookData = {
+          content: result.rollsDescription,
           roll_type: `Skill: ${skillName}`,
           dice_notation: result.diceNotation,
           individual_rolls: result.individualRolls,
@@ -829,6 +831,7 @@ function rollDice(diceNotationInput) {
 
         // Prepare and send to webhook
         const webhookData = {
+          content: result.rollsDescription,
           roll_type: `Stat: ${statName}`,
           dice_notation: result.diceNotation,
           individual_rolls: result.individualRolls,
