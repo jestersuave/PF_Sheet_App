@@ -515,11 +515,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (classSkillCheckbox) {
       classSkillCheckbox.addEventListener('change', updateAllCharacterSheetCalculations);
     }
-    }
-    const classSkillCheckbox = document.getElementById(skill.classSkillCheckboxId);
-    if (classSkillCheckbox) {
-      classSkillCheckbox.addEventListener('change', updateAllCharacterSheetCalculations);
-    }
     // Removed old statSelect listeners, new ones are in initializeCustomDropdowns
   });
   
