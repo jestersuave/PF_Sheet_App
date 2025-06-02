@@ -120,19 +120,6 @@ const attackConfigs = [
   { totalId: 'rangedAttack', babId: 'bab', primaryStatModId: 'dexMod', sizeModId: 'sizeModAttack', statSelectId: 'rangedAttackStatSelectDropdown', statSelectBtnId: 'rangedAttackStatSelectBtn', defaultStatKey: 'dex', name: "Ranged Attack" }
 ];
 
-];
-
-// --- Saving Throws, Attack, Defense Configs ---
-const saveConfigs = [
-  { baseId: 'fortBase', totalId: 'fortTotal', abilityModId: 'conMod', statSelectId: 'fortStatSelectDropdown', statSelectBtnId: 'fortStatSelectBtn', saveName: 'Fortitude', defaultStatKey: 'con' },
-  { baseId: 'refBase', totalId: 'refTotal', abilityModId: 'dexMod', statSelectId: 'refStatSelectDropdown', statSelectBtnId: 'refStatSelectBtn', saveName: 'Reflex', defaultStatKey: 'dex' },
-  { baseId: 'willBase', totalId: 'willTotal', abilityModId: 'wisMod', statSelectId: 'willStatSelectDropdown', statSelectBtnId: 'willStatSelectBtn', saveName: 'Will', defaultStatKey: 'wis' }
-];
-
-const attackConfigs = [
-  { totalId: 'meleeAttack', babId: 'bab', primaryStatModId: 'strMod', sizeModId: 'sizeModAttack', statSelectId: 'meleeAttackStatSelectDropdown', statSelectBtnId: 'meleeAttackStatSelectBtn', defaultStatKey: 'str', name: "Melee Attack" },
-  { totalId: 'rangedAttack', babId: 'bab', primaryStatModId: 'dexMod', sizeModId: 'sizeModAttack', statSelectId: 'rangedAttackStatSelectDropdown', statSelectBtnId: 'rangedAttackStatSelectBtn', defaultStatKey: 'dex', name: "Ranged Attack" }
-];
 
 const defenseConfig = {
   totalId: 'acTotal',
@@ -144,7 +131,6 @@ const defenseConfig = {
   deflectionModId: 'deflectionMod',
   miscAcBonusId: 'miscAcBonus',
   statSelectId: 'acStatSelectDropdown',
-  statSelectBtnId: 'acStatSelectBtn', // Corrected line: extraneous ']' removed
   statSelectBtnId: 'acStatSelectBtn',
   defaultStatKey: 'dex'
 };
@@ -396,8 +382,8 @@ function initializeCustomDropdowns() {
     defenseConfig // defenseConfig is an object, not an array
   ];
 
-  allConfigs.forEach(config => {
-    if (!config.statSelectBtnId || !config.statSelectId) return; // Skip if IDs are missing
+  allConfigs.forEach(config => { // This is the first outer loop
+    if (!config.statSelectBtnId || !config.statSelectId) return;
 
     const button = document.getElementById(config.statSelectBtnId);
     const optionsContainer = document.getElementById(config.statSelectId);
@@ -405,15 +391,16 @@ function initializeCustomDropdowns() {
     if (button && optionsContainer) {
       // Initial button text update
       updateStatSelectButtonText(config.statSelectBtnId, config.statSelectId, config.defaultStatKey);
+    }
+  // This next allConfigs.forEach is the one that contains the event listeners
+  // and is the one that should be part of the *first* loop.
+  // The previous steps for other subtasks might have already fixed the larger structural duplication
+  // of the outer allConfigs.forEach loop. I will proceed assuming the immediate duplication
+  // of the if (button && optionsContainer) is the primary target.
+  // If the outer loop is still duplicated, that's a separate, larger issue.
 
-
-    if (button && optionsContainer) {
-      // Initial button text update
-      updateStatSelectButtonText(config.statSelectBtnId, config.statSelectId, config.defaultStatKey);
-
-
-  allConfigs.forEach(config => {
-    if (!config.statSelectBtnId || !config.statSelectId) return; // Skip if IDs are missing
+  allConfigs.forEach(config => { // This is the second outer loop in the raw file
+    if (!config.statSelectBtnId || !config.statSelectId) return;
 
     const button = document.getElementById(config.statSelectBtnId);
     const optionsContainer = document.getElementById(config.statSelectId);
@@ -510,11 +497,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const ranksInput = document.getElementById(skill.ranksId);
     if (ranksInput) {
       ranksInput.addEventListener('input', updateAllCharacterSheetCalculations);
-    }
-    const classSkillCheckbox = document.getElementById(skill.classSkillCheckboxId);
-    if (classSkillCheckbox) {
-      classSkillCheckbox.addEventListener('change', updateAllCharacterSheetCalculations);
-    }
     }
     const classSkillCheckbox = document.getElementById(skill.classSkillCheckboxId);
     if (classSkillCheckbox) {
@@ -840,15 +822,6 @@ function createNewBonusForm() {
           originalRemove.apply(this, arguments);
       };
   }
-
-  let formHTML = `<div><label for="bonusTypeSelect_temp">Bonus Type:</label><select id="bonusTypeSelect_temp" name="bonusTypeSelect_temp"><option value="">-- Select Type --</option>${bonusTypes.map(type => `<option value="${type}">${type}</option>`).join('')}</select></div><div><label for="bonusValue_temp">Bonus Value:</label><input type="number" id="bonusValue_temp" name="bonusValue_temp" value="0"></div><div><label>Applies To (select at least one):</label></div><div class="checkbox-group">`;
-  bonusApplicationTargets.forEach(target => {
-    const checkboxId = `bonusTarget_${target.replace(/\s+/g, '').replace(/[()]/g, '')}_temp`;
-    formHTML += `<div style="margin-bottom: 3px;"><input type="checkbox" id="${checkboxId}" name="bonusTarget_temp" value="${target}"><label for="${checkboxId}">${target}</label></div>`;
-  });
-  formHTML += `</div><div><label for="bonusDescription_temp">Description/Notes:</label><textarea id="bonusDescription_temp" name="bonusDescription_temp" placeholder="e.g., +2 insight to Perception"></textarea></div><div style="margin-top: 10px;"><button class="save-bonus-btn">Save Bonus</button><button type="button" class="cancel-bonus-btn">Cancel</button></div>`;
-  formDiv.innerHTML = formHTML;
-  bonusFormContainerRef.appendChild(formDiv);
 
   formDiv.querySelector('.save-bonus-btn').addEventListener('click', () => {
     const selectedType = formDiv.querySelector('#bonusTypeSelect_temp').value;
