@@ -391,24 +391,8 @@ function initializeCustomDropdowns() {
     if (button && optionsContainer) {
       // Initial button text update
       updateStatSelectButtonText(config.statSelectBtnId, config.statSelectId, config.defaultStatKey);
-    }
-  // This next allConfigs.forEach is the one that contains the event listeners
-  // and is the one that should be part of the *first* loop.
-  // The previous steps for other subtasks might have already fixed the larger structural duplication
-  // of the outer allConfigs.forEach loop. I will proceed assuming the immediate duplication
-  // of the if (button && optionsContainer) is the primary target.
-  // If the outer loop is still duplicated, that's a separate, larger issue.
 
-  allConfigs.forEach(config => { // This is the second outer loop in the raw file
-    if (!config.statSelectBtnId || !config.statSelectId) return;
-
-    const button = document.getElementById(config.statSelectBtnId);
-    const optionsContainer = document.getElementById(config.statSelectId);
-
-    if (button && optionsContainer) {
-      // Initial button text update
-      updateStatSelectButtonText(config.statSelectBtnId, config.statSelectId, config.defaultStatKey);
-
+      // Event listener for the dropdown button
       button.addEventListener('click', (event) => {
         event.stopPropagation();
         // Close any other dropdown that might be open
@@ -421,11 +405,12 @@ function initializeCustomDropdowns() {
         currentlyOpenDropdown = isVisible ? null : optionsContainer;
       });
 
+      // Event listeners for checkboxes within the dropdown
       const checkboxes = optionsContainer.querySelectorAll('input[type="checkbox"]');
       checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
           updateStatSelectButtonText(config.statSelectBtnId, config.statSelectId, config.defaultStatKey);
-          updateAllCharacterSheetCalculations();
+          updateAllCharacterSheetCalculations(); // Ensure sheet updates on change
         });
       });
     }
