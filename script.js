@@ -552,10 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // emailVerificationMessageDiv.style.display = 'block';
         return; // Stop further processing if fields are empty
       }
-      console.log('Signup attempt (after check):', email); // Mock backend call. Renamed from previous 'Signup attempt' for clarity
-      event.preventDefault();
-      const email = signupEmailInput.value;
-      const password = signupPasswordInput.value; // In a real app, hash this
+      // Removed redundant console.log, event.preventDefault(), and email/password declarations
       console.log('Signup attempt:', email); // Mock backend call
 
       // Simulate successful signup
