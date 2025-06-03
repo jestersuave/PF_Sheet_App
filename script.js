@@ -495,27 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // as they are already declared above or not strictly needed for this logging section.
   // const signupButton = document.getElementById('signup-button');
   // const loginButton = document.getElementById('login-button');
-  // --- Auth DOM Elements ---
-  const authContainer = document.getElementById('auth-container');
-  const signupForm = document.getElementById('signup-form');
-  const signupEmailInput = document.getElementById('signup-email');
-  const signupPasswordInput = document.getElementById('signup-password');
-  const signupButton = document.getElementById('signup-button');
-  const loginForm = document.getElementById('login-form');
-  const loginEmailInput = document.getElementById('login-email');
-  const loginPasswordInput = document.getElementById('login-password');
-  const loginButton = document.getElementById('login-button');
-  const logoutButton = document.getElementById('logout-button');
-  const emailVerificationMessageDiv = document.getElementById('email-verification-message');
-  const sheetContainer = document.getElementById('sheet-container');
-
-  // --- Character Sheet Management DOM Elements ---
-  const characterSheetManagementDiv = document.getElementById('character-sheet-management');
-  const saveSheetButton = document.getElementById('save-sheet-button');
-  const sheetNameInput = document.getElementById('sheet-name-input');
-  const loadSheetButton = document.getElementById('load-sheet-button'); // This is "Refresh Saved Sheets"
-  const savedSheetsListDiv = document.getElementById('saved-sheets-list');
-
+  // Note: The redundant block of const declarations that was here has been removed.
 
   // --- User State Management ---
   function updateLoginState(isLoggedIn, userEmail = '', isVerified = false) {
@@ -572,10 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // emailVerificationMessageDiv.style.display = 'block';
         return; // Stop further processing if fields are empty
       }
-      console.log('Signup attempt (after check):', email); // Mock backend call. Renamed from previous 'Signup attempt' for clarity
-      event.preventDefault();
-      const email = signupEmailInput.value;
-      const password = signupPasswordInput.value; // In a real app, hash this
+      // Removed redundant console.log, event.preventDefault(), and email/password declarations
       console.log('Signup attempt:', email); // Mock backend call
 
       // Simulate successful signup
