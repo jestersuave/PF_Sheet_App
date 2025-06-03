@@ -451,6 +451,50 @@ function sendToWebhook(webhookData) {
 
 // --- Event Listeners & Initial Calculation ---
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM fully loaded and parsed');
+
+  // --- Auth DOM Elements ---
+  const authContainer = document.getElementById('auth-container');
+  console.log('authContainer:', authContainer);
+  const signupForm = document.getElementById('signup-form');
+  console.log('signupForm:', signupForm);
+  const signupEmailInput = document.getElementById('signup-email');
+  console.log('signupEmailInput:', signupEmailInput);
+  const signupPasswordInput = document.getElementById('signup-password');
+  console.log('signupPasswordInput:', signupPasswordInput);
+  // const signupButton = document.getElementById('signup-button'); // Already have this later, not strictly needed here if form is found
+  // console.log('signupButton:', signupButton);
+  const loginForm = document.getElementById('login-form');
+  console.log('loginForm:', loginForm);
+  const loginEmailInput = document.getElementById('login-email');
+  console.log('loginEmailInput:', loginEmailInput);
+  const loginPasswordInput = document.getElementById('login-password');
+  console.log('loginPasswordInput:', loginPasswordInput);
+  // const loginButton = document.getElementById('login-button');
+  // console.log('loginButton:', loginButton);
+  const logoutButton = document.getElementById('logout-button');
+  console.log('logoutButton:', logoutButton);
+  const emailVerificationMessageDiv = document.getElementById('email-verification-message');
+  console.log('emailVerificationMessageDiv:', emailVerificationMessageDiv);
+  const sheetContainer = document.getElementById('sheet-container');
+  console.log('sheetContainer:', sheetContainer);
+
+  // --- Character Sheet Management DOM Elements ---
+  const characterSheetManagementDiv = document.getElementById('character-sheet-management');
+  console.log('characterSheetManagementDiv:', characterSheetManagementDiv);
+  const saveSheetButton = document.getElementById('save-sheet-button');
+  console.log('saveSheetButton:', saveSheetButton);
+  const sheetNameInput = document.getElementById('sheet-name-input');
+  console.log('sheetNameInput:', sheetNameInput);
+  const loadSheetButton = document.getElementById('load-sheet-button');
+  console.log('loadSheetButton (Refresh List):', loadSheetButton);
+  const savedSheetsListDiv = document.getElementById('saved-sheets-list');
+  console.log('savedSheetsListDiv:', savedSheetsListDiv);
+
+  // Redundant declarations of signupButton and loginButton are removed here,
+  // as they are already declared above or not strictly needed for this logging section.
+  // const signupButton = document.getElementById('signup-button');
+  // const loginButton = document.getElementById('login-button');
   // --- Auth DOM Elements ---
   const authContainer = document.getElementById('auth-container');
   const signupForm = document.getElementById('signup-form');
@@ -515,6 +559,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Auth Event Listeners ---
   if (signupForm) {
     signupForm.addEventListener('submit', (event) => {
+      console.log("Signup form submitted");
+      event.preventDefault();
+      const email = signupEmailInput.value;
+      const password = signupPasswordInput.value;
+      console.log('Signup Email Value:', email);
+      console.log('Signup Password Value:', password);
+      if (!email || !password) {
+        console.error('Email or Password field is empty. Halting signup.');
+        // Optionally, display a user-friendly message here too
+        // For example: emailVerificationMessageDiv.textContent = 'Email and password cannot be empty.';
+        // emailVerificationMessageDiv.style.display = 'block';
+        return; // Stop further processing if fields are empty
+      }
+      console.log('Signup attempt (after check):', email); // Mock backend call. Renamed from previous 'Signup attempt' for clarity
       event.preventDefault();
       const email = signupEmailInput.value;
       const password = signupPasswordInput.value; // In a real app, hash this
