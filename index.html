@@ -5,10 +5,49 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="auth-container">
+    <h2>User Authentication</h2>
+    <div id="signup-form">
+      <h3>Sign Up</h3>
+      <label for="signup-email">Email:</label>
+      <input type="email" id="signup-email" required>
+      <label for="signup-password">Password:</label>
+      <input type="password" id="signup-password" required>
+      <button id="signup-button">Sign Up</button>
+    </div>
+    <div id="login-form">
+      <h3>Login</h3>
+      <label for="login-email">Email:</label>
+      <input type="email" id="login-email" required>
+      <label for="login-password">Password:</label>
+      <input type="password" id="login-password" required>
+      <button id="login-button">Login</button>
+    </div>
+    <button id="logout-button" style="display: none;">Logout</button>
+    <div id="email-verification-message" style="display: none;"></div>
+  </div>
+
   <div id="sheet-container">
     <div style="text-align: right; margin-bottom: 10px;"> <!-- Container for the button -->
       <button id="themeToggleBtn">Toggle Theme</button>
     </div>
+
+    <div id="character-sheet-management" style="display: none; margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px;">
+      <h2>Character Sheet Management</h2>
+      <div>
+        <label for="sheet-name-input">Sheet Name:</label>
+        <input type="text" id="sheet-name-input" placeholder="Enter character sheet name">
+        <button id="save-sheet-button">Save Current Sheet</button>
+      </div>
+      <div style="margin-top: 10px;">
+        <button id="load-sheet-button">Refresh Saved Sheets</button> <!-- Will be used to refresh list, or could be a specific load by name later -->
+      </div>
+      <h3>Saved Sheets:</h3>
+      <div id="saved-sheets-list" style="border: 1px solid #eee; padding: 10px; min-height: 50px; max-height: 200px; overflow-y: auto;">
+        <!-- List of saved sheets will appear here -->
+      </div>
+    </div>
+
     <div id="charInfo">
       <h2>Character Information</h2>
       <div>
