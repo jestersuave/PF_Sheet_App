@@ -451,6 +451,436 @@ function sendToWebhook(webhookData) {
 
 // --- Event Listeners & Initial Calculation ---
 document.addEventListener('DOMContentLoaded', () => {
+  // --- Auth DOM Elements ---
+  const authContainer = document.getElementById('auth-container');
+  const signupForm = document.getElementById('signup-form');
+  const signupEmailInput = document.getElementById('signup-email');
+  const signupPasswordInput = document.getElementById('signup-password');
+  const signupButton = document.getElementById('signup-button');
+  const loginForm = document.getElementById('login-form');
+  const loginEmailInput = document.getElementById('login-email');
+  const loginPasswordInput = document.getElementById('login-password');
+  const loginButton = document.getElementById('login-button');
+  const logoutButton = document.getElementById('logout-button');
+  const emailVerificationMessageDiv = document.getElementById('email-verification-message');
+  const sheetContainer = document.getElementById('sheet-container');
+
+  // --- Character Sheet Management DOM Elements ---
+  const characterSheetManagementDiv = document.getElementById('character-sheet-management');
+  const saveSheetButton = document.getElementById('save-sheet-button');
+  const sheetNameInput = document.getElementById('sheet-name-input');
+  const loadSheetButton = document.getElementById('load-sheet-button'); // This is "Refresh Saved Sheets"
+  const savedSheetsListDiv = document.getElementById('saved-sheets-list');
+
+
+  // --- User State Management ---
+  function updateLoginState(isLoggedIn, userEmail = '', isVerified = false) {
+    if (isLoggedIn) {
+      if (authContainer) authContainer.style.display = 'none';
+      if (logoutButton) logoutButton.style.display = 'block';
+      if (sheetContainer) sheetContainer.style.display = 'block';
+      if (characterSheetManagementDiv) characterSheetManagementDiv.style.display = 'block'; // Show sheet management
+
+      if (!isVerified) {
+        if (emailVerificationMessageDiv) {
+          emailVerificationMessageDiv.innerHTML = `Please verify your email (${userEmail}). <button id='resend-verification-btn'>Resend verification</button>`;
+          emailVerificationMessageDiv.style.display = 'block';
+        }
+      } else {
+        if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
+      }
+      renderSavedSheets(); // Render sheets when user is logged in
+    } else { // Not logged in
+      if (authContainer) authContainer.style.display = 'block';
+      if (logoutButton) logoutButton.style.display = 'none';
+      if (sheetContainer) sheetContainer.style.display = 'none';
+      if (characterSheetManagementDiv) characterSheetManagementDiv.style.display = 'none'; // Hide sheet management
+      if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
+      if (savedSheetsListDiv) savedSheetsListDiv.innerHTML = ''; // Clear saved sheets list on logout
+      if (sheetNameInput) sheetNameInput.value = ''; // Clear sheet name input
+    }
+  }
+
+  // Check initial login state
+  const storedToken = localStorage.getItem('userToken');
+  const storedEmail = localStorage.getItem('userEmail');
+  const storedVerified = localStorage.getItem('isUserVerified') === 'true';
+
+  if (storedToken && storedEmail) {
+    updateLoginState(true, storedEmail, storedVerified);
+  } else {
+    updateLoginState(false);
+  }
+
+  // --- Auth Event Listeners ---
+  if (signupForm) {
+    signupForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const email = signupEmailInput.value;
+      const password = signupPasswordInput.value; // In a real app, hash this
+      console.log('Signup attempt:', email); // Mock backend call
+
+      // Simulate successful signup
+      localStorage.setItem('userToken', 'dummyToken123'); // Replace with actual token from backend
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('isUserVerified', 'false');
+
+      updateLoginState(true, email, false);
+      if (emailVerificationMessageDiv) {
+        // Message is set by updateLoginState, but we can add a success part here if needed.
+        // For now, updateLoginState handles the "Please verify" message.
+        // We could also show a temporary "Signup successful! Check email." message that disappears.
+         emailVerificationMessageDiv.innerHTML = `Signup successful! Please check your email (${email}) to verify your account. <button id='resend-verification-btn'>Resend verification</button>`;
+         emailVerificationMessageDiv.style.display = 'block';
+      }
+    });
+  }
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const email = loginEmailInput.value;
+      const password = loginPasswordInput.value; // In a real app, send to backend for verification
+      console.log('Login attempt:', email); // Mock backend call
+
+      // Simulate successful login
+      const isVerified = email.includes('verified'); // Demo: if email has "verified", user is verified
+      localStorage.setItem('userToken', 'dummyToken123'); // Replace with actual token
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('isUserVerified', isVerified ? 'true' : 'false');
+
+      updateLoginState(true, email, isVerified);
+    });
+  }
+
+  if (logoutButton) {
+    logoutButton.addEventListener('click', () => {
+      localStorage.removeItem('userToken');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('isUserVerified');
+      updateLoginState(false);
+      // Clear form fields on logout for better UX
+      if(loginEmailInput) loginEmailInput.value = '';
+      if(loginPasswordInput) loginPasswordInput.value = '';
+      if(signupEmailInput) signupEmailInput.value = '';
+      if(signupPasswordInput) signupPasswordInput.value = '';
+
+    });
+  }
+
+  if (emailVerificationMessageDiv) {
+    emailVerificationMessageDiv.addEventListener('click', (event) => {
+      if (event.target.id === 'resend-verification-btn') {
+        console.log('Resend verification email request'); // Mock backend call
+        emailVerificationMessageDiv.innerHTML = 'Verification email resent. Please check your inbox.';
+        // Optionally, re-add the button after a timeout, or change message structure
+        setTimeout(() => {
+            // Restore original message if user is still not verified
+            const currentEmail = localStorage.getItem('userEmail');
+            const currentVerified = localStorage.getItem('isUserVerified') === 'true';
+            if (currentEmail && !currentVerified) {
+                 emailVerificationMessageDiv.innerHTML = `Please verify your email (${currentEmail}). <button id='resend-verification-btn'>Resend verification</button>`;
+            } else if (!currentEmail) { // Should not happen if button was visible
+                emailVerificationMessageDiv.style.display = 'none';
+            }
+        }, 5000); // Revert message after 5 seconds
+      }
+    });
+  }
+  // --- End Auth Logic ---
+
+  // --- Character Sheet Management Functions ---
+
+  // Function to get all data from the character sheet form
+  function getCharacterData() {
+    const data = {
+      charInfo: {},
+      abilityScores: {},
+      savingThrows: {},
+      combatStats: {},
+      skills: {},
+      customRolls: [], // Assuming customRolls is an array of objects
+      bonuses: []      // Assuming characterBonuses is an array of objects
+    };
+
+    // Character Info
+    data.charInfo.charName = document.getElementById('charName')?.value || '';
+    data.charInfo.charClass = document.getElementById('charClass')?.value || '';
+    data.charInfo.charRace = document.getElementById('charRace')?.value || '';
+    data.charInfo.charLevel = getIntValue('charLevel');
+
+    // Ability Scores
+    abilityScoreConfigs.forEach(config => {
+      data.abilityScores[config.scoreId] = getIntValue(config.scoreId);
+    });
+
+    // Saving Throws
+    saveConfigs.forEach(config => {
+      data.savingThrows[config.baseId] = getIntValue(config.baseId);
+      data.savingThrows[config.statSelectId] = getSelectedStats(config.statSelectId); // Save selected custom stats
+    });
+
+    // Combat Stats - Many fields here
+    data.combatStats.hpBase = getIntValue('hpBase');
+    data.combatStats.armorBonus = getIntValue('armorBonus');
+    data.combatStats.shieldBonus = getIntValue('shieldBonus');
+    data.combatStats.sizeModAc = getIntValue('sizeModAc');
+    data.combatStats.naturalArmor = getIntValue('naturalArmor');
+    data.combatStats.deflectionMod = getIntValue('deflectionMod');
+    data.combatStats.miscAcBonus = getIntValue('miscAcBonus');
+    data.combatStats.bab = getIntValue('bab');
+    data.combatStats.sizeModAttack = getIntValue('sizeModAttack');
+    data.combatStats.initiativeMiscMod = getIntValue('initiativeMiscMod');
+    // Custom stats for AC, Melee, Ranged
+    data.combatStats[defenseConfig.statSelectId] = getSelectedStats(defenseConfig.statSelectId);
+    attackConfigs.forEach(config => {
+      data.combatStats[config.statSelectId] = getSelectedStats(config.statSelectId);
+    });
+
+
+    // Skills
+    skillConfigs.forEach(skill => {
+      data.skills[skill.ranksId] = getIntValue(skill.ranksId);
+      const checkbox = document.getElementById(skill.classSkillCheckboxId);
+      data.skills[skill.classSkillCheckboxId] = checkbox ? checkbox.checked : false;
+      data.skills[skill.statSelectId] = getSelectedStats(skill.statSelectId); // Save selected custom stats
+    });
+
+    // Custom Rolls and Bonuses (assuming these are stored in global JS variables)
+    // Need to ensure `customRolls` and `characterBonuses` are the correct variable names
+    // and accessible here. If they are defined locally in DOMContentLoaded, this needs adjustment.
+    // For now, assuming they are accessible.
+    if (typeof customRolls !== 'undefined') data.customRolls = customRolls; // Defined later in the script
+    if (typeof characterBonuses !== 'undefined') data.bonuses = characterBonuses; // Defined at the top
+
+    return data;
+  }
+
+  // Function to populate the character sheet form with data
+  function populateCharacterData(sheetData) {
+    if (!sheetData) return;
+
+    // Character Info
+    if (sheetData.charInfo) {
+      document.getElementById('charName').value = sheetData.charInfo.charName || '';
+      document.getElementById('charClass').value = sheetData.charInfo.charClass || '';
+      document.getElementById('charRace').value = sheetData.charInfo.charRace || '';
+      document.getElementById('charLevel').value = sheetData.charInfo.charLevel || 1;
+    }
+
+    // Ability Scores
+    if (sheetData.abilityScores) {
+      abilityScoreConfigs.forEach(config => {
+        document.getElementById(config.scoreId).value = sheetData.abilityScores[config.scoreId] || 10;
+      });
+    }
+
+    // Saving Throws
+    if (sheetData.savingThrows) {
+      saveConfigs.forEach(config => {
+        document.getElementById(config.baseId).value = sheetData.savingThrows[config.baseId] || 0;
+        // Restore custom stat selections
+        const selectedCustomStats = sheetData.savingThrows[config.statSelectId] || [];
+        const optionsContainer = document.getElementById(config.statSelectId);
+        if (optionsContainer) {
+            optionsContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = selectedCustomStats.includes(cb.value);
+            });
+            updateStatSelectButtonText(config.statSelectBtnId, config.statSelectId, config.defaultStatKey);
+        }
+      });
+    }
+
+    // Combat Stats
+    if (sheetData.combatStats) {
+      document.getElementById('hpBase').value = sheetData.combatStats.hpBase || 10;
+      document.getElementById('armorBonus').value = sheetData.combatStats.armorBonus || 0;
+      document.getElementById('shieldBonus').value = sheetData.combatStats.shieldBonus || 0;
+      document.getElementById('sizeModAc').value = sheetData.combatStats.sizeModAc || 0;
+      document.getElementById('naturalArmor').value = sheetData.combatStats.naturalArmor || 0;
+      document.getElementById('deflectionMod').value = sheetData.combatStats.deflectionMod || 0;
+      document.getElementById('miscAcBonus').value = sheetData.combatStats.miscAcBonus || 0;
+      document.getElementById('bab').value = sheetData.combatStats.bab || 0;
+      document.getElementById('sizeModAttack').value = sheetData.combatStats.sizeModAttack || 0;
+      document.getElementById('initiativeMiscMod').value = sheetData.combatStats.initiativeMiscMod || 0;
+
+      // Restore custom stats for AC
+      const acCustomStats = sheetData.combatStats[defenseConfig.statSelectId] || [];
+      const acOptionsContainer = document.getElementById(defenseConfig.statSelectId);
+      if (acOptionsContainer) {
+          acOptionsContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+              cb.checked = acCustomStats.includes(cb.value);
+          });
+          updateStatSelectButtonText(defenseConfig.statSelectBtnId, defenseConfig.statSelectId, defenseConfig.defaultStatKey);
+      }
+      // Restore custom stats for Melee/Ranged Attacks
+      attackConfigs.forEach(config => {
+        const attackCustomStats = sheetData.combatStats[config.statSelectId] || [];
+        const attackOptionsContainer = document.getElementById(config.statSelectId);
+        if (attackOptionsContainer) {
+            attackOptionsContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = attackCustomStats.includes(cb.value);
+            });
+            updateStatSelectButtonText(config.statSelectBtnId, config.statSelectId, config.defaultStatKey);
+        }
+      });
+    }
+
+    // Skills
+    if (sheetData.skills) {
+      skillConfigs.forEach(skill => {
+        document.getElementById(skill.ranksId).value = sheetData.skills[skill.ranksId] || 0;
+        const checkbox = document.getElementById(skill.classSkillCheckboxId);
+        if (checkbox) checkbox.checked = sheetData.skills[skill.classSkillCheckboxId] || false;
+        // Restore custom stat selections for skills
+        const skillCustomStats = sheetData.skills[skill.statSelectId] || [];
+        const skillOptionsContainer = document.getElementById(skill.statSelectId);
+        if (skillOptionsContainer) {
+            skillOptionsContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = skillCustomStats.includes(cb.value);
+            });
+            updateStatSelectButtonText(skill.statSelectBtnId, skill.statSelectId, skill.defaultStatKey);
+        }
+      });
+    }
+
+    // Custom Rolls and Bonuses
+    // Ensure global `customRolls` and `characterBonuses` are updated
+    // These might need to be re-assigned and then their respective render functions called.
+    if (sheetData.customRolls) {
+      // Assuming customRolls is globally accessible or passed around
+      customRolls = sheetData.customRolls; // This was defined later, will need to ensure scope or pass
+      if(typeof renderCustomRolls === "function") renderCustomRolls(); // This was defined later
+    }
+    if (sheetData.bonuses) {
+      characterBonuses = sheetData.bonuses; // This is globally defined
+      if(typeof renderBonuses === "function") renderBonuses(); // This was defined later
+    }
+
+    updateAllCharacterSheetCalculations(); // Recalculate all derived stats
+  }
+
+  // Function to render the list of saved character sheets
+  function renderSavedSheets() {
+    if (!savedSheetsListDiv) return;
+    const userEmail = localStorage.getItem('userEmail');
+    if (!userEmail) {
+      savedSheetsListDiv.innerHTML = '<p>Please log in to see your saved sheets.</p>';
+      return;
+    }
+
+    const sheets = JSON.parse(localStorage.getItem(userEmail + '_sheets')) || [];
+    savedSheetsListDiv.innerHTML = ''; // Clear current list
+
+    if (sheets.length === 0) {
+      savedSheetsListDiv.innerHTML = '<p>No character sheets saved yet.</p>';
+      return;
+    }
+
+    sheets.forEach(sheet => {
+      const sheetItem = document.createElement('div');
+      sheetItem.classList.add('saved-sheet-item');
+      sheetItem.style.display = 'flex';
+      sheetItem.style.justifyContent = 'space-between';
+      sheetItem.style.padding = '5px';
+      sheetItem.style.borderBottom = '1px solid #eee';
+
+      const sheetNameSpan = document.createElement('span');
+      sheetNameSpan.textContent = sheet.name;
+      sheetItem.appendChild(sheetNameSpan);
+
+      const buttonsDiv = document.createElement('div');
+      const loadBtn = document.createElement('button');
+      loadBtn.textContent = 'Load';
+      loadBtn.classList.add('load-sheet-btn');
+      loadBtn.dataset.sheetName = sheet.name;
+      loadBtn.style.marginRight = '5px';
+      buttonsDiv.appendChild(loadBtn);
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.classList.add('delete-sheet-btn');
+      deleteBtn.dataset.sheetName = sheet.name;
+      buttonsDiv.appendChild(deleteBtn);
+
+      sheetItem.appendChild(buttonsDiv);
+      savedSheetsListDiv.appendChild(sheetItem);
+    });
+  }
+
+  // --- Event Listeners for Character Sheet Management ---
+  if (saveSheetButton) {
+    saveSheetButton.addEventListener('click', () => {
+      const userEmail = localStorage.getItem('userEmail');
+      if (!userEmail) {
+        alert('You must be logged in to save a character sheet.');
+        return;
+      }
+      let characterName = sheetNameInput.value.trim();
+      if (!characterName) {
+        // Use character's name from charInfo if sheet name input is blank
+        characterName = document.getElementById('charName')?.value.trim();
+        if (!characterName) {
+            characterName = "Unnamed Character"; // Default if both are blank
+        }
+        sheetNameInput.value = characterName; // Update input field
+      }
+
+      const sheetData = getCharacterData();
+      const newSheet = { name: characterName, data: sheetData, lastModified: new Date().toISOString() };
+
+      let sheets = JSON.parse(localStorage.getItem(userEmail + '_sheets')) || [];
+      // Check if sheet with this name already exists, if so, replace it (simple update)
+      const existingSheetIndex = sheets.findIndex(s => s.name === characterName);
+      if (existingSheetIndex > -1) {
+        sheets[existingSheetIndex] = newSheet;
+      } else {
+        sheets.push(newSheet);
+      }
+      localStorage.setItem(userEmail + '_sheets', JSON.stringify(sheets));
+      renderSavedSheets();
+      alert(`Character sheet "${characterName}" saved!`);
+    });
+  }
+
+  if (loadSheetButton) { // This is the "Refresh Saved Sheets" button
+    loadSheetButton.addEventListener('click', () => {
+      renderSavedSheets(); // Simply re-render the list from localStorage
+    });
+  }
+
+  if (savedSheetsListDiv) {
+    savedSheetsListDiv.addEventListener('click', (event) => {
+      const target = event.target;
+      const userEmail = localStorage.getItem('userEmail');
+      if (!userEmail) return; // Should not happen if list is visible
+
+      let sheets = JSON.parse(localStorage.getItem(userEmail + '_sheets')) || [];
+      const sheetName = target.dataset.sheetName;
+
+      if (target.classList.contains('load-sheet-btn')) {
+        const sheetToLoad = sheets.find(s => s.name === sheetName);
+        if (sheetToLoad) {
+          populateCharacterData(sheetToLoad.data);
+          if(sheetNameInput) sheetNameInput.value = sheetName; // Populate the sheet name input field
+          alert(`Character sheet "${sheetName}" loaded!`);
+        } else {
+          alert('Error: Could not find sheet to load.');
+        }
+      } else if (target.classList.contains('delete-sheet-btn')) {
+        if (confirm(`Are you sure you want to delete "${sheetName}"?`)) {
+          sheets = sheets.filter(s => s.name !== sheetName);
+          localStorage.setItem(userEmail + '_sheets', JSON.stringify(sheets));
+          renderSavedSheets();
+          alert(`Character sheet "${sheetName}" deleted.`);
+        }
+      }
+    });
+  }
+
+  // --- End Character Sheet Management ---
+
+
   initializeCustomDropdowns(); // Initialize new dropdowns
 
   const rollResultModal = document.getElementById('rollResultModal');
