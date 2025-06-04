@@ -475,7 +475,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const logoutButton = document.getElementById('logout-button');
   console.log('logoutButton:', logoutButton);
   const emailVerificationMessageDiv = document.getElementById('email-verification-message');
-  console.log('emailVerificationMessageDiv:', emailVerificationMessageDiv);
+  // Ensure emailVerificationMessageDiv is consistently available or handled if null
+  if (!emailVerificationMessageDiv) {
+    console.warn('Warning: email-verification-message element not found in the DOM. Some messages may not display.');
+  }
   const sheetContainer = document.getElementById('sheet-container');
   console.log('sheetContainer:', sheetContainer);
 
@@ -497,131 +500,209 @@ document.addEventListener('DOMContentLoaded', () => {
   // const loginButton = document.getElementById('login-button');
   // Note: The redundant block of const declarations that was here has been removed.
 
+  const BASE_URL = 'http://127.0.0.1:5000';
+
   // --- User State Management ---
   function updateLoginState(isLoggedIn, userEmail = '', isVerified = false) {
     if (isLoggedIn) {
       if (authContainer) authContainer.style.display = 'none';
       if (logoutButton) logoutButton.style.display = 'block';
       if (sheetContainer) sheetContainer.style.display = 'block';
-      if (characterSheetManagementDiv) characterSheetManagementDiv.style.display = 'block'; // Show sheet management
+      if (characterSheetManagementDiv) characterSheetManagementDiv.style.display = 'block';
 
-      if (!isVerified) {
-        if (emailVerificationMessageDiv) {
-          emailVerificationMessageDiv.innerHTML = `Please verify your email (${userEmail}). <button id='resend-verification-btn'>Resend verification</button>`;
-          emailVerificationMessageDiv.style.display = 'block';
-        }
-      } else {
-        if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
-      }
-      renderSavedSheets(); // Render sheets when user is logged in
+      // For now, login implies verification for UI purposes.
+      // A more robust system would get verification status from backend.
+      if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
+      // if (!isVerified) {
+      //   if (emailVerificationMessageDiv) {
+      //     emailVerificationMessageDiv.innerHTML = `Please verify your email (${userEmail}). <button id='resend-verification-btn'>Resend verification</button>`;
+      //     emailVerificationMessageDiv.style.display = 'block';
+      //   }
+      // } else {
+      //   if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
+      // }
+      renderSavedSheets();
     } else { // Not logged in
       if (authContainer) authContainer.style.display = 'block';
       if (logoutButton) logoutButton.style.display = 'none';
       if (sheetContainer) sheetContainer.style.display = 'none';
-      if (characterSheetManagementDiv) characterSheetManagementDiv.style.display = 'none'; // Hide sheet management
+      if (characterSheetManagementDiv) characterSheetManagementDiv.style.display = 'none';
       if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
-      if (savedSheetsListDiv) savedSheetsListDiv.innerHTML = ''; // Clear saved sheets list on logout
-      if (sheetNameInput) sheetNameInput.value = ''; // Clear sheet name input
+      if (savedSheetsListDiv) savedSheetsListDiv.innerHTML = '';
+      if (sheetNameInput) sheetNameInput.value = '';
     }
   }
 
   // Check initial login state
-  const storedToken = localStorage.getItem('userToken');
+  // const storedToken = localStorage.getItem('userToken'); // Token not used yet
   const storedEmail = localStorage.getItem('userEmail');
-  const storedVerified = localStorage.getItem('isUserVerified') === 'true';
+  // const storedVerified = localStorage.getItem('isUserVerified') === 'true'; // Verification not fully implemented yet
 
-  if (storedToken && storedEmail) {
-    updateLoginState(true, storedEmail, storedVerified);
+  if (storedEmail) { // If email exists, assume logged in for now
+    updateLoginState(true, storedEmail, true); // Assume verified on reload if email is present
   } else {
     updateLoginState(false);
   }
 
   // --- Auth Event Listeners ---
   if (signupForm) {
-    signupForm.addEventListener('submit', (event) => {
-      console.log("Signup form submitted");
+    signupForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       const email = signupEmailInput.value;
       const password = signupPasswordInput.value;
-      console.log('Signup Email Value:', email);
-      console.log('Signup Password Value:', password);
+
       if (!email || !password) {
-        console.error('Email or Password field is empty. Halting signup.');
-        // Optionally, display a user-friendly message here too
-        // For example: emailVerificationMessageDiv.textContent = 'Email and password cannot be empty.';
-        // emailVerificationMessageDiv.style.display = 'block';
-        return; // Stop further processing if fields are empty
+        if (emailVerificationMessageDiv) {
+            emailVerificationMessageDiv.textContent = 'Email and password are required.';
+            emailVerificationMessageDiv.style.color = 'red';
+            emailVerificationMessageDiv.style.display = 'block';
+        }
+        return;
       }
-      // Removed redundant console.log, event.preventDefault(), and email/password declarations
-      console.log('Signup attempt:', email); // Mock backend call
 
-      // Simulate successful signup
-      localStorage.setItem('userToken', 'dummyToken123'); // Replace with actual token from backend
-      localStorage.setItem('userEmail', email);
-      localStorage.setItem('isUserVerified', 'false');
+      // Basic email validation
+      if (!email.includes('@') || !email.substring(email.indexOf('@')).includes('.')) {
+        if (emailVerificationMessageDiv) {
+            emailVerificationMessageDiv.textContent = 'Please enter a valid email address.';
+            emailVerificationMessageDiv.style.color = 'red';
+            emailVerificationMessageDiv.style.display = 'block';
+        }
+        return;
+      }
 
-      updateLoginState(true, email, false);
-      if (emailVerificationMessageDiv) {
-        // Message is set by updateLoginState, but we can add a success part here if needed.
-        // For now, updateLoginState handles the "Please verify" message.
-        // We could also show a temporary "Signup successful! Check email." message that disappears.
-         emailVerificationMessageDiv.innerHTML = `Signup successful! Please check your email (${email}) to verify your account. <button id='resend-verification-btn'>Resend verification</button>`;
-         emailVerificationMessageDiv.style.display = 'block';
+      // Password length check
+      if (password.length < 6) {
+        if (emailVerificationMessageDiv) {
+            emailVerificationMessageDiv.textContent = 'Password must be at least 6 characters long.';
+            emailVerificationMessageDiv.style.color = 'red';
+            emailVerificationMessageDiv.style.display = 'block';
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          if (emailVerificationMessageDiv) {
+            emailVerificationMessageDiv.textContent = "Signup successful! Please log in.";
+            emailVerificationMessageDiv.style.color = 'green';
+            emailVerificationMessageDiv.style.display = 'block';
+          }
+          signupEmailInput.value = ''; // Clear form
+          signupPasswordInput.value = '';
+        } else {
+          if (emailVerificationMessageDiv) {
+            emailVerificationMessageDiv.textContent = data.message || 'Signup failed. Please try again.';
+            emailVerificationMessageDiv.style.color = 'red';
+            emailVerificationMessageDiv.style.display = 'block';
+          }
+        }
+      } catch (error) {
+        console.error('Signup error:', error);
+        if (emailVerificationMessageDiv) {
+            emailVerificationMessageDiv.textContent = 'An error occurred during signup. Please try again.';
+            emailVerificationMessageDiv.style.color = 'red';
+            emailVerificationMessageDiv.style.display = 'block';
+        }
       }
     });
   }
 
   if (loginForm) {
-    loginForm.addEventListener('submit', (event) => {
+    loginForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       const email = loginEmailInput.value;
-      const password = loginPasswordInput.value; // In a real app, send to backend for verification
-      console.log('Login attempt:', email); // Mock backend call
+      const password = loginPasswordInput.value;
 
-      // Simulate successful login
-      const isVerified = email.includes('verified'); // Demo: if email has "verified", user is verified
-      localStorage.setItem('userToken', 'dummyToken123'); // Replace with actual token
-      localStorage.setItem('userEmail', email);
-      localStorage.setItem('isUserVerified', isVerified ? 'true' : 'false');
+      if (!email || !password) {
+         if (emailVerificationMessageDiv) {
+            emailVerificationMessageDiv.textContent = 'Email and password are required.';
+            emailVerificationMessageDiv.style.color = 'red';
+            emailVerificationMessageDiv.style.display = 'block';
+         }
+        return;
+      }
 
-      updateLoginState(true, email, isVerified);
+      // Basic email validation
+      if (!email.includes('@') || !email.substring(email.indexOf('@')).includes('.')) {
+        if (emailVerificationMessageDiv) {
+            emailVerificationMessageDiv.textContent = 'Please enter a valid email address.';
+            emailVerificationMessageDiv.style.color = 'red';
+            emailVerificationMessageDiv.style.display = 'block';
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          localStorage.setItem('userEmail', email);
+          // localStorage.setItem('userToken', data.token); // For future JWT token handling
+          updateLoginState(true, email, true); // Assume verified on successful login for now
+          if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none'; // Hide any previous messages
+        } else {
+          if (emailVerificationMessageDiv) {
+            emailVerificationMessageDiv.textContent = data.message || 'Login failed. Please check your credentials.';
+            emailVerificationMessageDiv.style.color = 'red';
+            emailVerificationMessageDiv.style.display = 'block';
+          }
+          updateLoginState(false); // Ensure UI is in logged-out state
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        if (emailVerificationMessageDiv) {
+            emailVerificationMessageDiv.textContent = 'An error occurred during login. Please try again.';
+            emailVerificationMessageDiv.style.color = 'red';
+            emailVerificationMessageDiv.style.display = 'block';
+        }
+        updateLoginState(false); // Ensure UI is in logged-out state
+      }
     });
   }
 
   if (logoutButton) {
     logoutButton.addEventListener('click', () => {
-      localStorage.removeItem('userToken');
       localStorage.removeItem('userEmail');
-      localStorage.removeItem('isUserVerified');
+      // localStorage.removeItem('userToken'); // For future JWT token handling
+      // localStorage.removeItem('isUserVerified'); // If we were storing this separately
       updateLoginState(false);
-      // Clear form fields on logout for better UX
       if(loginEmailInput) loginEmailInput.value = '';
       if(loginPasswordInput) loginPasswordInput.value = '';
       if(signupEmailInput) signupEmailInput.value = '';
       if(signupPasswordInput) signupPasswordInput.value = '';
-
+      if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
     });
   }
 
-  if (emailVerificationMessageDiv) {
-    emailVerificationMessageDiv.addEventListener('click', (event) => {
-      if (event.target.id === 'resend-verification-btn') {
-        console.log('Resend verification email request'); // Mock backend call
-        emailVerificationMessageDiv.innerHTML = 'Verification email resent. Please check your inbox.';
-        // Optionally, re-add the button after a timeout, or change message structure
-        setTimeout(() => {
-            // Restore original message if user is still not verified
-            const currentEmail = localStorage.getItem('userEmail');
-            const currentVerified = localStorage.getItem('isUserVerified') === 'true';
-            if (currentEmail && !currentVerified) {
-                 emailVerificationMessageDiv.innerHTML = `Please verify your email (${currentEmail}). <button id='resend-verification-btn'>Resend verification</button>`;
-            } else if (!currentEmail) { // Should not happen if button was visible
-                emailVerificationMessageDiv.style.display = 'none';
-            }
-        }, 5000); // Revert message after 5 seconds
-      }
-    });
-  }
+  // Remove or comment out the old resend verification logic as it's not connected to the backend
+  // if (emailVerificationMessageDiv) {
+  //   emailVerificationMessageDiv.addEventListener('click', (event) => {
+  //     if (event.target.id === 'resend-verification-btn') {
+  //       console.log('Resend verification email request - (Currently Mocked)');
+  //       emailVerificationMessageDiv.innerHTML = 'Verification email resent (mock). Please check your inbox.';
+  //       setTimeout(() => {
+  //           const currentEmail = localStorage.getItem('userEmail');
+  //           // const currentVerified = localStorage.getItem('isUserVerified') === 'true'; // Not used now
+  //           if (currentEmail /* && !currentVerified */) { // Simplified condition
+  //                emailVerificationMessageDiv.innerHTML = `Please verify your email (${currentEmail}). <button id='resend-verification-btn'>Resend verification</button>`;
+  //           } else if (!currentEmail) {
+  //               emailVerificationMessageDiv.style.display = 'none';
+  //           }
+  //       }, 5000);
+  //     }
+  //   });
+  // }
   // --- End Auth Logic ---
 
   // --- Character Sheet Management Functions ---
