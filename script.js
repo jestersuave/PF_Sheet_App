@@ -472,6 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('loginPasswordInput:', loginPasswordInput);
   // const loginButton = document.getElementById('login-button');
   // console.log('loginButton:', loginButton);
+  const googleLoginButton = document.getElementById('google-login-button'); // Added this
+  console.log('googleLoginButton:', googleLoginButton); // Added this
   const logoutButton = document.getElementById('logout-button');
   console.log('logoutButton:', logoutButton);
   const emailVerificationMessageDiv = document.getElementById('email-verification-message');
@@ -670,6 +672,72 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Google Login Button
+  if (googleLoginButton) {
+    googleLoginButton.addEventListener('click', () => {
+      // Redirect to Google OAuth endpoint on the backend
+      window.location.href = `${BASE_URL}/login/google`;
+    });
+  }
+
+  if (logoutButton) {
+    logoutButton.addEventListener('click', () => {
+      // Attempt to call backend logout to clear HttpOnly session cookie
+      fetch(`${BASE_URL}/logout`, { method: 'POST', credentials: 'include' })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Logout response:', data);
+          // Clear any client-side storage regardless of backend response for robustness
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('userToken'); // If used
+          localStorage.removeItem('isUserVerified'); // If used
+          updateLoginState(false);
+          if(loginEmailInput) loginEmailInput.value = '';
+          if(loginPasswordInput) loginPasswordInput.value = '';
+          if(signupEmailInput) signupEmailInput.value = '';
+          if(signupPasswordInput) signupPasswordInput.value = '';
+          if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
+        })
+        .catch(error => {
+          console.error('Logout fetch error:', error);
+          // Still clear client-side storage as a fallback
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('userToken'); // If used
+          localStorage.removeItem('isUserVerified'); // If used
+          updateLoginState(false);
+          if(loginEmailInput) loginEmailInput.value = '';
+          if(loginPasswordInput) loginPasswordInput.value = '';
+          if(signupEmailInput) signupEmailInput.value = '';
+          if(signupPasswordInput) signupPasswordInput.value = '';
+          if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
+        });
+    });
+  }
+
+  // Check current user status from backend on page load
+  // This will help sync state if session is still active on server
+  fetch(`${BASE_URL}/@me`, { credentials: 'include' })
+    .then(response => response.json())
+    .then(data => {
+      if (data.logged_in) {
+        localStorage.setItem('userEmail', data.email); // Update/confirm local storage
+        // Potentially store name if available: localStorage.setItem('userName', data.name);
+        updateLoginState(true, data.email, true); // Assume verified if session active
+      } else {
+        // Not logged in on backend, ensure client is also logged out
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userToken');
+        updateLoginState(false);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching current user status:', error);
+      // If backend is unreachable, rely on localStorage for now, or force logout.
+      // Forcing logout might be safer if backend state is unknown.
+      // updateLoginState(false); // Optionally force logout if backend is down
+    });
+
 
   if (logoutButton) {
     logoutButton.addEventListener('click', () => {
