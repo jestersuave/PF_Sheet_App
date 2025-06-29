@@ -738,6 +738,31 @@ document.addEventListener('DOMContentLoaded', () => {
       // updateLoginState(false); // Optionally force logout if backend is down
     });
 
+  // Check for Google login success redirect
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('login_success') === 'true') {
+    // We've just returned from a successful Google login.
+    // The session should be set. We can now fetch user data.
+    fetch(`${BASE_URL}/@me`, { credentials: 'include' })
+      .then(response => response.json())
+      .then(data => {
+        if (data.logged_in) {
+          localStorage.setItem('userEmail', data.email);
+          updateLoginState(true, data.email, true);
+          // Clean the URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+        } else {
+          // This case might happen if the session check fails for some reason
+          console.error("Google login success flag was present, but backend session check failed.");
+          updateLoginState(false);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching current user status after Google login:', error);
+        updateLoginState(false);
+      });
+  }
+
 
   if (logoutButton) {
     logoutButton.addEventListener('click', () => {
@@ -945,7 +970,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Function to render the list of saved character sheets
-  function renderSavedSheets() {
+  async function renderSavedSheets() {
     if (!savedSheetsListDiv) return;
     const userEmail = localStorage.getItem('userEmail');
     if (!userEmail) {
@@ -953,48 +978,59 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const sheets = JSON.parse(localStorage.getItem(userEmail + '_sheets')) || [];
-    savedSheetsListDiv.innerHTML = ''; // Clear current list
+    try {
+      const response = await fetch(`${BASE_URL}/api/sheets`, { credentials: 'include' });
+      if (!response.ok) {
+        savedSheetsListDiv.innerHTML = '<p>Error loading sheets.</p>';
+        return;
+      }
+      const sheets = await response.json();
+      savedSheetsListDiv.innerHTML = ''; // Clear current list
 
-    if (sheets.length === 0) {
-      savedSheetsListDiv.innerHTML = '<p>No character sheets saved yet.</p>';
-      return;
+      if (sheets.length === 0) {
+        savedSheetsListDiv.innerHTML = '<p>No character sheets saved yet.</p>';
+        return;
+      }
+
+      sheets.forEach(sheet => {
+        const sheetItem = document.createElement('div');
+        sheetItem.classList.add('saved-sheet-item');
+        sheetItem.style.display = 'flex';
+        sheetItem.style.justifyContent = 'space-between';
+        sheetItem.style.padding = '5px';
+        sheetItem.style.borderBottom = '1px solid #eee';
+
+        const sheetNameSpan = document.createElement('span');
+        sheetNameSpan.textContent = sheet.name;
+        sheetItem.appendChild(sheetNameSpan);
+
+        const buttonsDiv = document.createElement('div');
+        const loadBtn = document.createElement('button');
+        loadBtn.textContent = 'Load';
+        loadBtn.classList.add('load-sheet-btn');
+        loadBtn.dataset.sheetName = sheet.name;
+        loadBtn.dataset.sheetData = sheet.data; // Store data directly
+        loadBtn.style.marginRight = '5px';
+        buttonsDiv.appendChild(loadBtn);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.classList.add('delete-sheet-btn');
+        deleteBtn.dataset.sheetName = sheet.name;
+        buttonsDiv.appendChild(deleteBtn);
+
+        sheetItem.appendChild(buttonsDiv);
+        savedSheetsListDiv.appendChild(sheetItem);
+      });
+    } catch (error) {
+      console.error('Failed to render sheets:', error);
+      savedSheetsListDiv.innerHTML = '<p>Failed to load sheets from the server.</p>';
     }
-
-    sheets.forEach(sheet => {
-      const sheetItem = document.createElement('div');
-      sheetItem.classList.add('saved-sheet-item');
-      sheetItem.style.display = 'flex';
-      sheetItem.style.justifyContent = 'space-between';
-      sheetItem.style.padding = '5px';
-      sheetItem.style.borderBottom = '1px solid #eee';
-
-      const sheetNameSpan = document.createElement('span');
-      sheetNameSpan.textContent = sheet.name;
-      sheetItem.appendChild(sheetNameSpan);
-
-      const buttonsDiv = document.createElement('div');
-      const loadBtn = document.createElement('button');
-      loadBtn.textContent = 'Load';
-      loadBtn.classList.add('load-sheet-btn');
-      loadBtn.dataset.sheetName = sheet.name;
-      loadBtn.style.marginRight = '5px';
-      buttonsDiv.appendChild(loadBtn);
-
-      const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = 'Delete';
-      deleteBtn.classList.add('delete-sheet-btn');
-      deleteBtn.dataset.sheetName = sheet.name;
-      buttonsDiv.appendChild(deleteBtn);
-
-      sheetItem.appendChild(buttonsDiv);
-      savedSheetsListDiv.appendChild(sheetItem);
-    });
   }
 
   // --- Event Listeners for Character Sheet Management ---
   if (saveSheetButton) {
-    saveSheetButton.addEventListener('click', () => {
+    saveSheetButton.addEventListener('click', async () => {
       const userEmail = localStorage.getItem('userEmail');
       if (!userEmail) {
         alert('You must be logged in to save a character sheet.');
@@ -1002,28 +1038,31 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       let characterName = sheetNameInput.value.trim();
       if (!characterName) {
-        // Use character's name from charInfo if sheet name input is blank
-        characterName = document.getElementById('charName')?.value.trim();
-        if (!characterName) {
-            characterName = "Unnamed Character"; // Default if both are blank
-        }
-        sheetNameInput.value = characterName; // Update input field
+        characterName = document.getElementById('charName')?.value.trim() || "Unnamed Character";
+        sheetNameInput.value = characterName;
       }
 
       const sheetData = getCharacterData();
-      const newSheet = { name: characterName, data: sheetData, lastModified: new Date().toISOString() };
+      const payload = { name: characterName, data: sheetData };
 
-      let sheets = JSON.parse(localStorage.getItem(userEmail + '_sheets')) || [];
-      // Check if sheet with this name already exists, if so, replace it (simple update)
-      const existingSheetIndex = sheets.findIndex(s => s.name === characterName);
-      if (existingSheetIndex > -1) {
-        sheets[existingSheetIndex] = newSheet;
-      } else {
-        sheets.push(newSheet);
+      try {
+        const response = await fetch(`${BASE_URL}/api/sheets`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json();
+        if (result.success) {
+          renderSavedSheets();
+          alert(result.message);
+        } else {
+          alert(`Error: ${result.message}`);
+        }
+      } catch (error) {
+        console.error('Failed to save sheet:', error);
+        alert('An error occurred while saving the sheet.');
       }
-      localStorage.setItem(userEmail + '_sheets', JSON.stringify(sheets));
-      renderSavedSheets();
-      alert(`Character sheet "${characterName}" saved!`);
     });
   }
 
@@ -1034,29 +1073,41 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (savedSheetsListDiv) {
-    savedSheetsListDiv.addEventListener('click', (event) => {
+    savedSheetsListDiv.addEventListener('click', async (event) => {
       const target = event.target;
       const userEmail = localStorage.getItem('userEmail');
-      if (!userEmail) return; // Should not happen if list is visible
+      if (!userEmail) return;
 
-      let sheets = JSON.parse(localStorage.getItem(userEmail + '_sheets')) || [];
       const sheetName = target.dataset.sheetName;
 
       if (target.classList.contains('load-sheet-btn')) {
-        const sheetToLoad = sheets.find(s => s.name === sheetName);
-        if (sheetToLoad) {
-          populateCharacterData(sheetToLoad.data);
-          if(sheetNameInput) sheetNameInput.value = sheetName; // Populate the sheet name input field
+        try {
+          const sheetData = JSON.parse(target.dataset.sheetData);
+          populateCharacterData(sheetData);
+          if(sheetNameInput) sheetNameInput.value = sheetName;
           alert(`Character sheet "${sheetName}" loaded!`);
-        } else {
-          alert('Error: Could not find sheet to load.');
+        } catch (e) {
+          alert('Error parsing sheet data to load.');
+          console.error(e);
         }
       } else if (target.classList.contains('delete-sheet-btn')) {
         if (confirm(`Are you sure you want to delete "${sheetName}"?`)) {
-          sheets = sheets.filter(s => s.name !== sheetName);
-          localStorage.setItem(userEmail + '_sheets', JSON.stringify(sheets));
-          renderSavedSheets();
-          alert(`Character sheet "${sheetName}" deleted.`);
+          try {
+            const response = await fetch(`${BASE_URL}/api/sheets/${sheetName}`, {
+              method: 'DELETE',
+              credentials: 'include',
+            });
+            const result = await response.json();
+            if (result.success) {
+              renderSavedSheets();
+              alert(result.message);
+            } else {
+              alert(`Error: ${result.message}`);
+            }
+          } catch (error) {
+            console.error('Failed to delete sheet:', error);
+            alert('An error occurred while deleting the sheet.');
+          }
         }
       }
     });

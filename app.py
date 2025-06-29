@@ -1,8 +1,10 @@
-from flask import Flask, jsonify, request, session, redirect
+from flask import Flask, jsonify, request, session, redirect, g
 from flask_cors import CORS
 import bcrypt
 import sqlite3
 import os
+import json
+from datetime import datetime
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import requests # Already here but good to note
@@ -53,6 +55,16 @@ def init_db(db_name_override=None): # Changed param name for consistency
             password_hash TEXT,
             google_id TEXT UNIQUE,
             name TEXT
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS character_sheets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            name TEXT NOT NULL,
+            data TEXT NOT NULL,
+            last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id)
         )
     ''')
 # Clear the table for schema change (development only)
@@ -247,7 +259,7 @@ def login_google_callback():
         # Redirect to a frontend page that indicates successful login
         # For now, just a JSON response
         # In a real app, you'd redirect to something like '/profile' or '/'
-        return jsonify({"success": True, "message": "Login successful via Google", "email": email, "name": name})
+        return redirect(f"/{'index.html'}?login_success=true")
 
     except sqlite3.Error as e:
         print(f"Database error: {e}") # Log DB error
@@ -269,12 +281,89 @@ def logout():
 @app.route('/@me') # Example protected route
 def get_current_user():
     if 'user_email' in session:
-        return jsonify({
-            "logged_in": True,
-            "email": session['user_email'],
-            "name": session.get('user_name')
-        }), 200
+        conn = get_db_connection()
+        user = conn.execute("SELECT id, email, name FROM users WHERE email = ?", (session['user_email'],)).fetchone()
+        conn.close()
+        if user:
+            return jsonify({
+                "logged_in": True,
+                "id": user['id'],
+                "email": user['email'],
+                "name": user['name']
+            }), 200
     return jsonify({"logged_in": False}), 401
+
+def get_current_user_id():
+    if 'user_email' not in session:
+        return None
+    conn = get_db_connection()
+    user = conn.execute("SELECT id FROM users WHERE email = ?", (session['user_email'],)).fetchone()
+    conn.close()
+    return user['id'] if user else None
+
+@app.route('/api/sheets', methods=['GET'])
+def get_sheets():
+    user_id = get_current_user_id()
+    if not user_id:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+    
+    conn = get_db_connection()
+    sheets_cursor = conn.execute("SELECT name, data, last_modified FROM character_sheets WHERE user_id = ? ORDER BY last_modified DESC", (user_id,))
+    sheets = sheets_cursor.fetchall()
+    conn.close()
+    
+    return jsonify([dict(row) for row in sheets])
+
+@app.route('/api/sheets', methods=['POST'])
+def save_sheet():
+    user_id = get_current_user_id()
+    if not user_id:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+        
+    sheet_data = request.get_json()
+    sheet_name = sheet_data.get('name')
+    data = sheet_data.get('data')
+
+    if not sheet_name or not data:
+        return jsonify({"success": False, "message": "Sheet name and data are required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Check if a sheet with the same name already exists for this user
+    existing_sheet = cursor.execute("SELECT id FROM character_sheets WHERE user_id = ? AND name = ?", (user_id, sheet_name)).fetchone()
+    
+    if existing_sheet:
+        # Update existing sheet
+        cursor.execute("UPDATE character_sheets SET data = ?, last_modified = ? WHERE id = ?", (json.dumps(data), datetime.now(), existing_sheet['id']))
+        message = "Sheet updated successfully"
+    else:
+        # Insert new sheet
+        cursor.execute("INSERT INTO character_sheets (user_id, name, data, last_modified) VALUES (?, ?, ?, ?)", (user_id, sheet_name, json.dumps(data), datetime.now()))
+        message = "Sheet saved successfully"
+        
+    conn.commit()
+    conn.close()
+    
+    return jsonify({"success": True, "message": message})
+
+@app.route('/api/sheets/<string:sheet_name>', methods=['DELETE'])
+def delete_sheet(sheet_name):
+    user_id = get_current_user_id()
+    if not user_id:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM character_sheets WHERE user_id = ? AND name = ?", (user_id, sheet_name))
+    conn.commit()
+    
+    if cursor.rowcount == 0:
+        conn.close()
+        return jsonify({"success": False, "message": "Sheet not found or already deleted"}), 404
+        
+    conn.close()
+    return jsonify({"success": True, "message": "Sheet deleted successfully"})
 
 
 if __name__ == '__main__':
