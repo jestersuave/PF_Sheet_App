@@ -6,6 +6,7 @@ const bonusTypes = [
 ];
 
 let characterBonuses = [];
+let customRolls = [];
 
 // --- Ability Scores ---
 const coreBonusMappings = {
@@ -450,6 +451,245 @@ function sendToWebhook(webhookData) {
 }
 
 // --- Event Listeners & Initial Calculation ---
+function createNewRollForm() {
+    if (!document.getElementById('customRollFormContainer')) { console.error('customRollFormContainer not found'); return; }
+    if (document.getElementById('customRollFormContainer').querySelector('.custom-roll-form')) {
+        alert("A custom roll form is already open."); return;
+    }
+    const formDiv = document.createElement('div');
+    formDiv.classList.add('custom-roll-form');
+    let formHTML = `<div><label for="rollDescription_temp">Description:</label><input type="text" class="roll-description-input" name="rollDescription_temp" placeholder="e.g., Longsword Damage"></div><div><label>Dice (enter quantity):</label></div><div style="display: flex; flex-wrap: wrap;">`;
+    const diceTypes = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'];
+    diceTypes.forEach(die => {
+        formHTML += `<div style="margin-right: 10px; margin-bottom: 5px; display: flex; align-items: center;"><label class="dice-label" for="${die}_count_temp" style="min-width: auto; margin-right: 3px;">${die}:</label><input type="number" class="dice-input" data-die="${die}" name="${die}_count_temp" value="0" min="0" style="width: 45px;"></div>`;
+    });
+    formHTML += `</div><div style="margin-top: 10px;"><button class="save-roll-btn">Save Roll</button><button class="cancel-roll-btn" type="button" style="margin-left: 10px;">Cancel</button></div>`;
+    formDiv.innerHTML = formHTML;
+    document.getElementById('customRollFormContainer').appendChild(formDiv);
+
+    formDiv.querySelector('.save-roll-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        const description = formDiv.querySelector('.roll-description-input').value.trim();
+        const diceCounts = [];
+        formDiv.querySelectorAll('.dice-input').forEach(input => {
+            const count = parseInt(input.value, 10);
+            if (count > 0) diceCounts.push({ die: input.dataset.die, count: count });
+        });
+        if (description === '' && diceCounts.length === 0) { alert("Please enter a description or at least one die."); return; }
+        if (diceCounts.length === 0) { alert("Please specify at least one die."); return; }
+        customRolls.push({ id: Date.now().toString(), description: description || "Custom Roll", dice: diceCounts });
+        renderCustomRolls();
+        formDiv.remove();
+    });
+    formDiv.querySelector('.cancel-roll-btn').addEventListener('click', () => formDiv.remove());
+}
+
+function renderCustomRolls() {
+  const customRollsDisplayContainer = document.getElementById('customRollsDisplayContainer');
+  if (!customRollsDisplayContainer) { console.error('customRollsDisplayContainer not found'); return; }
+  customRollsDisplayContainer.innerHTML = '';
+  customRolls.forEach(roll => {
+      const rollDiv = document.createElement('div');
+      rollDiv.classList.add('displayed-roll');
+      rollDiv.dataset.rollId = roll.id;
+      const descriptionSpan = document.createElement('span');
+      descriptionSpan.textContent = roll.description;
+      const diceSummarySpan = document.createElement('span');
+      diceSummarySpan.textContent = roll.dice.map(d => `${d.count}${d.die}`).join(' + ');
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.addEventListener('click', () => {
+          customRolls = customRolls.filter(r => r.id !== roll.id);
+          renderCustomRolls();
+      });
+      const rollActionBtn = document.createElement('button');
+      rollActionBtn.textContent = 'Roll';
+      rollActionBtn.classList.add('roll-custom-btn');
+      rollActionBtn.addEventListener('click', () => {
+        let diceNotation = roll.dice.map(d => `${d.count}${d.die}`).join('+');
+        if (!diceNotation) { showModal(`${roll.description} Roll Error`, "No dice specified."); return; }
+        const result = rollDice(diceNotation);
+        showModal(`${roll.description} Roll`, result.rollsDescription);
+        const characterName = document.getElementById('charName')?.value.trim() || "Unnamed Character";
+        sendToWebhook({
+          username: `${characterName} (Pathfinder Sheet)`,
+          embeds: [{ title: `Custom Roll: ${roll.description || 'Unnamed'}`, description: `**${result.total}**\n*${result.rollsDescription}*`, color: 5814783, timestamp: new Date().toISOString(), author: { name: characterName } }],
+        });
+      });
+      rollDiv.appendChild(descriptionSpan);
+      rollDiv.appendChild(diceSummarySpan);
+      rollDiv.appendChild(rollActionBtn);
+      rollDiv.appendChild(deleteBtn);
+      customRollsDisplayContainer.appendChild(rollDiv);
+  });
+}
+
+function createNewBonusForm() {
+  const bonusFormContainerRef = document.getElementById('bonusFormContainer');
+  if (!bonusFormContainerRef) { console.error('bonusFormContainer not found.'); return; }
+  if (bonusFormContainerRef.querySelector('.bonus-form')) { alert('A bonus form is already open.'); return; }
+
+  const formDiv = document.createElement('div');
+  formDiv.classList.add('bonus-form');
+  // Start of formHTML modification
+  let formHTML = `
+    <div><label for="bonusTypeSelect_temp">Bonus Type:</label><select id="bonusTypeSelect_temp" name="bonusTypeSelect_temp"><option value="">-- Select Type --</option>${bonusTypes.map(type => `<option value="${type}">${type}</option>`).join('')}</select></div>
+    <div><label for="bonusValue_temp">Bonus Value:</label><input type="number" id="bonusValue_temp" name="bonusValue_temp" value="0"></div>
+
+    <div>
+      <label for="bonusAppliesToBtn_temp">Applies To:</label>
+      <button type="button" id="bonusAppliesToBtn_temp" class="stat-select-button">Select Targets</button>
+    </div>
+    <div id="bonusAppliesToOptions_temp" class="stat-select-dropdown-options" style="display: none;">`; // Removed width: 100%;
+
+  bonusApplicationTargets.forEach(target => {
+    const checkboxId = `bonusTarget_${target.replace(/\s+/g, '').replace(/[()]/g, '')}_temp`;
+    formHTML += `
+      <label style="display: block; padding: 4px 8px; cursor: pointer;">
+          <input type="checkbox" id="${checkboxId}" name="bonusTarget_temp" value="${target}" style="margin-right: 8px; vertical-align: middle;">
+          ${target}
+      </label>`;
+  });
+  formHTML += `</div>`; // Close bonusAppliesToOptions_temp
+
+  formHTML += `
+    <div><label for="bonusDescription_temp">Description/Notes:</label><textarea id="bonusDescription_temp" name="bonusDescription_temp" placeholder="e.g., +2 insight to Perception"></textarea></div>
+    <div style="margin-top: 10px;"><button class="save-bonus-btn">Save Bonus</button><button type="button" class="cancel-bonus-btn">Cancel</button></div>`;
+  // End of formHTML modification
+  formDiv.innerHTML = formHTML;
+  bonusFormContainerRef.appendChild(formDiv);
+
+  // --- Logic for the new "Applies To" custom dropdown ---
+  const appliesToBtn = formDiv.querySelector('#bonusAppliesToBtn_temp');
+  const appliesToOptionsDiv = formDiv.querySelector('#bonusAppliesToOptions_temp');
+
+  if (appliesToBtn && appliesToOptionsDiv) {
+      const appliesToCheckboxes = appliesToOptionsDiv.querySelectorAll('input[name="bonusTarget_temp"]');
+      // Initialize button text
+      updateBonusAppliesToButtonText(appliesToBtn, appliesToOptionsDiv);
+
+      appliesToBtn.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const isHidden = appliesToOptionsDiv.style.display === 'none';
+          // Close other custom dropdowns on the page if any were managed by a similar system
+          // For this specific form, we assume it's the only one of its kind active,
+          // or that its lifecycle is managed by the form's visibility.
+          appliesToOptionsDiv.style.display = isHidden ? 'block' : 'none';
+      });
+
+      appliesToCheckboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', () => {
+              updateBonusAppliesToButtonText(appliesToBtn, appliesToOptionsDiv);
+          });
+      });
+
+      // Click-outside-to-close listener specifically for this dropdown
+      // Wrapped in a named function to potentially manage removal, though complex in this structure
+      const closeAppliesToDropdownListener = (event) => {
+          if (appliesToOptionsDiv.style.display === 'block' &&
+              !appliesToBtn.contains(event.target) &&
+              !appliesToOptionsDiv.contains(event.target)) {
+              appliesToOptionsDiv.style.display = 'none';
+          }
+      };
+      // Add this listener with capture to ensure it can act before other potential stopPropagation calls.
+      // It's added to the document and will be active as long as the formDiv exists.
+      // When formDiv is removed (on save/cancel), this listener ideally should be cleaned up
+      // if it were attached to formDiv. Since it's on document, it's more complex.
+      // A simpler approach might be to rely on the form's modal nature or handle within form's main event flow.
+      // For now, let's keep it simple. If this becomes an issue, a more robust cleanup is needed.
+      document.addEventListener('click', closeAppliesToDropdownListener, true);
+
+      // Attempt to remove the listener when the form is removed.
+      const originalRemove = formDiv.remove;
+      formDiv.remove = function() {
+          document.removeEventListener('click', closeAppliesToDropdownListener, true);
+          originalRemove.apply(this, arguments);
+      };
+  }
+
+  formDiv.querySelector('.save-bonus-btn').addEventListener('click', () => {
+    const selectedType = formDiv.querySelector('#bonusTypeSelect_temp').value;
+    const bonusValue = parseInt(formDiv.querySelector('#bonusValue_temp').value, 10) || 0;
+    const descriptionText = formDiv.querySelector('#bonusDescription_temp').value;
+    const selectedTargets = Array.from(formDiv.querySelectorAll('input[name="bonusTarget_temp"]:checked')).map(cb => cb.value);
+    if (!selectedType) { alert("Please select a bonus type."); return; }
+    if (selectedTargets.length === 0) { alert("Please select at least one target."); return; }
+    characterBonuses.push({ id: Date.now().toString(), type: selectedType, appliesTo: selectedTargets, value: bonusValue, description: descriptionText.trim() });
+    renderBonuses();
+    updateAllCharacterSheetCalculations();
+    formDiv.remove();
+  });
+  formDiv.querySelector('.cancel-bonus-btn').addEventListener('click', () => formDiv.remove());
+}
+
+function updateBonusAppliesToButtonText(buttonElement, optionsContainerElement) {
+    if (!buttonElement || !optionsContainerElement) return;
+
+    const checkedCheckboxes = Array.from(optionsContainerElement.querySelectorAll('input[type="checkbox"]:checked'));
+    const selectedTargets = checkedCheckboxes.map(cb => cb.value);
+
+    if (selectedTargets.length === 0) {
+        buttonElement.textContent = 'Select Targets';
+    } else if (selectedTargets.length <= 2) {
+        buttonElement.textContent = selectedTargets.join(', ');
+    } else {
+        buttonElement.textContent = `${selectedTargets.length} Targets Selected`;
+    }
+}
+
+function renderBonuses() {
+  const displayContainer = document.getElementById('bonusesDisplayContainer');
+  if (!displayContainer) { console.error('bonusesDisplayContainer not found.'); return; }
+  displayContainer.innerHTML = '';
+  characterBonuses.forEach(bonus => {
+    const bonusDiv = document.createElement('div');
+    bonusDiv.classList.add('displayed-bonus');
+    bonusDiv.dataset.bonusId = bonus.id;
+    const summaryP = document.createElement('p');
+    summaryP.textContent = `Type: ${bonus.type} (${bonus.value >= 0 ? '+' : ''}${bonus.value})`;
+    const appliesToP = document.createElement('p');
+    appliesToP.textContent = `Applies to: ${bonus.appliesTo.join(', ')}`;
+    const deleteBtn = document.createElement('button');
+    deleteBtn.classList.add('delete-bonus-btn');
+    deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', function() { // Added event listener for delete here
+        characterBonuses = characterBonuses.filter(b => b.id !== bonus.id);
+        renderBonuses();
+        updateAllCharacterSheetCalculations();
+    });
+    bonusDiv.appendChild(deleteBtn);
+    bonusDiv.appendChild(summaryP);
+    bonusDiv.appendChild(appliesToP);
+    if (bonus.description) {
+      const descriptionP = document.createElement('p');
+      descriptionP.textContent = bonus.description;
+      bonusDiv.appendChild(descriptionP);
+    }
+    displayContainer.appendChild(bonusDiv);
+  });
+}
+
+function showModal(title, resultContent) {
+    const modalTitleEl = document.getElementById('modalTitle');
+    const modalResultTextEl = document.getElementById('modalResultText');
+    const rollResultModalEl = document.getElementById('rollResultModal');
+    if (modalTitleEl && modalResultTextEl && rollResultModalEl) {
+      modalTitleEl.textContent = title;
+      modalResultTextEl.innerHTML = resultContent; // Use innerHTML for potentially formatted dice rolls
+      rollResultModalEl.classList.remove('modal-hidden');
+      rollResultModalEl.classList.add('modal-visible');
+    }
+}
+
+function hideModal() {
+    const rollResultModalEl = document.getElementById('rollResultModal');
+    if (rollResultModalEl) {
+      rollResultModalEl.classList.remove('modal-visible');
+      rollResultModalEl.classList.add('modal-hidden');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM fully loaded and parsed');
 
@@ -764,6 +1004,72 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const clearSheetBtn = document.getElementById('clearSheetBtn');
+  if (clearSheetBtn) {
+    clearSheetBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear all data on this sheet? This action cannot be undone.')) {
+        clearSheet();
+      }
+    });
+  }
+
+  function clearSheet() {
+    // Reset all input fields to their default or empty state
+    const inputs = document.querySelectorAll('input[type="text"], input[type="number"]');
+    inputs.forEach(input => {
+      if (input.id.includes('Score')) {
+        input.value = '10';
+      } else if (input.id === 'charLevel') {
+        input.value = '1';
+      } else if (input.id === 'hpBase') {
+        input.value = '10';
+      } else if(input.type === 'number') {
+        input.value = '0';
+      } else {
+        input.value = '';
+      }
+    });
+
+    // Uncheck all checkboxes
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = false;
+    });
+
+    // Reset custom rolls and bonuses
+    customRolls = [];
+    characterBonuses = [];
+    renderCustomRolls();
+    renderBonuses();
+
+    // Recalculate everything
+    updateAllCharacterSheetCalculations();
+
+    // Reset dropdown button texts
+    initializeCustomDropdowns(); // This will re-run the text updates
+
+    alert('Character sheet has been cleared.');
+  }
+
+  const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+  if (downloadPdfBtn) {
+    downloadPdfBtn.addEventListener('click', downloadPdf);
+  }
+
+  function downloadPdf() {
+    const sheetContainer = document.getElementById('sheet-container');
+    const charName = document.getElementById('charName').value.trim() || 'character-sheet';
+    const options = {
+      margin: 0.5,
+      filename: `${charName}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().from(sheetContainer).set(options).save();
+  }
+
   abilityScoreConfigs.forEach(ability => {
     const scoreInput = document.getElementById(ability.scoreId);
     if (scoreInput) {
@@ -845,8 +1151,6 @@ function rollDice(diceNotationInput) {
   const customRollFormContainer = document.getElementById('customRollFormContainer');
   const customRollsDisplayContainer = document.getElementById('customRollsDisplayContainer');
   let customRolls = [];
-  function createNewRollForm() { /* ... existing code ... */ }
-  function renderCustomRolls() { /* ... existing code ... */ }
   if (addCustomRollBtn) addCustomRollBtn.addEventListener('click', createNewRollForm);
   renderCustomRolls();
 
@@ -941,244 +1245,6 @@ function rollDice(diceNotationInput) {
   }
 
   updateAllCharacterSheetCalculations();
-}); // End DOMContentLoaded
+});
 
 // Full function definitions for brevity in prompt, assuming they exist from previous steps
-function createNewRollForm() {
-    if (!document.getElementById('customRollFormContainer')) { console.error('customRollFormContainer not found'); return; }
-    if (document.getElementById('customRollFormContainer').querySelector('.custom-roll-form')) {
-        alert("A custom roll form is already open."); return;
-    }
-    const formDiv = document.createElement('div');
-    formDiv.classList.add('custom-roll-form');
-    let formHTML = `<div><label for="rollDescription_temp">Description:</label><input type="text" class="roll-description-input" name="rollDescription_temp" placeholder="e.g., Longsword Damage"></div><div><label>Dice (enter quantity):</label></div><div style="display: flex; flex-wrap: wrap;">`;
-    const diceTypes = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'];
-    diceTypes.forEach(die => {
-        formHTML += `<div style="margin-right: 10px; margin-bottom: 5px; display: flex; align-items: center;"><label class="dice-label" for="${die}_count_temp" style="min-width: auto; margin-right: 3px;">${die}:</label><input type="number" class="dice-input" data-die="${die}" name="${die}_count_temp" value="0" min="0" style="width: 45px;"></div>`;
-    });
-    formHTML += `</div><div style="margin-top: 10px;"><button class="save-roll-btn">Save Roll</button><button class="cancel-roll-btn" type="button" style="margin-left: 10px;">Cancel</button></div>`;
-    formDiv.innerHTML = formHTML;
-    document.getElementById('customRollFormContainer').appendChild(formDiv);
-
-    formDiv.querySelector('.save-roll-btn').addEventListener('click', function(event) {
-        event.preventDefault();
-        const description = formDiv.querySelector('.roll-description-input').value.trim();
-        const diceCounts = [];
-        formDiv.querySelectorAll('.dice-input').forEach(input => {
-            const count = parseInt(input.value, 10);
-            if (count > 0) diceCounts.push({ die: input.dataset.die, count: count });
-        });
-        if (description === '' && diceCounts.length === 0) { alert("Please enter a description or at least one die."); return; }
-        if (diceCounts.length === 0) { alert("Please specify at least one die."); return; }
-        customRolls.push({ id: Date.now().toString(), description: description || "Custom Roll", dice: diceCounts });
-        renderCustomRolls();
-        formDiv.remove();
-    });
-    formDiv.querySelector('.cancel-roll-btn').addEventListener('click', () => formDiv.remove());
-}
-
-function renderCustomRolls() {
-  const customRollsDisplayContainer = document.getElementById('customRollsDisplayContainer');
-  if (!customRollsDisplayContainer) { console.error('customRollsDisplayContainer not found'); return; }
-  customRollsDisplayContainer.innerHTML = '';
-  customRolls.forEach(roll => {
-      const rollDiv = document.createElement('div');
-      rollDiv.classList.add('displayed-roll');
-      rollDiv.dataset.rollId = roll.id;
-      const descriptionSpan = document.createElement('span');
-      descriptionSpan.textContent = roll.description;
-      const diceSummarySpan = document.createElement('span');
-      diceSummarySpan.textContent = roll.dice.map(d => `${d.count}${d.die}`).join(' + ');
-      const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = 'Delete';
-      deleteBtn.addEventListener('click', () => {
-          customRolls = customRolls.filter(r => r.id !== roll.id);
-          renderCustomRolls();
-      });
-      const rollActionBtn = document.createElement('button');
-      rollActionBtn.textContent = 'Roll';
-      rollActionBtn.classList.add('roll-custom-btn');
-      rollActionBtn.addEventListener('click', () => {
-        let diceNotation = roll.dice.map(d => `${d.count}${d.die}`).join('+');
-        if (!diceNotation) { showModal(`${roll.description} Roll Error`, "No dice specified."); return; }
-        const result = rollDice(diceNotation);
-        showModal(`${roll.description} Roll`, result.rollsDescription);
-        const characterName = document.getElementById('charName')?.value.trim() || "Unnamed Character";
-        sendToWebhook({
-          username: `${characterName} (Pathfinder Sheet)`,
-          embeds: [{ title: `Custom Roll: ${roll.description || 'Unnamed'}`, description: `**${result.total}**\n*${result.rollsDescription}*`, color: 5814783, timestamp: new Date().toISOString(), author: { name: characterName } }],
-        });
-      });
-      rollDiv.appendChild(descriptionSpan);
-      rollDiv.appendChild(diceSummarySpan);
-      rollDiv.appendChild(rollActionBtn);
-      rollDiv.appendChild(deleteBtn);
-      customRollsDisplayContainer.appendChild(rollDiv);
-  });
-}
-
-function createNewBonusForm() {
-  const bonusFormContainerRef = document.getElementById('bonusFormContainer');
-  if (!bonusFormContainerRef) { console.error('bonusFormContainer not found.'); return; }
-  if (bonusFormContainerRef.querySelector('.bonus-form')) { alert('A bonus form is already open.'); return; }
-
-  const formDiv = document.createElement('div');
-  formDiv.classList.add('bonus-form');
-  // Start of formHTML modification
-  let formHTML = `
-    <div><label for="bonusTypeSelect_temp">Bonus Type:</label><select id="bonusTypeSelect_temp" name="bonusTypeSelect_temp"><option value="">-- Select Type --</option>${bonusTypes.map(type => `<option value="${type}">${type}</option>`).join('')}</select></div>
-    <div><label for="bonusValue_temp">Bonus Value:</label><input type="number" id="bonusValue_temp" name="bonusValue_temp" value="0"></div>
-
-    <div>
-      <label for="bonusAppliesToBtn_temp">Applies To:</label>
-      <button type="button" id="bonusAppliesToBtn_temp" class="stat-select-button">Select Targets</button>
-    </div>
-    <div id="bonusAppliesToOptions_temp" class="stat-select-dropdown-options" style="display: none;">`; // Removed width: 100%;
-
-  bonusApplicationTargets.forEach(target => {
-    const checkboxId = `bonusTarget_${target.replace(/\s+/g, '').replace(/[()]/g, '')}_temp`;
-    formHTML += `
-      <label style="display: block; padding: 4px 8px; cursor: pointer;">
-          <input type="checkbox" id="${checkboxId}" name="bonusTarget_temp" value="${target}" style="margin-right: 8px; vertical-align: middle;">
-          ${target}
-      </label>`;
-  });
-  formHTML += `</div>`; // Close bonusAppliesToOptions_temp
-
-  formHTML += `
-    <div><label for="bonusDescription_temp">Description/Notes:</label><textarea id="bonusDescription_temp" name="bonusDescription_temp" placeholder="e.g., +2 insight to Perception"></textarea></div>
-    <div style="margin-top: 10px;"><button class="save-bonus-btn">Save Bonus</button><button type="button" class="cancel-bonus-btn">Cancel</button></div>`;
-  // End of formHTML modification
-  formDiv.innerHTML = formHTML;
-  bonusFormContainerRef.appendChild(formDiv);
-
-  // --- Logic for the new "Applies To" custom dropdown ---
-  const appliesToBtn = formDiv.querySelector('#bonusAppliesToBtn_temp');
-  const appliesToOptionsDiv = formDiv.querySelector('#bonusAppliesToOptions_temp');
-
-  if (appliesToBtn && appliesToOptionsDiv) {
-      const appliesToCheckboxes = appliesToOptionsDiv.querySelectorAll('input[name="bonusTarget_temp"]');
-      // Initialize button text
-      updateBonusAppliesToButtonText(appliesToBtn, appliesToOptionsDiv);
-
-      appliesToBtn.addEventListener('click', (event) => {
-          event.stopPropagation();
-          const isHidden = appliesToOptionsDiv.style.display === 'none';
-          // Close other custom dropdowns on the page if any were managed by a similar system
-          // For this specific form, we assume it's the only one of its kind active,
-          // or that its lifecycle is managed by the form's visibility.
-          appliesToOptionsDiv.style.display = isHidden ? 'block' : 'none';
-      });
-
-      appliesToCheckboxes.forEach(checkbox => {
-          checkbox.addEventListener('change', () => {
-              updateBonusAppliesToButtonText(appliesToBtn, appliesToOptionsDiv);
-          });
-      });
-
-      // Click-outside-to-close listener specifically for this dropdown
-      // Wrapped in a named function to potentially manage removal, though complex in this structure
-      const closeAppliesToDropdownListener = (event) => {
-          if (appliesToOptionsDiv.style.display === 'block' &&
-              !appliesToBtn.contains(event.target) &&
-              !appliesToOptionsDiv.contains(event.target)) {
-              appliesToOptionsDiv.style.display = 'none';
-          }
-      };
-      // Add this listener with capture to ensure it can act before other potential stopPropagation calls.
-      // It's added to the document and will be active as long as the formDiv exists.
-      // When formDiv is removed (on save/cancel), this listener ideally should be cleaned up
-      // if it were attached to formDiv. Since it's on document, it's more complex.
-      // A simpler approach might be to rely on the form's modal nature or handle within form's main event flow.
-      // For now, let's keep it simple. If this becomes an issue, a more robust cleanup is needed.
-      document.addEventListener('click', closeAppliesToDropdownListener, true);
-
-      // Attempt to remove the listener when the form is removed.
-      const originalRemove = formDiv.remove;
-      formDiv.remove = function() {
-          document.removeEventListener('click', closeAppliesToDropdownListener, true);
-          originalRemove.apply(this, arguments);
-      };
-  }
-
-  formDiv.querySelector('.save-bonus-btn').addEventListener('click', () => {
-    const selectedType = formDiv.querySelector('#bonusTypeSelect_temp').value;
-    const bonusValue = parseInt(formDiv.querySelector('#bonusValue_temp').value, 10) || 0;
-    const descriptionText = formDiv.querySelector('#bonusDescription_temp').value;
-    const selectedTargets = Array.from(formDiv.querySelectorAll('input[name="bonusTarget_temp"]:checked')).map(cb => cb.value);
-    if (!selectedType) { alert("Please select a bonus type."); return; }
-    if (selectedTargets.length === 0) { alert("Please select at least one target."); return; }
-    characterBonuses.push({ id: Date.now().toString(), type: selectedType, appliesTo: selectedTargets, value: bonusValue, description: descriptionText.trim() });
-    renderBonuses();
-    updateAllCharacterSheetCalculations();
-    formDiv.remove();
-  });
-  formDiv.querySelector('.cancel-bonus-btn').addEventListener('click', () => formDiv.remove());
-}
-
-function updateBonusAppliesToButtonText(buttonElement, optionsContainerElement) {
-    if (!buttonElement || !optionsContainerElement) return;
-
-    const checkedCheckboxes = Array.from(optionsContainerElement.querySelectorAll('input[type="checkbox"]:checked'));
-    const selectedTargets = checkedCheckboxes.map(cb => cb.value);
-
-    if (selectedTargets.length === 0) {
-        buttonElement.textContent = 'Select Targets';
-    } else if (selectedTargets.length <= 2) {
-        buttonElement.textContent = selectedTargets.join(', ');
-    } else {
-        buttonElement.textContent = `${selectedTargets.length} Targets Selected`;
-    }
-}
-
-function renderBonuses() {
-  const displayContainer = document.getElementById('bonusesDisplayContainer');
-  if (!displayContainer) { console.error('bonusesDisplayContainer not found.'); return; }
-  displayContainer.innerHTML = '';
-  characterBonuses.forEach(bonus => {
-    const bonusDiv = document.createElement('div');
-    bonusDiv.classList.add('displayed-bonus');
-    bonusDiv.dataset.bonusId = bonus.id;
-    const summaryP = document.createElement('p');
-    summaryP.textContent = `Type: ${bonus.type} (${bonus.value >= 0 ? '+' : ''}${bonus.value})`;
-    const appliesToP = document.createElement('p');
-    appliesToP.textContent = `Applies to: ${bonus.appliesTo.join(', ')}`;
-    const deleteBtn = document.createElement('button');
-    deleteBtn.classList.add('delete-bonus-btn');
-    deleteBtn.textContent = 'Delete';
-        deleteBtn.addEventListener('click', function() { // Added event listener for delete here
-        characterBonuses = characterBonuses.filter(b => b.id !== bonus.id);
-        renderBonuses();
-        updateAllCharacterSheetCalculations();
-    });
-    bonusDiv.appendChild(deleteBtn);
-    bonusDiv.appendChild(summaryP);
-    bonusDiv.appendChild(appliesToP);
-    if (bonus.description) {
-      const descriptionP = document.createElement('p');
-      descriptionP.textContent = bonus.description;
-      bonusDiv.appendChild(descriptionP);
-    }
-    displayContainer.appendChild(bonusDiv);
-  });
-}
-
-function showModal(title, resultContent) {
-    const modalTitleEl = document.getElementById('modalTitle');
-    const modalResultTextEl = document.getElementById('modalResultText');
-    const rollResultModalEl = document.getElementById('rollResultModal');
-    if (modalTitleEl && modalResultTextEl && rollResultModalEl) {
-      modalTitleEl.textContent = title;
-      modalResultTextEl.innerHTML = resultContent; // Use innerHTML for potentially formatted dice rolls
-      rollResultModalEl.classList.remove('modal-hidden');
-      rollResultModalEl.classList.add('modal-visible');
-    }
-}
-
-function hideModal() {
-    const rollResultModalEl = document.getElementById('rollResultModal');
-    if (rollResultModalEl) {
-      rollResultModalEl.classList.remove('modal-visible');
-      rollResultModalEl.classList.add('modal-hidden');
-    }
-}
