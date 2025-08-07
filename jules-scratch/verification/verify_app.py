@@ -6,7 +6,7 @@ def run(playwright):
     page = context.new_page()
 
     # 1. Navigate to the application.
-    page.goto("http://127.0.0.1:5000/index.html")
+    page.goto("http://127.0.0.1:8080/index.html")
 
     # 2. Check that the main character sheet container is visible.
     sheet_container = page.locator("#sheet-container")

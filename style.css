@@ -119,10 +119,9 @@ h2 {
 #skills > div {
   display: flex;
   align-items: center;
-  /* flex-wrap: nowrap; */ /* Allow skill items to wrap if they become too long - CHANGED */
-  flex-wrap: wrap;
-  margin-bottom: 4px; /* Reduced space between skill rows */
-  padding: 2px 0; /* Reduced padding, only top/bottom */
+  flex-wrap: nowrap;
+  margin-bottom: 2px; /* Reduced space between skill rows */
+  padding: 1px 0; /* Reduced padding, only top/bottom */
   border-bottom: 1px solid #eee; /* Light separator for rows */
 }
 
@@ -172,8 +171,8 @@ span { /* General spans, often used for "Modifier:" or "Total:" text */
 
 /* Skills */
 #skills label {
-  min-width: 170px; /* Skills often have longer names - Compacted */
-  margin-right: 4px; /* Reduced space after main skill label */
+  min-width: 140px; /* Skills often have longer names - Compacted */
+  margin-right: 2px; /* Reduced space after main skill label */
 }
 #skills input[type="number"] { width: 50px; } /* This is general, skill-rank-input is more specific */
 
@@ -970,7 +969,7 @@ body.dark-mode #modalTitle {
 
 /* Adjustments for skills section to accommodate dropdowns */
 #skills .stat-dropdown-container { /* This is the parent flex container */
-  width: 100%;
+  width: auto;
   margin-left: 0;
 }
 
@@ -979,8 +978,8 @@ body.dark-mode #modalTitle {
 }
 
 #skills .stat-select-button {
-    width: 100%; /* Make button take full width of its container */
-    margin-top: 2px;
+    width: 120px; /* Make button take full width of its container */
+    margin-top: 0;
 }
 #skills .stat-select-dropdown-options {
     width: 100%; /* Match button width */
