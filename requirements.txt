@@ -1,6 +1,2 @@
-google-auth
-google-auth-oauthlib
-requests
 flask
 flask-cors
-bcrypt

@@ -453,39 +453,12 @@ function sendToWebhook(webhookData) {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM fully loaded and parsed');
 
-  // --- Auth DOM Elements ---
-  const authContainer = document.getElementById('auth-container');
-  console.log('authContainer:', authContainer);
-  const signupForm = document.getElementById('signup-form');
-  console.log('signupForm:', signupForm);
-  const signupEmailInput = document.getElementById('signup-email');
-  console.log('signupEmailInput:', signupEmailInput);
-  const signupPasswordInput = document.getElementById('signup-password');
-  console.log('signupPasswordInput:', signupPasswordInput);
-  // const signupButton = document.getElementById('signup-button'); // Already have this later, not strictly needed here if form is found
-  // console.log('signupButton:', signupButton);
-  const loginForm = document.getElementById('login-form');
-  console.log('loginForm:', loginForm);
-  const loginEmailInput = document.getElementById('login-email');
-  console.log('loginEmailInput:', loginEmailInput);
-  const loginPasswordInput = document.getElementById('login-password');
-  console.log('loginPasswordInput:', loginPasswordInput);
-  // const loginButton = document.getElementById('login-button');
-  // console.log('loginButton:', loginButton);
-  const googleLoginButton = document.getElementById('google-login-button'); // Added this
-  console.log('googleLoginButton:', googleLoginButton); // Added this
-  const logoutButton = document.getElementById('logout-button');
-  console.log('logoutButton:', logoutButton);
-  const emailVerificationMessageDiv = document.getElementById('email-verification-message');
-  // Ensure emailVerificationMessageDiv is consistently available or handled if null
-  if (!emailVerificationMessageDiv) {
-    console.warn('Warning: email-verification-message element not found in the DOM. Some messages may not display.');
-  }
   const sheetContainer = document.getElementById('sheet-container');
   console.log('sheetContainer:', sheetContainer);
 
   // --- Character Sheet Management DOM Elements ---
   const characterSheetManagementDiv = document.getElementById('character-sheet-management');
+  characterSheetManagementDiv.style.display = 'block';
   console.log('characterSheetManagementDiv:', characterSheetManagementDiv);
   const saveSheetButton = document.getElementById('save-sheet-button');
   console.log('saveSheetButton:', saveSheetButton);
@@ -496,307 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const savedSheetsListDiv = document.getElementById('saved-sheets-list');
   console.log('savedSheetsListDiv:', savedSheetsListDiv);
 
-  // Redundant declarations of signupButton and loginButton are removed here,
-  // as they are already declared above or not strictly needed for this logging section.
-  // const signupButton = document.getElementById('signup-button');
-  // const loginButton = document.getElementById('login-button');
-  // Note: The redundant block of const declarations that was here has been removed.
-
-  const BASE_URL = 'http://127.0.0.1:5000';
-
-  // --- User State Management ---
-  function updateLoginState(isLoggedIn, userEmail = '', isVerified = false) {
-    if (isLoggedIn) {
-      if (authContainer) authContainer.style.display = 'none';
-      if (logoutButton) logoutButton.style.display = 'block';
-      if (sheetContainer) sheetContainer.style.display = 'block';
-      if (characterSheetManagementDiv) characterSheetManagementDiv.style.display = 'block';
-
-      // For now, login implies verification for UI purposes.
-      // A more robust system would get verification status from backend.
-      if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
-      // if (!isVerified) {
-      //   if (emailVerificationMessageDiv) {
-      //     emailVerificationMessageDiv.innerHTML = `Please verify your email (${userEmail}). <button id='resend-verification-btn'>Resend verification</button>`;
-      //     emailVerificationMessageDiv.style.display = 'block';
-      //   }
-      // } else {
-      //   if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
-      // }
-      renderSavedSheets();
-    } else { // Not logged in
-      if (authContainer) authContainer.style.display = 'block';
-      if (logoutButton) logoutButton.style.display = 'none';
-      if (sheetContainer) sheetContainer.style.display = 'none';
-      if (characterSheetManagementDiv) characterSheetManagementDiv.style.display = 'none';
-      if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
-      if (savedSheetsListDiv) savedSheetsListDiv.innerHTML = '';
-      if (sheetNameInput) sheetNameInput.value = '';
-    }
-  }
-
-  // Check initial login state
-  // const storedToken = localStorage.getItem('userToken'); // Token not used yet
-  const storedEmail = localStorage.getItem('userEmail');
-  // const storedVerified = localStorage.getItem('isUserVerified') === 'true'; // Verification not fully implemented yet
-
-  if (storedEmail) { // If email exists, assume logged in for now
-    updateLoginState(true, storedEmail, true); // Assume verified on reload if email is present
-  } else {
-    updateLoginState(false);
-  }
-
-  // --- Auth Event Listeners ---
-  if (signupForm) {
-    signupForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const email = signupEmailInput.value;
-      const password = signupPasswordInput.value;
-
-      if (!email || !password) {
-        if (emailVerificationMessageDiv) {
-            emailVerificationMessageDiv.textContent = 'Email and password are required.';
-            emailVerificationMessageDiv.style.color = 'red';
-            emailVerificationMessageDiv.style.display = 'block';
-        }
-        return;
-      }
-
-      // Basic email validation
-      if (!email.includes('@') || !email.substring(email.indexOf('@')).includes('.')) {
-        if (emailVerificationMessageDiv) {
-            emailVerificationMessageDiv.textContent = 'Please enter a valid email address.';
-            emailVerificationMessageDiv.style.color = 'red';
-            emailVerificationMessageDiv.style.display = 'block';
-        }
-        return;
-      }
-
-      // Password length check
-      if (password.length < 6) {
-        if (emailVerificationMessageDiv) {
-            emailVerificationMessageDiv.textContent = 'Password must be at least 6 characters long.';
-            emailVerificationMessageDiv.style.color = 'red';
-            emailVerificationMessageDiv.style.display = 'block';
-        }
-        return;
-      }
-
-      try {
-        const response = await fetch(`${BASE_URL}/signup`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
-        const data = await response.json();
-        if (response.ok && data.success) {
-          if (emailVerificationMessageDiv) {
-            emailVerificationMessageDiv.textContent = "Signup successful! Please log in.";
-            emailVerificationMessageDiv.style.color = 'green';
-            emailVerificationMessageDiv.style.display = 'block';
-          }
-          signupEmailInput.value = ''; // Clear form
-          signupPasswordInput.value = '';
-        } else {
-          if (emailVerificationMessageDiv) {
-            emailVerificationMessageDiv.textContent = data.message || 'Signup failed. Please try again.';
-            emailVerificationMessageDiv.style.color = 'red';
-            emailVerificationMessageDiv.style.display = 'block';
-          }
-        }
-      } catch (error) {
-        console.error('Signup error:', error);
-        if (emailVerificationMessageDiv) {
-            emailVerificationMessageDiv.textContent = 'An error occurred during signup. Please try again.';
-            emailVerificationMessageDiv.style.color = 'red';
-            emailVerificationMessageDiv.style.display = 'block';
-        }
-      }
-    });
-  }
-
-  if (loginForm) {
-    loginForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const email = loginEmailInput.value;
-      const password = loginPasswordInput.value;
-
-      if (!email || !password) {
-         if (emailVerificationMessageDiv) {
-            emailVerificationMessageDiv.textContent = 'Email and password are required.';
-            emailVerificationMessageDiv.style.color = 'red';
-            emailVerificationMessageDiv.style.display = 'block';
-         }
-        return;
-      }
-
-      // Basic email validation
-      if (!email.includes('@') || !email.substring(email.indexOf('@')).includes('.')) {
-        if (emailVerificationMessageDiv) {
-            emailVerificationMessageDiv.textContent = 'Please enter a valid email address.';
-            emailVerificationMessageDiv.style.color = 'red';
-            emailVerificationMessageDiv.style.display = 'block';
-        }
-        return;
-      }
-
-      try {
-        const response = await fetch(`${BASE_URL}/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
-        const data = await response.json();
-
-        if (response.ok && data.success) {
-          localStorage.setItem('userEmail', email);
-          // localStorage.setItem('userToken', data.token); // For future JWT token handling
-          updateLoginState(true, email, true); // Assume verified on successful login for now
-          if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none'; // Hide any previous messages
-        } else {
-          if (emailVerificationMessageDiv) {
-            emailVerificationMessageDiv.textContent = data.message || 'Login failed. Please check your credentials.';
-            emailVerificationMessageDiv.style.color = 'red';
-            emailVerificationMessageDiv.style.display = 'block';
-          }
-          updateLoginState(false); // Ensure UI is in logged-out state
-        }
-      } catch (error) {
-        console.error('Login error:', error);
-        if (emailVerificationMessageDiv) {
-            emailVerificationMessageDiv.textContent = 'An error occurred during login. Please try again.';
-            emailVerificationMessageDiv.style.color = 'red';
-            emailVerificationMessageDiv.style.display = 'block';
-        }
-        updateLoginState(false); // Ensure UI is in logged-out state
-      }
-    });
-  }
-
-  // Google Login Button
-  if (googleLoginButton) {
-    googleLoginButton.addEventListener('click', () => {
-      // Redirect to Google OAuth endpoint on the backend
-      window.location.href = `${BASE_URL}/login/google`;
-    });
-  }
-
-  if (logoutButton) {
-    logoutButton.addEventListener('click', () => {
-      // Attempt to call backend logout to clear HttpOnly session cookie
-      fetch(`${BASE_URL}/logout`, { method: 'POST', credentials: 'include' })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Logout response:', data);
-          // Clear any client-side storage regardless of backend response for robustness
-          localStorage.removeItem('userEmail');
-          localStorage.removeItem('userToken'); // If used
-          localStorage.removeItem('isUserVerified'); // If used
-          updateLoginState(false);
-          if(loginEmailInput) loginEmailInput.value = '';
-          if(loginPasswordInput) loginPasswordInput.value = '';
-          if(signupEmailInput) signupEmailInput.value = '';
-          if(signupPasswordInput) signupPasswordInput.value = '';
-          if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
-        })
-        .catch(error => {
-          console.error('Logout fetch error:', error);
-          // Still clear client-side storage as a fallback
-          localStorage.removeItem('userEmail');
-          localStorage.removeItem('userToken'); // If used
-          localStorage.removeItem('isUserVerified'); // If used
-          updateLoginState(false);
-          if(loginEmailInput) loginEmailInput.value = '';
-          if(loginPasswordInput) loginPasswordInput.value = '';
-          if(signupEmailInput) signupEmailInput.value = '';
-          if(signupPasswordInput) signupPasswordInput.value = '';
-          if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
-        });
-    });
-  }
-
-  // Check current user status from backend on page load
-  // This will help sync state if session is still active on server
-  fetch(`${BASE_URL}/@me`, { credentials: 'include' })
-    .then(response => response.json())
-    .then(data => {
-      if (data.logged_in) {
-        localStorage.setItem('userEmail', data.email); // Update/confirm local storage
-        // Potentially store name if available: localStorage.setItem('userName', data.name);
-        updateLoginState(true, data.email, true); // Assume verified if session active
-      } else {
-        // Not logged in on backend, ensure client is also logged out
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userToken');
-        updateLoginState(false);
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching current user status:', error);
-      // If backend is unreachable, rely on localStorage for now, or force logout.
-      // Forcing logout might be safer if backend state is unknown.
-      // updateLoginState(false); // Optionally force logout if backend is down
-    });
-
-  // Check for Google login success redirect
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('login_success') === 'true') {
-    // We've just returned from a successful Google login.
-    // The session should be set. We can now fetch user data.
-    fetch(`${BASE_URL}/@me`, { credentials: 'include' })
-      .then(response => response.json())
-      .then(data => {
-        if (data.logged_in) {
-          localStorage.setItem('userEmail', data.email);
-          updateLoginState(true, data.email, true);
-          // Clean the URL
-          window.history.replaceState({}, document.title, window.location.pathname);
-        } else {
-          // This case might happen if the session check fails for some reason
-          console.error("Google login success flag was present, but backend session check failed.");
-          updateLoginState(false);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching current user status after Google login:', error);
-        updateLoginState(false);
-      });
-  }
-
-
-  if (logoutButton) {
-    logoutButton.addEventListener('click', () => {
-      localStorage.removeItem('userEmail');
-      // localStorage.removeItem('userToken'); // For future JWT token handling
-      // localStorage.removeItem('isUserVerified'); // If we were storing this separately
-      updateLoginState(false);
-      if(loginEmailInput) loginEmailInput.value = '';
-      if(loginPasswordInput) loginPasswordInput.value = '';
-      if(signupEmailInput) signupEmailInput.value = '';
-      if(signupPasswordInput) signupPasswordInput.value = '';
-      if (emailVerificationMessageDiv) emailVerificationMessageDiv.style.display = 'none';
-    });
-  }
-
-  // Remove or comment out the old resend verification logic as it's not connected to the backend
-  // if (emailVerificationMessageDiv) {
-  //   emailVerificationMessageDiv.addEventListener('click', (event) => {
-  //     if (event.target.id === 'resend-verification-btn') {
-  //       console.log('Resend verification email request - (Currently Mocked)');
-  //       emailVerificationMessageDiv.innerHTML = 'Verification email resent (mock). Please check your inbox.';
-  //       setTimeout(() => {
-  //           const currentEmail = localStorage.getItem('userEmail');
-  //           // const currentVerified = localStorage.getItem('isUserVerified') === 'true'; // Not used now
-  //           if (currentEmail /* && !currentVerified */) { // Simplified condition
-  //                emailVerificationMessageDiv.innerHTML = `Please verify your email (${currentEmail}). <button id='resend-verification-btn'>Resend verification</button>`;
-  //           } else if (!currentEmail) {
-  //               emailVerificationMessageDiv.style.display = 'none';
-  //           }
-  //       }, 5000);
-  //     }
-  //   });
-  // }
-  // --- End Auth Logic ---
+  renderSavedSheets();
 
   // --- Character Sheet Management Functions ---
 
@@ -970,72 +643,51 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Function to render the list of saved character sheets
-  async function renderSavedSheets() {
+  function renderSavedSheets() {
     if (!savedSheetsListDiv) return;
-    const userEmail = localStorage.getItem('userEmail');
-    if (!userEmail) {
-      savedSheetsListDiv.innerHTML = '<p>Please log in to see your saved sheets.</p>';
+
+    const sheets = JSON.parse(localStorage.getItem('characterSheets')) || [];
+    savedSheetsListDiv.innerHTML = ''; // Clear current list
+
+    if (sheets.length === 0) {
+      savedSheetsListDiv.innerHTML = '<p>No character sheets saved yet.</p>';
       return;
     }
 
-    try {
-      const response = await fetch(`${BASE_URL}/api/sheets`, { credentials: 'include' });
-      if (!response.ok) {
-        savedSheetsListDiv.innerHTML = '<p>Error loading sheets.</p>';
-        return;
-      }
-      const sheets = await response.json();
-      savedSheetsListDiv.innerHTML = ''; // Clear current list
+    sheets.forEach(sheet => {
+      const sheetItem = document.createElement('div');
+      sheetItem.classList.add('saved-sheet-item');
+      sheetItem.style.display = 'flex';
+      sheetItem.style.justifyContent = 'space-between';
+      sheetItem.style.padding = '5px';
+      sheetItem.style.borderBottom = '1px solid #eee';
 
-      if (sheets.length === 0) {
-        savedSheetsListDiv.innerHTML = '<p>No character sheets saved yet.</p>';
-        return;
-      }
+      const sheetNameSpan = document.createElement('span');
+      sheetNameSpan.textContent = sheet.name;
+      sheetItem.appendChild(sheetNameSpan);
 
-      sheets.forEach(sheet => {
-        const sheetItem = document.createElement('div');
-        sheetItem.classList.add('saved-sheet-item');
-        sheetItem.style.display = 'flex';
-        sheetItem.style.justifyContent = 'space-between';
-        sheetItem.style.padding = '5px';
-        sheetItem.style.borderBottom = '1px solid #eee';
+      const buttonsDiv = document.createElement('div');
+      const loadBtn = document.createElement('button');
+      loadBtn.textContent = 'Load';
+      loadBtn.classList.add('load-sheet-btn');
+      loadBtn.dataset.sheetName = sheet.name;
+      loadBtn.style.marginRight = '5px';
+      buttonsDiv.appendChild(loadBtn);
 
-        const sheetNameSpan = document.createElement('span');
-        sheetNameSpan.textContent = sheet.name;
-        sheetItem.appendChild(sheetNameSpan);
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.classList.add('delete-sheet-btn');
+      deleteBtn.dataset.sheetName = sheet.name;
+      buttonsDiv.appendChild(deleteBtn);
 
-        const buttonsDiv = document.createElement('div');
-        const loadBtn = document.createElement('button');
-        loadBtn.textContent = 'Load';
-        loadBtn.classList.add('load-sheet-btn');
-        loadBtn.dataset.sheetName = sheet.name;
-        loadBtn.dataset.sheetData = sheet.data; // Store data directly
-        loadBtn.style.marginRight = '5px';
-        buttonsDiv.appendChild(loadBtn);
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.classList.add('delete-sheet-btn');
-        deleteBtn.dataset.sheetName = sheet.name;
-        buttonsDiv.appendChild(deleteBtn);
-
-        sheetItem.appendChild(buttonsDiv);
-        savedSheetsListDiv.appendChild(sheetItem);
-      });
-    } catch (error) {
-      console.error('Failed to render sheets:', error);
-      savedSheetsListDiv.innerHTML = '<p>Failed to load sheets from the server.</p>';
-    }
+      sheetItem.appendChild(buttonsDiv);
+      savedSheetsListDiv.appendChild(sheetItem);
+    });
   }
 
   // --- Event Listeners for Character Sheet Management ---
   if (saveSheetButton) {
-    saveSheetButton.addEventListener('click', async () => {
-      const userEmail = localStorage.getItem('userEmail');
-      if (!userEmail) {
-        alert('You must be logged in to save a character sheet.');
-        return;
-      }
+    saveSheetButton.addEventListener('click', () => {
       let characterName = sheetNameInput.value.trim();
       if (!characterName) {
         characterName = document.getElementById('charName')?.value.trim() || "Unnamed Character";
@@ -1043,71 +695,47 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const sheetData = getCharacterData();
-      const payload = { name: characterName, data: sheetData };
+      const sheets = JSON.parse(localStorage.getItem('characterSheets')) || [];
+      const existingSheetIndex = sheets.findIndex(sheet => sheet.name === characterName);
 
-      try {
-        const response = await fetch(`${BASE_URL}/api/sheets`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify(payload),
-        });
-        const result = await response.json();
-        if (result.success) {
-          renderSavedSheets();
-          alert(result.message);
-        } else {
-          alert(`Error: ${result.message}`);
-        }
-      } catch (error) {
-        console.error('Failed to save sheet:', error);
-        alert('An error occurred while saving the sheet.');
+      if (existingSheetIndex > -1) {
+        sheets[existingSheetIndex].data = sheetData;
+      } else {
+        sheets.push({ name: characterName, data: sheetData });
       }
+
+      localStorage.setItem('characterSheets', JSON.stringify(sheets));
+      renderSavedSheets();
+      alert(`Character sheet "${characterName}" saved!`);
     });
   }
 
   if (loadSheetButton) { // This is the "Refresh Saved Sheets" button
     loadSheetButton.addEventListener('click', () => {
-      renderSavedSheets(); // Simply re-render the list from localStorage
+      renderSavedSheets();
     });
   }
 
   if (savedSheetsListDiv) {
-    savedSheetsListDiv.addEventListener('click', async (event) => {
+    savedSheetsListDiv.addEventListener('click', (event) => {
       const target = event.target;
-      const userEmail = localStorage.getItem('userEmail');
-      if (!userEmail) return;
-
       const sheetName = target.dataset.sheetName;
 
       if (target.classList.contains('load-sheet-btn')) {
-        try {
-          const sheetData = JSON.parse(target.dataset.sheetData);
-          populateCharacterData(sheetData);
+        const sheets = JSON.parse(localStorage.getItem('characterSheets')) || [];
+        const sheetToLoad = sheets.find(sheet => sheet.name === sheetName);
+        if (sheetToLoad) {
+          populateCharacterData(sheetToLoad.data);
           if(sheetNameInput) sheetNameInput.value = sheetName;
           alert(`Character sheet "${sheetName}" loaded!`);
-        } catch (e) {
-          alert('Error parsing sheet data to load.');
-          console.error(e);
         }
       } else if (target.classList.contains('delete-sheet-btn')) {
         if (confirm(`Are you sure you want to delete "${sheetName}"?`)) {
-          try {
-            const response = await fetch(`${BASE_URL}/api/sheets/${sheetName}`, {
-              method: 'DELETE',
-              credentials: 'include',
-            });
-            const result = await response.json();
-            if (result.success) {
-              renderSavedSheets();
-              alert(result.message);
-            } else {
-              alert(`Error: ${result.message}`);
-            }
-          } catch (error) {
-            console.error('Failed to delete sheet:', error);
-            alert('An error occurred while deleting the sheet.');
-          }
+          let sheets = JSON.parse(localStorage.getItem('characterSheets')) || [];
+          sheets = sheets.filter(sheet => sheet.name !== sheetName);
+          localStorage.setItem('characterSheets', JSON.stringify(sheets));
+          renderSavedSheets();
+          alert(`Character sheet "${sheetName}" deleted.`);
         }
       }
     });
