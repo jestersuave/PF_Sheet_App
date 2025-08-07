@@ -16,7 +16,6 @@ body {
 
 /* Sheet Container */
 #sheet-container {
-  max-width: 1000px;
   margin: 0 auto;
   background-color: #fff;
   padding: 20px;
@@ -40,9 +39,10 @@ h2 {
 
 /* Character Info Section */
 #charInfo {
-  padding-bottom: 15px;
+  border: 1px solid #aaa;
+  padding: 10px;
+  border-radius: 3px;
   margin-bottom: 15px;
-  border-bottom: 1px solid #ccc;
   display: flex;
   flex-wrap: wrap; /* Allow items to wrap */
   gap: 10px 20px; /* Row and column gap */
@@ -94,13 +94,11 @@ h2 {
 }
 
 /* Common styling for sections within columns */
-#abilityScores,
-#skills,
-#combatStats,
-#savingThrows {
+#main-content > div > div, #sheet-container > div {
   border: 1px solid #aaa;
   padding: 10px;
   border-radius: 3px; /* Subtle rounding */
+  margin-bottom: 15px;
 }
 
 /* Styling for individual items within sections (label, input, span) */
